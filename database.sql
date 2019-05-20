@@ -39,9 +39,9 @@ CREATE TABLE "goals" (
     "mission_id" INT REFERENCES "missions" NOT NULL,
     "goal_type_id" INT REFERENCES "goal_types" NOT NULL,
     "name" VARCHAR(200) NOT NULL,
-    "points" INT NOT NULL,
-    "how_many_max" INT NOT NULL,
-    "how_many_min" INT NOT NULL DEFAULT '0'
+    "points" INT ,
+    "how_many_max" INT ,
+    "how_many_min" INT DEFAULT '0'
 );
 
 
@@ -74,8 +74,9 @@ CREATE TABLE "runs" (
     "driver" INT REFERENCES "team_members" NOT NULL,
     "assistant" INT REFERENCES "team_members" NOT NULL,
     "score_keeper" INT REFERENCES "team_members"NOT NULL,
-    "score" INT NOT NULL,
-    "penalties" INT NOT NULL
+    "score" INT,
+    "penalties" INT,
+    "notes" VARCHAR(1000)
 );
 
 
@@ -111,8 +112,8 @@ CREATE TABLE "goals_per_run" (
     "id" SERIAL PRIMARY KEY,
     "goal_id" INT REFERENCES "goals" NOT NULL,
     "selected_missions_id" INT REFERENCES "selected_missions" NOT NULL,
-    "how_many_collected" INT NOT NULL,
-    "is_completed" BOOLEAN NOT NULL
+    "how_many_collected" INT,
+    "is_completed" BOOLEAN,
 );
 
 
