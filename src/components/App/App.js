@@ -15,6 +15,7 @@ import ProtectedRoute from '../ProtectedRoute/ProtectedRoute'
 
 import AboutPage from '../AboutPage/AboutPage';
 import UserPage from '../UserPage/UserPage';
+import HomeAdmin from '../Admin/HomeAdmin/HomeAdmin';
 
 import './App.css';
 
@@ -46,6 +47,11 @@ class App extends Component {
               exact
               path="/home"
               component={UserPage}
+            />
+            <ProtectedRoute
+              exact
+              path="/admin/home"
+              component={HomeAdmin}
             />
             <Route render={() => <h1>404</h1>} />
           </Switch>
