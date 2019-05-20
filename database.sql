@@ -113,18 +113,14 @@ CREATE TABLE "goals_per_run" (
     "goal_id" INT REFERENCES "goals" NOT NULL,
     "selected_missions_id" INT REFERENCES "selected_missions" NOT NULL,
     "how_many_collected" INT,
-    "is_completed" BOOLEAN,
+    "is_completed" BOOLEAN
 );
 
 
-INSERT INTO "public"."projects"(
-    "id", "name", "description", "year", "published") 
-    VALUES(1, 'Under Da Sea', 'We are going under the sea', '2016', TRUE, '5/20/19') 
-    INSERT INTO "public"."penalties"("id", "project_id", "name", "points", "max") VALUES(1, 1, 'Touch Penalty', 3, 6) RETURNING "id", "project_id", "name", "points", "max";
- "id", "name", "description", "year", "published", "date_created";
+INSERT INTO "public"."projects"("id", "name", "description", "year", "published", "date_created") 
+VALUES(1, 'Under Da Sea', 'We are going under the sea', '2016', TRUE, '5/20/19'); 
 
-
-
+INSERT INTO "public"."penalties"("id", "project_id", "name", "points", "max") VALUES(1, 1, 'Touch Penalty', 3, 6) RETURNING "id", "project_id", "name", "points", "max";
 
 INSERT INTO "public"."missions"("id", "project_id", "name", "description") 
 VALUES(1, 1, 'Shark Shipment', 'In their usual environments, animals are very resilient. But in strange environments, they need a lot of care. As we ship our Bonnet-Head Shark in an aircraft, she needs impact avoidance, specific diet, clean water at proper pressure and temperature, and medical care along the way. She must not be upset. Move the shark to her new home not touching her tank''s walls.') 
