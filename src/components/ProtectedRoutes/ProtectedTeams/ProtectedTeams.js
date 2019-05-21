@@ -27,7 +27,7 @@ const ProtectedTeams = (props) => {
 
   let ComponentToShow;
 
-  if( user.security_clearance === 3 || user.security_clearance === 2 ) {
+  if( user.security_clearance === 4 || user.security_clearance === 3 ) {
     // if the user is a team with access to create their own runs) OR
     // if the user is a team without access to create their own runs OR
     // if the user is a coach
