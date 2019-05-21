@@ -1,25 +1,54 @@
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import ProjectSnap from './ProjectSnap/ProjectSnap'
 
 class HomeAdmin extends Component {
-  componentDidMount () {
 
-  }
+    state = {
 
-  render() {
-    return (
-        <div>
-            <h1>Welcome!</h1>
-            <p>Click on a project to view details or create a new project below.</p>
+    }
+
+    componentDidMount() {
+        this.props.dispatch({ type: 'GET_ALL_PROJECTS' });
+    }
+
+    render() {
+        return (
             <div>
-                <h2>Projects:</h2>
-                <button>New Project +</button>
+                <h1>Welcome!</h1>
+                {/* {JSON.stringify(this.props.reduxState.projects)} */}
+                {JSON.stringify(this.state)}
+                <p>Click on a project to view details or create a new project below.</p>
                 <div>
-                    
+                    <h2>Projects:</h2>
+                    <button>New Project +</button>
+                    <div>
+                        {this.props.reduxState.projects.map(project => (
+                            <button>
+                                {project.name}
+                            </button>
+                        ))}
+                    </div>
+                </div>
+                <div>
+                    {this.props.reduxState.projects.map(project => {
+                        this.setState({
+                            [project.id]: false,
+                        })
+                        return(
+                            <div key={project.id}>
+                                <ProjectSnap project={project}/>
+                            </div>
+                        )
+                    })}
                 </div>
             </div>
-        </div>
-  )}
+        )
+    }
 }
 
-export default connect()(HomeAdmin);
+const mapStateToProps = reduxState => ({
+    reduxState
+});
+
+export default connect(mapStateToProps)(HomeAdmin);
