@@ -7,19 +7,20 @@ import {
 } from 'react-router-dom';
 import {connect} from 'react-redux';
 
-import ProtectedAdmin from '../ProtectedAdmin/ProtectedAdmin';
-import ProtectedCoach from '../ProtectedCoach/ProtectedCoach';
-import ProtectedTeam from '../ProtectedTeam/ProtectedTeam';
-import ProtectedTeamWithAccess from '../ProtectedTeamWithAccess/ProtectedTeamWithAccess';
+import ProtectedAdmin from '../ProtectedRoutes/ProtectedAdmin/ProtectedAdmin';
+import ProtectedCoach from '../ProtectedRoutes/ProtectedCoach/ProtectedCoach';
+import ProtectedTeams from '../ProtectedRoutes/ProtectedTeams/ProtectedTeams';
+import ProtectedTeamWithAccess from '../ProtectedRoutes/ProtectedTeamWithAccess/ProtectedTeamWithAccess';
 
 import Nav from '../Nav/Nav';
 import Footer from '../Footer/Footer';
 import AboutPage from '../AboutPage/AboutPage';
 import UserPage from '../UserPage/UserPage';
 import './App.css';
+import ProtectedCoachAndTeams from '../ProtectedRoutes/ProtectedCoachAndTeams/ProtectedCoachAndTeams';
 
 class App extends Component {
-  componentDidMount () {
+  componentDidMount() {
     this.props.dispatch({type: 'FETCH_USER'})
   }
 
@@ -47,6 +48,7 @@ class App extends Component {
               path="/home"
               component={UserPage}
             />
+            <ProtectedCoachAndTeams />
             <Route render={() => <h1>404</h1>} />
           </Switch>
           <Footer />

@@ -1,8 +1,8 @@
 import React from 'react';
 import {Route} from 'react-router-dom'
 import {connect} from 'react-redux';
-import LoginPage from '../LoginPage/LoginPage';
-import RegisterPage from '../RegisterPage/RegisterPage';
+import LoginPage from '../../LoginPage/LoginPage';
+import RegisterPage from '../../RegisterPage/RegisterPage';
 
 // A Custom Wrapper Component -- This will keep our code DRY.
 // Responsible for watching redux state, and returning an appropriate component
@@ -14,7 +14,7 @@ import RegisterPage from '../RegisterPage/RegisterPage';
 // by checking req.isAuthenticated for authentication
 // and by checking req.user for authorization
 
-const ProtectedTeam = (props) => {
+const ProtectedTeams = (props) => {
   // Using destructuring, this takes ComponentToProtect from component
   // prop and grabs all other props to pass them along to Route
   const {
@@ -27,8 +27,10 @@ const ProtectedTeam = (props) => {
 
   let ComponentToShow;
 
-  if( user.security_clearance === 3 ) {
-    // if the user's security clearance is 3 (team without access to create their own runs)
+  if( user.security_clearance === 3 || user.security_clearance === 2 ) {
+    // if the user is a team with access to create their own runs) OR
+    // if the user is a team without access to create their own runs OR
+    // if the user is a coach
     // show the component that is protected
     ComponentToShow = ComponentToProtect;
   } else if (loginMode === 'login') {
@@ -58,6 +60,6 @@ const ProtectedTeam = (props) => {
 // const mapStateToProps = ({ user, loginMode }) => ({ user, loginMode });
 const mapStateToProps = ({ user, loginMode }) => ({ user, loginMode });
 
-export default connect( mapStateToProps )( ProtectedTeam );
+export default connect( mapStateToProps )( ProtectedTeams );
 
 
