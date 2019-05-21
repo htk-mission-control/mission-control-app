@@ -5,22 +5,23 @@ import {
   Redirect,
   Switch,
 } from 'react-router-dom';
-
 import {connect} from 'react-redux';
+
+import ProtectedAdmin from '../ProtectedRoutes/ProtectedAdmin/ProtectedAdmin';
+import ProtectedCoach from '../ProtectedRoutes/ProtectedCoach/ProtectedCoach';
+import ProtectedTeams from '../ProtectedRoutes/ProtectedTeams/ProtectedTeams';
+import ProtectedTeamWithAccess from '../ProtectedRoutes/ProtectedTeamWithAccess/ProtectedTeamWithAccess';
 
 import Nav from '../Nav/Nav';
 import Footer from '../Footer/Footer';
-
-import ProtectedRoute from '../ProtectedRoute/ProtectedRoute'
-
 import AboutPage from '../AboutPage/AboutPage';
 import UserPage from '../UserPage/UserPage';
 import HomeAdmin from '../Admin/HomeAdmin/HomeAdmin';
-
 import './App.css';
+import ProtectedCoachAndTeams from '../ProtectedRoutes/ProtectedCoachAndTeams/ProtectedCoachAndTeams';
 
 class App extends Component {
-  componentDidMount () {
+  componentDidMount() {
     this.props.dispatch({type: 'FETCH_USER'})
   }
 
@@ -43,11 +44,12 @@ class App extends Component {
             Visiting localhost:3000/home will show the UserPage if the user is logged in.
             If the user is not logged in, the ProtectedRoute will show the 'Login' or 'Register' page.
             Even though it seems like they are different pages, the user is always on localhost:3000/home */}
-            <ProtectedRoute
+            <ProtectedAdmin
               exact
               path="/home"
               component={UserPage}
             />
+            <ProtectedCoachAndTeams />
             <ProtectedRoute
               exact
               path="/admin/home"
