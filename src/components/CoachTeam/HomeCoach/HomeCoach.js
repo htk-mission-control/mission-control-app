@@ -24,6 +24,7 @@ class HomeCoach extends Component {
                 <h2>Welcome, Coach!</h2>
 
                 <button className="route-link" onClick={this.routeToMissions} >View Missions</button>
+                <br/>
                 <button className="route-link" onClick={this.routeToTeams} >View Your Teams</button>
             </div>
         );
