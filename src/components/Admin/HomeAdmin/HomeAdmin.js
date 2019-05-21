@@ -32,9 +32,6 @@ class HomeAdmin extends Component {
                 </div>
                 <div>
                     {this.props.reduxState.projects.map(project => {
-                        this.setState({
-                            [project.id]: false,
-                        })
                         return(
                             <div key={project.id}>
                                 <ProjectSnap project={project}/>
