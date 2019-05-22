@@ -1,7 +1,13 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
+import {connect} from 'react-redux';
 
 class HomeCoach extends Component {
+
+    componentDidMount(){
+        console.log( 'User is:', this.props.reduxState );
+        
+    }
 
     // On click, route to ProjectOverview page
     routeToMissions = () => {
@@ -31,5 +37,9 @@ class HomeCoach extends Component {
     }
 }
 
+const mapReduxStateToProps = (reduxState) => ({
+    reduxState,
+});
 
-export default withRouter(HomeCoach);
+
+export default connect(mapReduxStateToProps)(withRouter(HomeCoach));

@@ -41,12 +41,12 @@ class App extends Component {
               path="/about"
               component={AboutPage}
             />
-            <Route
+            <ProtectedRoute
               exact
               path="/coach"
               component={HomeCoach}
             />
-            <Route
+            <ProtectedRoute
               exact
               path="/coach/teams"
               component={ViewAllTeams}
