@@ -6,7 +6,7 @@ const allMissionsReducer = (state = [], action) => {
           let mission = {
             project_id: item.project_id,
             name: item.name,
-            checked: false 
+            selected: false 
           }
           allMissions.push(mission);
         }

@@ -6,45 +6,27 @@ class SelectMissions extends Component {
     state = {
         selectedMissions: this.props.reduxState.missions
     }
-
-    componentDidMount () {
-        this.props.dispatch({ type: 'GET_ALL_MISSIONS' });
+    
+    selectAllMissions () {
+        console.log(`this is selectAllMissions`);
     }
 
-    // componentDidUpdate ( prevProps ) {
-    //     if( this.props.reduxState.missions !== prevProps.missions ){
-    //         this.setState({
-    //             selectedMissions: this.props.reduxState.missions
-    //         })
-    //     }
-    // }
-
-    // selectAllMissions () {
-    //     console.log(`this is selectAllMissions`);
-    // }
-
-    setSelectedMissions () {
+    setSelectedMissions = () => {
         this.props.dispatch({ type: 'SET_SELECTED_MISSIONS', payload: this.state })
     }
 
-    updateMission = ( i ) => ( event ) => {
+    updateMission (i) {
         console.log('i is', i)
         console.log('current state', this.state.selectedMissions)
-        let newSelection = [...this.state.selectedMissions];
-        newSelection[i].checked = !event.target.value;
+        
+        let newSelection = [...this.props.reduxState.missions];
+        console.log('newSelection[i]', newSelection[i])
+        newSelection[i].selected = !newSelection[i].selected;
         this.setState({
             ...this.state,
             selectedMissions: newSelection
         })
     }
-
-    // missionsCheck () {
-    //     if(this.props.reduxState.missions) {
-   
-    //     }
-    // }
-
-    // number = i + 1;
 
     render() {
 
@@ -53,7 +35,7 @@ class SelectMissions extends Component {
             missionList = this.props.reduxState.missions.map( (mission, i) =>
             <div>
                 <label>{i + 1}. {mission.name}</label>
-                <input type='checkbox' checked={mission.checked === true} value={mission.checked} onChange={this.updateMission(i)} />
+                <input type='checkbox' checked={mission.selected === true} value={mission.selected} onChange={ () => {this.updateMission(i)} } />
             </div>
         )} else {
             missionList =  null;
@@ -78,4 +60,4 @@ const mapReduxStateToProps = reduxState => ({
     reduxState,
 })
 
-export default connect(mapReduxStateToProps)(SelectMissions);
+export default connect( mapReduxStateToProps )( SelectMissions );
