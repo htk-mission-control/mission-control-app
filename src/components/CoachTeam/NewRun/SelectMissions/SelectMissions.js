@@ -9,6 +9,15 @@ class SelectMissions extends Component {
     
     selectAllMissions () {
         console.log(`this is selectAllMissions`);
+        let newSelection = [...this.props.reduxState.missions];
+        for( mission of newSelection ){
+            mission.selected = true;
+        }
+        this.setState({
+            ...this.state,
+            selectedMissions: newSelection
+        })
+
     }
 
     setSelectedMissions = () => {
