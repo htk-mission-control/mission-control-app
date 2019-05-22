@@ -17,6 +17,7 @@ import Footer from '../Footer/Footer';
 import AboutPage from '../AboutPage/AboutPage';
 import UserPage from '../UserPage/UserPage';
 import HomeAdmin from '../Admin/HomeAdmin/HomeAdmin';
+import HomeTeam from '../CoachTeam/HomeTeam/HomeTeam';
 import ViewProject from '../Admin/ViewProject/ViewProject';
 
 import './App.css';
@@ -60,6 +61,11 @@ class App extends Component {
               exact
               path="/admin/projects"
               component={ViewProject}
+            />
+            <ProtectedTeams
+              exact
+              path="/team/home"
+              component={HomeTeam}
             />
             <Route render={() => <h1>404</h1>} />
           </Switch>
