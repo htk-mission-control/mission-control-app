@@ -1,7 +1,16 @@
 const allMissionsReducer = (state = [], action) => {
     switch (action.type) {
       case 'SET_ALL_MISSIONS':
-        return action.payload;
+        let allMissions = [];
+        for ( let item of action.payload) {
+          let mission = {
+            project_id: item.project_id,
+            name: item.name,
+            checked: false 
+          }
+          allMissions.push(mission);
+        }
+        return allMissions;
       default:
         return state;
     }
