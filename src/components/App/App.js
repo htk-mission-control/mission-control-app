@@ -17,6 +17,7 @@ import Footer from '../Footer/Footer';
 import AboutPage from '../AboutPage/AboutPage';
 import UserPage from '../UserPage/UserPage';
 import HomeAdmin from '../Admin/HomeAdmin/HomeAdmin';
+import SelectMissions from '../CoachTeam/NewRun/SelectMissions/SelectMissions';
 import './App.css';
 import ProtectedCoachAndTeams from '../ProtectedRoutes/ProtectedCoachAndTeams/ProtectedCoachAndTeams';
 
@@ -53,6 +54,10 @@ class App extends Component {
               exact
               path="/admin/home"
               component={HomeAdmin}
+            />
+            <ProtectedAdmin
+            exact path="/practice-run"
+            component={SelectMissions}
             />
             <Route render={() => <h1>404</h1>} />
           </Switch>
