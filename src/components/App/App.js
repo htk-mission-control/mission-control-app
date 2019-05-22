@@ -17,6 +17,8 @@ import Footer from '../Footer/Footer';
 import AboutPage from '../AboutPage/AboutPage';
 import UserPage from '../UserPage/UserPage';
 import HomeAdmin from '../Admin/HomeAdmin/HomeAdmin';
+import ViewProject from '../Admin/ViewProject/ViewProject';
+
 import './App.css';
 import ProtectedCoachAndTeams from '../ProtectedRoutes/ProtectedCoachAndTeams/ProtectedCoachAndTeams';
 
@@ -53,6 +55,11 @@ class App extends Component {
               exact
               path="/admin/home"
               component={HomeAdmin}
+            />
+            <ProtectedAdmin
+              exact
+              path="/admin/projects"
+              component={ViewProject}
             />
             <Route render={() => <h1>404</h1>} />
           </Switch>
