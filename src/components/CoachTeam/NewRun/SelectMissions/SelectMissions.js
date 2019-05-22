@@ -6,7 +6,8 @@ class SelectMissions extends Component {
     state = {}
 
     componentDidMount () {
-        this.props.dispatch({ type: 'GET_ALL_MISSIONS' })
+        this.props.dispatch({ type: 'GET_ALL_MISSIONS' });
+        
     }
 
     // componentWillUpdate () {

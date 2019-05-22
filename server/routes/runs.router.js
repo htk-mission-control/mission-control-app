@@ -6,20 +6,14 @@ const router = express.Router();
  * GET route template
  */
 router.get('/missions', (req, res) => {
-    const client = await pool.connect();
-    try {
-        await client.query( 'BEGIN' );
-        let sqlText = ``;
-        await client.query( sqlText, [] );
-        await client.query( 'COMMIT' );
-        res.sendStatus( 200 );
-    } catch ( error ) {
-        await client.query( 'ROLLBACK' );
-        console.log(`error making db query`, error);
-        res.sendStatus( 500 );
-    } finally {
-        client.release();
-    }
+    const sqlText = `SELECT "id", "project_id", "name", "description", MAX("project_id") FROM "missions"
+GROUP BY "id";`
+pool.query( sqlText )
+.then ( result => {
+    res.send( result.rows )
+}).catch ( error => {
+    res.sendStatus( 500 );
+})
 }); // end transaction
 
 /**

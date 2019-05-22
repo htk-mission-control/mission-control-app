@@ -9,4 +9,4 @@ const selectedMissionsReducer = (state = [], action) => {
   
   // user will be on the redux state at:
   // state.user
-  export default selectedMissions;
+  export default selectedMissionsReducer;
