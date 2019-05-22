@@ -19,11 +19,6 @@ class HomeCoach extends Component {
         this.props.history.push('/coach/teams');
     }
 
-    // in return, I made buttons as divs and added class "route-link" 
-    // which I'll add to other similar buttons (big buttons that link to other routes)
-
-    // Will test routes when merged with branch containing protected routes
-
     render(){
         return(
             <div>

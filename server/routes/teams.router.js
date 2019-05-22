@@ -27,4 +27,43 @@ router.post('/', rejectUnauthenticated, (req, res) => {
 
 });
 
+// PUT to update team_access on toggle clicks
+router.put( `/`, rejectUnauthenticated, (req, res) => {
+    let team_id = req.body.team_id;
+    let access = req.body.permission;
+    console.log( `in update access:`, access, team_id );
+    
+    let sqlText = `UPDATE "teams" SET "team_access" = $1 WHERE "id" = $2;`;
+    let newAccess;
+
+    if( access === 'false' ){
+        newAccess = true;
+        console.log( `newAccess:`, newAccess );
+
+        pool.query( sqlText, [newAccess, team_id] )
+            .then((response) => {
+                console.log( `it works!` );
+                res.sendStatus(200);
+            })
+            .catch((error) => {
+                console.log( `Couldn't update team access.`, error );
+                res.sendStatus(500);
+            })
+
+    } else if(access === 'true') {
+        newAccess = false;
+        console.log( `newAccess:`, newAccess );
+
+        pool.query( sqlText, [newAccess, team_id] )
+            .then((response) => {
+                console.log( `it works!` );
+                res.sendStatus(200);
+            })
+            .catch((error) => {
+                console.log( `Couldn't update team access.`, error );
+                res.sendStatus(500);
+            })
+    }
+})
+
 module.exports = router;
