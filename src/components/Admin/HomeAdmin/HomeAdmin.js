@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-// import ProjectSnap from './ProjectSnap/ProjectSnap';
 
 import './HomeAdmin.css'
 
@@ -61,6 +60,11 @@ class HomeAdmin extends Component {
                 published: false,
             }
         });
+        // this.props.history.push(`/admin/projects?projectId=${event.target.value}`)
+    }
+
+    handleClickMission = (event) => {
+        this.props.history.push(`/admin/projects?projectId=${event.target.value}`)
     }
 
     render() {
@@ -68,7 +72,7 @@ class HomeAdmin extends Component {
             <div>
                 <h1>Welcome, {this.props.reduxState.user.username}!</h1>
                 {/* {JSON.stringify(this.props.reduxState)} */}
-                {JSON.stringify(this.state.newProject)}
+                {/* {JSON.stringify(this.state.newProject)} */}
                 <p>Click on a project to view details or create a new project below.</p>
                 <div>
                     <h2>Projects:</h2>
@@ -90,7 +94,7 @@ class HomeAdmin extends Component {
                                 <h3>{project.name}, {project.year}</h3>
                                 <h4>The Project</h4>
                                 <p>{project.description}</p>
-                                <button>View Mission</button>
+                                <button value={project.id} onClick={this.handleClickMission}>View Mission</button>
                             </div>
                         )
                     })}

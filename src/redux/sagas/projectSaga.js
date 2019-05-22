@@ -14,7 +14,9 @@ function* getProjects(action) {
 
 function* addProject(action) {
     try {
-        yield axios.post(`/api/projects`, action.payload);
+        const response = yield axios.post(`/api/projects`, action.payload);
+        console.log('new project id:', response);
+        
         yield put({ type: 'GET_ALL_PROJECTS' })
     }
     catch (error) {

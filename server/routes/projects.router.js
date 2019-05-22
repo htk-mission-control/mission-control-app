@@ -7,7 +7,7 @@ const router = express.Router();
  * GET route template
  */
 router.get('/', (req, res) => {
-    let sqlText = (`SELECT * FROM "projects";`)
+    let sqlText = (`SELECT * FROM "projects" ORDER BY "id" DESC;`)
     pool.query(sqlText)
         .then((results) => {
             res.send(results.rows);
@@ -20,14 +20,14 @@ router.get('/', (req, res) => {
 
 router.post('/', (req, res) => {
     let newProject = req.body;
-    let currentDate = moment().format('MMMM DD YYYY')
+    let currentDate = moment().format()
     console.log('req.body post', newProject);
     
     let sqlText = (`INSERT INTO "projects" ("name", "description", "year", "published", "date_created")
-                    VALUES ($1, $2, $3, $4, $5);`);
+                    VALUES ($1, $2, $3, $4, $5) RETURNING id;`);
     pool.query(sqlText, [newProject.name, newProject.description, newProject.year, newProject.published, currentDate])
     .then((result) => {
-        res.sendStatus(200);
+        res.send(result.row);
     })
     .catch((error) => {
         console.log('Error adding new project', error);
