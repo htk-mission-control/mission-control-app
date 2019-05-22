@@ -42,11 +42,8 @@ router.post('/register', (req, res, next) => {
     .then(() => res.sendStatus(201))
     .catch(() => res.sendStatus(500));
   } else {
-    // POST user with 'team' security clearance.
-    const queryText = 'INSERT INTO "users" (username, password, security_clearance) VALUES ($1, $2, $3) RETURNING id';
-    pool.query(queryText, [username, password, 3])
-    .then(() => res.sendStatus(201))
-    .catch(() => res.sendStatus(500));
+    // send 500 error
+    res.sendStatus(500);
   }
 });
 
