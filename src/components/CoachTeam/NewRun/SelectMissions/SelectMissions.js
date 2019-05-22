@@ -2,13 +2,34 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 class SelectMissions extends Component {
-    componentDidMount() {
+
+    state = {}
+
+    componentDidMount () {
         this.props.dispatch({ type: 'GET_ALL_MISSIONS' })
     }
 
-    selectAllMissions() {
-        console.log(`this is selectAllMissions`);
-    }
+    // componentWillUpdate () {
+
+    // }
+
+    // selectAllMissions () {
+    //     console.log(`this is selectAllMissions`);
+    // }
+
+    // setSelectedMissions () {
+    //     this.props.dispatch({ type: 'SET_SELECTED_MISSIONS', payload: this.state })
+    // }
+
+    // updateMissions (id) {
+    //     this.setState({
+    //         ...this.state,
+    //         mission : {
+    //             missionId: id,
+    //             checked: !check
+    //         }
+    //     })
+    // }
 
     // number = i + 1;
 
@@ -22,12 +43,12 @@ class SelectMissions extends Component {
 
                 <div>
                 <label>{ this.number }{ mission.name }</label>
-                <input type='checkbox' value={ mission.name } />
+                <input type='checkbox' value={ mission } onClick={ this.updateMissions( mission.id )} checked=this.state.checked/>
                 </div>
             )} */}
                 </div>
-                <button onClick={this.selectAllMissions}>Select all Missions</button>
-                <button onClick={this.setSelectedMissions}>Select Run Team</button>
+                <button onClick={ this.selectAllMissions }>Select all Missions</button>
+                <button onClick={ this.setSelectedMissions }>Select Run Team</button>
             </form>
 
         )
