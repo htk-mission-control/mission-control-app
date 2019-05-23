@@ -4,17 +4,30 @@ import { connect } from 'react-redux';
 class SelectMissions extends Component {
 
     state = {
+        runName: '',
         selectedMissions: this.props.reduxState.missions,
-        allSelected: false
+        allSelected: false,
+    }
+
+    handleChangeFor = event => {
+        this.setState({
+            runName: event.target.value,
+        })
     }
     
-    selectAllMissions (missions) {
+    selectAllMissions ( missions ) {
         console.log(`this is selectAllMissions`);
         console.log(`missions props`, missions);
-        
         let newSelection = [...missions];
-        for( let mission of newSelection ){
-            mission.selected = !mission.selected;
+        if( this.state.allSelected === false ){
+            for( let mission of newSelection ){
+                mission.selected = true;
+            }
+        }
+        if( this.state.allSelected === true ){
+            for( let mission of newSelection ) {
+                mission.selected = false;
+            }
         }
         this.setState({
             ...this.state,
@@ -54,16 +67,18 @@ class SelectMissions extends Component {
             missionList =  null;
         }
         return (
-            <form>
-                <input type='text' placeholder='Run Name' />
-                {/* {JSON.stringify(this.state.selectedMissions)} */}
-                <h2>Select Missions</h2>
-                <div className='mission-selection'>
-                    {missionList}
-                </div>
+            <div>
+                <form>
+                    <input type='text' placeholder='Run Name' value={this.state.runName} required onChange={this.handleChangeFor} />
+                    {JSON.stringify(this.state)}
+                    <h2>Select Missions</h2>
+                    <div className='mission-selection'>
+                        {missionList}
+                    </div>
+                    <button onClick={this.setSelectedMissions}>Select Run Team</button>
+                </form>
                 <button onClick={() => { this.selectAllMissions(this.props.reduxState.missions) }}>{this.state.allSelected === false ? 'Select All Missions' : 'Deselect All Missions'}</button>
-                <button onClick={ this.setSelectedMissions }>Select Run Team</button>
-            </form>
+            </div>
 
         )
     }
