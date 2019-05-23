@@ -8,12 +8,15 @@ const router = express.Router();
  */
 router.get('/members', rejectUnauthenticated, (req, res) => {
     console.log(`team members user id`, req.user);
-    let sqlText = `SELECT "team_members"."team_id", "team_members"."name", "users"."id" FROM "team_members"
+    let sqlText = `SELECT "team_members"."id" AS "member_id", "team_members"."team_id", "team_members"."name", "users"."id" AS "user_id" FROM "team_members"
                    LEFT JOIN "teams" ON "team_members"."team_id" = "teams"."id"
                    LEFT JOIN "users" ON "teams"."team_user_id" = "users"."id" OR "teams"."coach_user_id" = "users"."id"
-                   WHERE "users"."id"=$1;`;
+                   WHERE "users"."id"=$1
+                   ORDER BY "team_members"."id";`;
     pool.query(sqlText, [req.user.id])
         .then(results => {
+            console.log(`result.rows in team member get`, results.rows);
+            
             res.send(results.rows);
         })
         .catch((error) => {

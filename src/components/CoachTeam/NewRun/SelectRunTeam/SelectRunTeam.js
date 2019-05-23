@@ -34,27 +34,27 @@ class SelectRunTeam extends Component {
     render(){
         return(
             <div>
-                {JSON.stringify(this.state)}
+                {/* {JSON.stringify(this.state)} */}
                 <form>
                     <label>Driver:</label>
                     <select value={this.state.runTeam.driverId} onChange={this.handleChangeFor('driverId')}>
                         <option value='coach' key='coach'>Coach</option>
                         {this.props.reduxState.teamMembers.map((teamMember, i) => 
-                            <option value={teamMember.id} key={i}>{teamMember.name}</option>
+                            <option value={teamMember.member_id} key={i}>{teamMember.name}</option>
                         )}
                     </select>
                     <label>Assistant:</label>
                     <select value={this.state.runTeam.assistantId} onChange={this.handleChangeFor('assistantId')}>
                         <option value='coach' key='coach'>Coach</option>
                         {this.props.reduxState.teamMembers.map((teamMember, i) =>
-                            <option value={teamMember.id} key={i}>{teamMember.name}</option>
+                            <option value={teamMember.member_id} key={i}>{teamMember.name}</option>
                         )}
                     </select>
                     <label>Scorekeeper:</label>
                     <select value={this.state.runTeam.scorekeeperId} onChange={this.handleChangeFor('scorekeeperId')}>
                         <option value='coach' key='coach'>Coach</option>
                         {this.props.reduxState.teamMembers.map((teamMember, i) =>
-                            <option value={teamMember.id} key={i}>{teamMember.name}</option>
+                            <option value={teamMember.member_id} key={i}>{teamMember.name}</option>
                         )}
                     </select>
                     <button onClick={this.handleSubmit}>Start</button>
