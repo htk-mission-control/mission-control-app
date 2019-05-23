@@ -6,6 +6,7 @@ import projects from './projectsReducer';
 import missions from './allMissionsReducer';
 import selectedMissions from './selectedMissionsReducer';
 import allTeams from './allTeamsReducer';
+import teamMembers from './teamMembersReducer';
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -17,10 +18,11 @@ const rootReducer = combineReducers({
   errors, // contains registrationMessage and loginMessage
   loginMode, // will have a value of 'login' or 'registration' to control which screen is shown
   user, // will have an id and username if someone is logged in
-  projects,
-  missions,
-  selectedMissions,
+  projects, // holds all projects
+  missions, // holds all missions
+  selectedMissions, // holds missions selected for run creation
   allTeams, // holds teams with specific coach/user id
+  teamMembers, // holds team members for logged in user
 });
 
 export default rootReducer;

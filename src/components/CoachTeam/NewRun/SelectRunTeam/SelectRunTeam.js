@@ -7,6 +7,11 @@ class SelectRunTeam extends Component {
         assistant: '',
         scorekeeper: ''
     }
+
+    componentDidMount () {
+        this.props.dispatch({ type: 'GET_TEAM_MEMBERS' });
+    }
+
     render(){
         return(
             <div>
