@@ -53,6 +53,40 @@ router.post( '/penalty', rejectUnauthenticated, (req, res) => {
         })
 })
 
+// get penalty data for edit
+router.get( `/penalty/:id`, rejectUnauthenticated, (req, res) => {
+    let penalty_id = req.params.id;
+
+    let sqlText = `SELECT * FROM "penalties" WHERE "id" = $1;`;
+    pool.query( sqlText, [penalty_id] )
+        .then( (result) => {
+            res.send(result.rows[0]);
+        })
+        .catch( (error) => {
+            console.log( `Couldn't get penalty data.`, error );
+            res.sendStatus(500);
+        })
+})
+
+// update edited penalty
+router.put( `/penalty`, rejectUnauthenticated, (req, res) => {
+    let penalty = req.body;
+
+    let sqlText = `UPDATE "penalties" 
+                    SET "name" = $1, "description" = $2, 
+                    "points" = $3, "max" = $4 
+                    WHERE "id" = $5;`;
+    pool.query( sqlText, 
+        [penalty.name, penalty.description, penalty.points, penalty.max, penalty.penalty_id] )
+        .then( (response) => {
+            res.sendStatus(200);
+        })
+        .catch( (error) => {
+            console.log( `Couldn't update penatly.`, error );
+            res.sendStatus(500);
+        })
+})
+
 /**
  * POST route template
  */

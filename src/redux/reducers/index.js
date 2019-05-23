@@ -4,6 +4,7 @@ import loginMode from './loginModeReducer';
 import user from './userReducer';
 import projects from './projectsReducer';
 import allTeams from './allTeamsReducer';
+import penalty from './penaltyReducer';
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -17,6 +18,7 @@ const rootReducer = combineReducers({
   user, // will have an id and username if someone is logged in
   projects,
   allTeams, // holds teams with specific coach/user id
+  penalty, 
 });
 
 export default rootReducer;

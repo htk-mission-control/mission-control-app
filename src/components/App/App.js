@@ -22,6 +22,7 @@ import ViewProject from '../Admin/ViewProject/ViewProject';
 import './App.css';
 import ProtectedCoachAndTeams from '../ProtectedRoutes/ProtectedCoachAndTeams/ProtectedCoachAndTeams';
 import AddPenalty from '../Admin/ViewProject/Penalty/AddPenalty';
+import EditPenalty from '../Admin/ViewProject/Penalty/EditPenalty';
 
 class App extends Component {
   componentDidMount() {
@@ -66,6 +67,11 @@ class App extends Component {
               // exact
               path="/admin/projects/add-penalty"
               component={AddPenalty}
+            />
+            <ProtectedAdmin
+              // exact
+              path="/admin/projects/edit-penalty"
+              component={EditPenalty}
             />
             <Route render={() => <h1>404</h1>} />
           </Switch>

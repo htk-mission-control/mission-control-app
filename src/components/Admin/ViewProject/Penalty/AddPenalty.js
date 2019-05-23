@@ -36,31 +36,33 @@ class AddPenalty extends Component {
             <div>
                 <h2>Add Penalty</h2>
 
-                <label>Name</label>
-                <input type="text" placeholder="Penalty Name"
-                    name="name"
-                    value={this.state.name}
-                    onChange={this.handleChange} />
-                <br/>
-                <label>Description</label>
-                <input type="text" placeholder="Penalty Description"
-                    name="description"
-                    value={this.state.description}
-                    onChange={this.handleChange} />
-                <br/><br/>
-                
-                <label>Max number of penalties</label>
-                <input type="number" placeholder="1" min="1"
-                    name="max"
-                    value={this.state.max}
-                    onChange={this.handleChange} />
-                <br/>
-                <label>Points</label>
-                <input type="number" placeholder="-1" max="-1"
-                    name="points"
-                    value={this.state.points}
-                    onChange={this.handleChange} />
-                <br/>
+                <div>
+                    <label>Name</label>
+                    <input type="text" placeholder="Penalty Name"
+                        name="name"
+                        value={this.state.name}
+                        onChange={this.handleChange} />
+                    <br/>
+                    <label>Description</label>
+                    <input type="text" placeholder="Penalty Description"
+                        name="description"
+                        value={this.state.description}
+                        onChange={this.handleChange} />
+                    <br/><br/>
+                    
+                    <label>Max number of penalties</label>
+                    <input type="number" placeholder="1" min="1"
+                        name="max"
+                        value={this.state.max}
+                        onChange={this.handleChange} />
+                    <br/>
+                    <label>Points</label>
+                    <input type="number" placeholder="-1" max="-1"
+                        name="points"
+                        value={this.state.points}
+                        onChange={this.handleChange} />
+                    <br/>
+                </div>
 
                 <button onClick={this.routeBack} >Back</button>
                 <button onClick={this.savePenalty} >Save Penalty</button>
