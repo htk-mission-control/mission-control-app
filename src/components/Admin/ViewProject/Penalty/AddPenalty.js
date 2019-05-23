@@ -5,7 +5,7 @@ import {withRouter} from 'react-router-dom';
 class AddPenalty extends Component {
 
     state = {
-        project_id: this.props.reduxState.projects.id,
+        project_id: this.props.reduxState.projects.id || 1,
         name: '',
         description: '',
         max: 1,
