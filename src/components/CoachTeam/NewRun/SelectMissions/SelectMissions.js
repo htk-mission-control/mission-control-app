@@ -4,18 +4,25 @@ import { connect } from 'react-redux';
 class SelectMissions extends Component {
 
     state = {
-        selectedMissions: this.props.reduxState.missions
+        selectedMissions: this.props.reduxState.missions,
+        allSelected: false
     }
     
-    selectAllMissions () {
+    selectAllMissions (missions) {
         console.log(`this is selectAllMissions`);
-        let newSelection = [...this.props.reduxState.missions];
-        for( mission of newSelection ){
-            mission.selected = true;
+        console.log(`missions props`, missions);
+        
+        // console.log(`missionsReducer`, this.props.reduxState.missions);
+        // console.log(`current state`, this.state.selectedMissions);
+        
+        let newSelection = [...missions];
+        for( let mission of newSelection ){
+            mission.selected = !mission.selected;
         }
         this.setState({
             ...this.state,
-            selectedMissions: newSelection
+            selectedMissions: newSelection,
+            allSelected: !this.state.allSelected
         })
 
     }
@@ -57,7 +64,8 @@ class SelectMissions extends Component {
                 <div className='mission-selection'>
                     {missionList}
                 </div>
-                <button onClick={ this.selectAllMissions }>Select all Missions</button>
+                <button onClick={() => { this.selectAllMissions(this.props.reduxState.missions) }}>{this.state.allSelected === false ? 'Select All Missions' : 'Deselect All Missions'}</button>
+                {/* {this.renderSelectAllButton()} */}
                 <button onClick={ this.setSelectedMissions }>Select Run Team</button>
             </form>
 
