@@ -4,6 +4,26 @@ const pool = require('../modules/pool');
 const router = express.Router();
 
 /**
+ * GET team members by team id
+ */
+router.get('/members', rejectUnauthenticated, (req, res) => {
+    console.log(`team members user id`, req.user);
+    let sqlText = `SELECT "team_members"."team_id", "team_members"."name", "users"."id" FROM "team_members"
+                   LEFT JOIN "teams" ON "team_members"."team_id" = "teams"."id"
+                   LEFT JOIN "users" ON "teams"."team_user_id" = "users"."id" OR "teams"."coach_user_id" = "users"."id"
+                   WHERE "users"."id"=$1;`;
+    pool.query(sqlText, [req.user.id])
+        .then(results => {
+            res.send(results.rows);
+        })
+        .catch((error) => {
+            console.log(`Couldn't get team members for logged in user.`, error);
+            res.sendStatus(500);
+        })
+});
+
+
+/**
  * GET teams by coach id
  */
 router.get('/:id', rejectUnauthenticated, (req, res) => {
@@ -20,23 +40,6 @@ router.get('/:id', rejectUnauthenticated, (req, res) => {
         })
 });
 
-/**
- * GET team members by team id
- */
-router.get('/members', rejectUnauthenticated, (req, res) => {
-    console.log(`team members req`, req);
-    
-
-    // let sqlText = `SELECT * FROM "teams" WHERE "coach_user_id" = $1`;
-    // pool.query(sqlText, [coachId])
-    //     .then(results => {
-    //         res.send(results.rows);
-    //     })
-    //     .catch((error) => {
-    //         console.log(`Couldn't get teams by coach_user_id.`, req.params);
-    //         res.sendStatus(500);
-    //     })
-});
 
 /**
  * POST route template

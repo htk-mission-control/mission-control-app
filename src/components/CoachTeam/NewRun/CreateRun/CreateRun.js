@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import SelectMissions from '../SelectMissions/SelectMissions';
+import SelectRunTeam from '../SelectRunTeam/SelectRunTeam';
 
 class CreateRun extends Component {
 
@@ -12,6 +13,7 @@ class CreateRun extends Component {
         return (
             <div>
                 <SelectMissions />
+                <SelectRunTeam />
             </div>
         )
     }
