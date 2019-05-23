@@ -12,9 +12,6 @@ class SelectMissions extends Component {
         console.log(`this is selectAllMissions`);
         console.log(`missions props`, missions);
         
-        // console.log(`missionsReducer`, this.props.reduxState.missions);
-        // console.log(`current state`, this.state.selectedMissions);
-        
         let newSelection = [...missions];
         for( let mission of newSelection ){
             mission.selected = !mission.selected;
@@ -59,13 +56,12 @@ class SelectMissions extends Component {
         return (
             <form>
                 <input type='text' placeholder='Run Name' />
-                {JSON.stringify(this.state.selectedMissions)}
+                {/* {JSON.stringify(this.state.selectedMissions)} */}
                 <h2>Select Missions</h2>
                 <div className='mission-selection'>
                     {missionList}
                 </div>
                 <button onClick={() => { this.selectAllMissions(this.props.reduxState.missions) }}>{this.state.allSelected === false ? 'Select All Missions' : 'Deselect All Missions'}</button>
-                {/* {this.renderSelectAllButton()} */}
                 <button onClick={ this.setSelectedMissions }>Select Run Team</button>
             </form>
 
