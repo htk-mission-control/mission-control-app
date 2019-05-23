@@ -5,6 +5,7 @@ import user from './userReducer';
 import projects from './projectsReducer';
 import missions from './allMissionsReducer';
 import selectedMissions from './selectedMissionsReducer';
+import projectMission from './missionReducer';
 import allTeams from './allTeamsReducer';
 import projectDetails from './projectDetailsReducer';
 import penalties from './penaltiesReducer';
@@ -22,6 +23,7 @@ const rootReducer = combineReducers({
   projects,
   projectDetails,
   penalties,
+  projectMission,
   missions,
   selectedMissions,
   allTeams, // holds teams with specific coach/user id

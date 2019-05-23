@@ -8,6 +8,7 @@ class ViewProject extends Component {
         projectId: 0,
         projectDetails: {},
         projectPenalties: [],
+        projectMissions: [],
     }
 
     componentDidMount() {
@@ -18,6 +19,8 @@ class ViewProject extends Component {
         })
         this.props.dispatch({ type: 'GET_PROJECT_DETAILS', payload: searchObject });
         this.props.dispatch({ type: 'GET_PENALTIES', payload: searchObject });
+        this.props.dispatch({ type: 'GET_MISSIONS', payload: searchObject });
+
     }
 
     componentDidUpdate(prevProps) {
@@ -31,13 +34,34 @@ class ViewProject extends Component {
                 projectPenalties: this.props.reduxState.penalties
             })
         };
+        if (this.props.reduxState.projectMission !== prevProps.reduxState.projectMission) {
+            this.setState({
+                projectMissions: this.props.reduxState.projectMission
+            })
+        };
+    }
+
+    groundControl = () => {
+        let missionArr = this.state.projectMissions;
+        let newArr = [];
+        let count = 0;
+        let test = [];
+        for (let count = 0; count < missionArr.length; count++) {
+            test = missionArr.filter(x => x.mission_id == count) 
+            console.log('test', test);
+                          
+            newArr.push(test)
+            
+        }
+        console.log('newArr', newArr);
+        
     }
 
     render() {
         return (
             <div>
-                {/* {JSON.stringify(this.props.reduxState.projectDetails)} */}
-                {JSON.stringify(this.state.projectPenalties)}
+                {JSON.stringify(this.props.reduxState.projectMission)}
+                {/* {JSON.stringify(this.state.projectPenalties)} */}
                 {/* {JSON.stringify(this.state.projectDetails)} */}
                 <h1>{this.state.projectDetails.name}</h1>
                 <h2>The Project</h2>
@@ -45,7 +69,7 @@ class ViewProject extends Component {
                 <div>
                     <h2>Penalties</h2>
                     <button>Add Penalty</button>
-                    <hr/>
+                    <hr />
                     {this.state.projectPenalties.map(penalty => {
                         return (
                             <div key={penalty.id}>
@@ -58,13 +82,24 @@ class ViewProject extends Component {
                             </div>
                         )
                     })}
-                    <hr/>
+                    <hr />
                 </div>
                 <div>
                     <h2>Missions</h2>
                     <button>Add Mission</button>
-                    <hr/>
+                    <hr />
+                    {this.state.projectMissions.map( (mission, i)=> {
+                        return (
+                            <div key={i}>
+                                <h5>{mission.mission_name}</h5>
+                                <p>{mission.description}</p>
+                                <p>{mission.name}</p>
+                                <p>{mission.points}</p>
+                            </div>
+                        )
+                    })}
                 </div>
+                {this.groundControl()}
             </div>
         )
     }

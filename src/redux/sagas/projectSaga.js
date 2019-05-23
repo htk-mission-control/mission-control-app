@@ -34,6 +34,16 @@ function* getPenalties(action) {
     }
 }
 
+function* getMissions(action) {
+    try {
+        const response = yield axios.get(`/api/projects/missions/${action.payload.projectId}`);
+        yield put({ type: 'SET_MISSIONS', payload: response.data })
+    }
+    catch (error) {
+        console.log(`Couldn't get penalties info`);
+    }
+}
+
 function* addProject(action) {
     try {
         const response = yield axios.post(`/api/projects`, action.payload);
@@ -49,7 +59,8 @@ function* addProject(action) {
 function* projectSaga() {
     yield takeLatest('GET_ALL_PROJECTS', getAllProjects);
     yield takeLatest('GET_PROJECT_DETAILS', getProjectDetails);
-    yield takeLatest('GET_PENALTIES', getPenalties)
+    yield takeLatest('GET_PENALTIES', getPenalties);
+    yield takeLatest('GET_MISSIONS', getMissions);
     yield takeLatest('ADD_PROJECT', addProject);
 }
 
