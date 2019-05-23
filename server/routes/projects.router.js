@@ -18,6 +18,30 @@ router.get('/', (req, res) => {
         })
 });
 
+router.get('/:id', (req, res) => {
+    let sqlText = (`SELECT * FROM "projects" WHERE "id" = $1;`)
+    pool.query(sqlText, [req.params.id])
+        .then((results) => {
+            res.send(results.rows[0]);
+        })
+        .catch((error) => {
+            console.log('Something went wrong getting project details', error);
+            res.sendStatus(500);
+        })
+});
+
+router.get('/penalties/:id', (req, res) => {
+    let sqlText = (`SELECT * FROM "penalties" WHERE "project_id" = $1;`)
+    pool.query(sqlText, [req.params.id])
+        .then((results) => {
+            res.send(results.rows);
+        })
+        .catch((error) => {
+            console.log('Something went wrong getting penalty info', error);
+            res.sendStatus(500);
+        })
+});
+
 router.post('/', (req, res) => {
     let newProject = req.body;
     let currentDate = moment().format()
