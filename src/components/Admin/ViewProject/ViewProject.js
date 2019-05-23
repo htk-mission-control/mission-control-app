@@ -20,7 +20,6 @@ class ViewProject extends Component {
         this.props.dispatch({ type: 'GET_PROJECT_DETAILS', payload: searchObject });
         this.props.dispatch({ type: 'GET_PENALTIES', payload: searchObject });
         this.props.dispatch({ type: 'GET_MISSIONS', payload: searchObject });
-
     }
 
     componentDidUpdate(prevProps) {
@@ -44,25 +43,46 @@ class ViewProject extends Component {
     groundControl = () => {
         let missionArr = this.state.projectMissions;
         let newArr = [];
-        let count = 0;
         let test = [];
-        for (let count = 0; count < missionArr.length; count++) {
-            test = missionArr.filter(x => x.mission_id == count) 
-            console.log('test', test);
-                          
-            newArr.push(test)
+
+        //Find a way to stop loop other than #100
+        for (let count = 0; count < 100; count++) {
+            test = missionArr.filter(x => x.mission_id == count)
+            
+            if (test.length !== 0 ) {
+            console.log('test length', test.length);
+
+                newArr.push(test)
+            }       
             
         }
         console.log('newArr', newArr);
-        
+        return (
+                newArr.map( (mission, i)  => {
+                    return (
+                        <div key={i}>
+                            <h3>Mission {i + 1}: {mission[0].mission_name}</h3>
+                            <h4>{mission[0].description}</h4>
+                            {mission.map( mission => {
+                                return (
+                                    <div>
+                                        <h5>Goal: {mission.name} = {mission.points} points</h5>
+                                    </div>
+                                )
+                            })}
+                        </div>
+                    )
+                })   
+        )
     }
 
     render() {
         return (
             <div>
-                {JSON.stringify(this.props.reduxState.projectMission)}
+                {/* {JSON.stringify(this.props.reduxState.projectMission)} */}
                 {/* {JSON.stringify(this.state.projectPenalties)} */}
                 {/* {JSON.stringify(this.state.projectDetails)} */}
+                {JSON.stringify(this.state.projectMissions)}
                 <h1>{this.state.projectDetails.name}</h1>
                 <h2>The Project</h2>
                 <p>{this.state.projectDetails.description}</p>
@@ -88,18 +108,9 @@ class ViewProject extends Component {
                     <h2>Missions</h2>
                     <button>Add Mission</button>
                     <hr />
-                    {this.state.projectMissions.map( (mission, i)=> {
-                        return (
-                            <div key={i}>
-                                <h5>{mission.mission_name}</h5>
-                                <p>{mission.description}</p>
-                                <p>{mission.name}</p>
-                                <p>{mission.points}</p>
-                            </div>
-                        )
-                    })}
+                    {this.groundControl()}
                 </div>
-                {this.groundControl()}
+               
             </div>
         )
     }
