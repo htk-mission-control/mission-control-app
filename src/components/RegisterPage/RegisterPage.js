@@ -5,10 +5,31 @@ class RegisterPage extends Component {
   state = {
     username: '',
     password: '',
+    confirmPassword: '',
+    access_code: '',
   };
+
+  passwordConfirmed = ( password ) => {
+    // 1. if the password matches, return true
+    // 2. if the password doesn't match, return false
+    if ( this.state.password === this.state.confirmPassword ) {
+      return true;
+    } else {
+      return false;
+    }
+  }
 
   registerUser = (event) => {
     event.preventDefault();
+
+    console.log( 'passwordConfirmed()', this.passwordConfirmed() );
+
+    // if the password input doesn't match the confirm password input
+    if ( this.passwordConfirmed() ===  false ) {
+      // cancel the dispatch
+      this.props.dispatch({type: 'CONFIRMATION_ERROR'});
+      return;
+    }
 
     if (this.state.username && this.state.password) {
       this.props.dispatch({
@@ -16,6 +37,7 @@ class RegisterPage extends Component {
         payload: {
           username: this.state.username,
           password: this.state.password,
+          access_code: this.state.access_code,
         },
       });
     } else {
@@ -53,6 +75,7 @@ class RegisterPage extends Component {
               />
             </label>
           </div>
+
           <div>
             <label htmlFor="password">
               Password:
@@ -64,6 +87,31 @@ class RegisterPage extends Component {
               />
             </label>
           </div>
+
+          <div>
+            <label htmlFor="password">
+              Confirm Password:
+              <input
+                type="password"
+                name="confirmPassword"
+                value={this.state.confirmPassword}
+                onChange={this.handleInputChangeFor('confirmPassword')}
+              />
+            </label>
+          </div>
+
+          <div>
+            <label htmlFor="access_code">
+              Access Code:
+              <input
+                type="number"
+                name="access_code"
+                value={this.state.access_code}
+                onChange={this.handleInputChangeFor('access_code')}
+              />
+            </label>
+          </div>
+
           <div>
             <input
               className="register"

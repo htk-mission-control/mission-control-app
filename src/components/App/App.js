@@ -18,6 +18,9 @@ import AboutPage from '../AboutPage/AboutPage';
 import UserPage from '../UserPage/UserPage';
 import HomeAdmin from '../Admin/HomeAdmin/HomeAdmin';
 import CreateRun from '../CoachTeam/NewRun/CreateRun/CreateRun';
+import HomeTeam from '../CoachTeam/HomeTeam/HomeTeam';
+import ViewProject from '../Admin/ViewProject/ViewProject';
+
 import './App.css';
 import ProtectedCoachAndTeams from '../ProtectedRoutes/ProtectedCoachAndTeams/ProtectedCoachAndTeams';
 
@@ -56,8 +59,19 @@ class App extends Component {
               component={HomeAdmin}
             />
             <ProtectedAdmin
-            exact path="/practice-run"
-            component={CreateRun}
+              exact 
+              path="/practice-run"
+              component={CreateRun}
+            />
+            <ProtectedAdmin
+              exact
+              path="/admin/projects"
+              component={ViewProject}
+            />
+            <ProtectedTeams
+              exact
+              path="/team/home"
+              component={HomeTeam}
             />
             <Route render={() => <h1>404</h1>} />
           </Switch>
