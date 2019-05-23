@@ -3,6 +3,8 @@ import errors from './errorsReducer';
 import loginMode from './loginModeReducer';
 import user from './userReducer';
 import projects from './projectsReducer';
+import missions from './allMissionsReducer';
+import selectedMissions from './selectedMissionsReducer';
 import allTeams from './allTeamsReducer';
 import projectDetails from './projectDetailsReducer';
 import penalties from './penaltiesReducer';
@@ -20,6 +22,8 @@ const rootReducer = combineReducers({
   projects,
   projectDetails,
   penalties,
+  missions,
+  selectedMissions,
   allTeams, // holds teams with specific coach/user id
 });
 
