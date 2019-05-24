@@ -7,6 +7,7 @@ import missions from './allMissionsReducer';
 import selectedMissions from './selectedMissionsReducer';
 import allTeams from './allTeamsReducer';
 import teamMembers from './teamMembersReducer';
+import penalty from './penaltyReducer';
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -23,6 +24,7 @@ const rootReducer = combineReducers({
   selectedMissions, // holds missions selected for run creation
   allTeams, // holds teams with specific coach/user id
   teamMembers, // holds team members for logged in user
+  penalty, 
 });
 
 export default rootReducer;
