@@ -87,6 +87,84 @@ router.put( `/penalty`, rejectUnauthenticated, (req, res) => {
         })
 })
 
+// get goal types for adding/editing missions
+router.get( '/goalTypes', rejectUnauthenticated, (req, res) => {
+    let sqlText = `SELECT * FROM "goal_types" ORDER BY "id";`;
+
+    pool.query( sqlText )
+        .then( (result) => {
+            res.send(result.rows);
+        })
+        .catch( (error) => {
+            console.log( `Couldn't get goal types.`, error );
+            res.sendStatus(500);
+        })
+})
+
+// save mission data
+router.post( '/mission', rejectUnauthenticated, async(req, res) => {
+    console.log( 'in mission POST...' );
+    
+    const client = await pool.connect();
+    let mission = req.body;
+    let goals = mission.goals;
+
+    // let sqlText3 = `INSERT INTO "either_or" ("goal_id", "name", "points")
+    //                 VALUES ( $1, $2, $3 );`;
+    
+    try {
+        console.log( 'in mission POST try...' );
+        
+        await client.query('BEGIN');
+
+        let sqlText1 = `INSERT INTO "missions" ("project_id", "name", "description")
+                        VALUES ( $1, $2, $3 ) 
+                        RETURNING "id";`;
+
+        const id = await client.query( sqlText1, 
+            [mission.project_id, mission.name, mission.description]);
+
+        const missionId = id.rows[0].id;
+
+        for( let goal of goals ){
+            console.log( `in da looooop...`, goal );
+            
+            if(goal.type === '1'){
+                console.log( `in Yes/No..` );
+                
+                let sqlText2 = `INSERT INTO "goals" 
+                                ("mission_id", "goal_type_id", "name", "points")
+                                VALUES ( $1, $2, $3, $4 );`;
+                await client.query( sqlText2, [missionId, goal.type, goal.name, goal.points]);
+
+            } else if(goal.type === '2'){
+                console.log( `in E/O..` );
+                let sqlText2 = `INSERT INTO "goals" 
+                                ("mission_id", "goal_type_id")
+                                VALUES ( $1, $2);`;
+                const goalId = await client.query( sqlText2, [missionId, goal.type]);
+                // await client.query( sqlText3, [goalId[0].id,  ]);
+
+            } else if(goal.type === '3'){
+                console.log( `in How many..` );
+                let sqlText2 = `INSERT INTO "goals" 
+                                ("mission_id", "goal_type_id", "name", "points", "how_many_max", "how_many_min")
+                                VALUES ( $1, $2, $3, $4, $5, $6 );`;
+                await client.query( sqlText2, [missionId, goal.type, goal.name, goal.points, goal.max, goal.min]);
+            }
+        }
+
+        await client.query('COMMIT');
+        res.sendStatus(201);
+    } catch(error) {   
+        await client.query('ROLLBACK');
+        console.log( `Couldn't POST mission, goal data.`, error );
+        res.sendStatus(500);
+    } finally {
+        client.release()
+      }
+})
+
 /**
  * POST route template
  */

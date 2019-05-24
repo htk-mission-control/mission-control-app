@@ -7,6 +7,8 @@ import missions from './allMissionsReducer';
 import selectedMissions from './selectedMissionsReducer';
 import allTeams from './allTeamsReducer';
 import penalty from './penaltyReducer';
+import goalTypes from './goalTypesReducer';
+import goalOptions from './goalOptionReducer';
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -23,6 +25,8 @@ const rootReducer = combineReducers({
   selectedMissions,
   allTeams, // holds teams with specific coach/user id
   penalty, 
+  goalTypes,
+  goalOptions, // options for Either/Or goals
 });
 
 export default rootReducer;

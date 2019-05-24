@@ -6,6 +6,7 @@ import EitherOr from './EitherOr';
 class AddMission extends Component {
 
     state = {
+        project_id: this.props.reduxState.projects.id || 1,
         name: '',
         description: '',
         goalCount: 1,
@@ -15,6 +16,10 @@ class AddMission extends Component {
                 type: '',
             }
         ]
+    }
+
+    componentDidMount(){
+        this.props.dispatch( {type: 'GET_GOAL_TYPES'} );
     }
 
     handleChange = (event) => {
@@ -33,7 +38,7 @@ class AddMission extends Component {
                 ...this.state.goals,
                 {
                     goal: this.state.goalCount + 1,
-                    type: 'Goal Type',
+                    type: '',
                 }
             ]
         })
@@ -51,14 +56,15 @@ class AddMission extends Component {
         })
     }
 
+    handleSave = () => {
+        this.props.dispatch( {type: 'ADD_MISSION', payload: this.state} );
+    }
 
     render() {
-        let goalList;
-        if( this.state.goalCount > 0 ){
-            goalList = this.state.goals.map( (goal, i) => {
-                
+        let goalList = 
+            this.state.goals.map( (goal, i) => {
                 let goalTypeForm;
-                if( goal.type === 'Yes/No' ){
+                if( goal.type === '1' ){
                     goalTypeForm = <div>
                         <label>Name</label>
                         <input type="text" name="name" placeholder="Goal Name"
@@ -68,12 +74,10 @@ class AddMission extends Component {
                             onChange={this.handleGoal(i, 'points')} />
                     </div>
 
-                } else if( goal.type === 'Either/Or' ){
-                    
+                } else if( goal.type === '2' ){
                     goalTypeForm = <EitherOr index={i} goal={goal} />
                     
-
-                } else if( goal.type === 'How Many' ){
+                } else if( goal.type === '3' ){
                     goalTypeForm = <div>
                         <label>Name</label>
                         <input type="text" name="name" placeholder="Goal Name"
@@ -97,22 +101,19 @@ class AddMission extends Component {
                 return <div key={i}>
                     <h3>Goal {goal.goal}</h3>
 
-                    <label>Type</label>
+                    <label>Type </label>
                     <select name="type" value={goal.type}
                         onChange={this.handleGoal(i, 'type')} >
                         <option value="" disabled
                             selected >Choose a Type</option>
-                        <option value="Yes/No">Yes/No</option>
-                        <option value="Either/Or">Either/Or</option>
-                        <option value="How Many">How Many</option>
+                        {this.props.reduxState.goalTypes.map( type => 
+                                <option key={type.id} value={type.id}>{type.type}</option>
+                            )}
                     </select>
                     
                     {goalTypeForm}
                 </div>
             })
-        } else {
-            goalList = null;
-        }
     
         return(
             <div>
