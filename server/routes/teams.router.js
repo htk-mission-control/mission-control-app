@@ -16,7 +16,7 @@ router.get('/members', rejectUnauthenticated, (req, res) => {
                    ORDER BY "team_members"."id";`;
     pool.query(sqlText, [req.user.id])
         .then(results => {
-            console.log(`result.rows in team member get`, results.rows);
+            // console.log(`result.rows in team member get`, results.rows);
             
             res.send(results.rows);
         })

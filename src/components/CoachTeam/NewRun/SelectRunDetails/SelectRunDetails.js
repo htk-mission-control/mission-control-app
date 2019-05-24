@@ -20,15 +20,11 @@ class SelectRunDetails extends Component {
         },
         // used for view toggle
         stepOne: true,
-        teamId: 0
     }
     
     componentDidMount() {
         const searchObject = qs.parse(this.props.location.search);
         console.log('searchObject', this.props.location.search.teamId);
-        this.setState({
-            teamId: searchObject.teamId,
-        })
         console.log(`user security clearance`, this.props.reduxState.user.security_clearance);
         
         // gets all the team members for logged in team
@@ -135,7 +131,20 @@ class SelectRunDetails extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: this.state })
+
+        const searchObject = qs.parse(this.props.location.search);
+        console.log('searchObject', this.props.location.search.teamId);
+        console.log(`user security clearance`, this.props.reduxState.user.security_clearance);
+
+        if (this.props.reduxState.user.security_clearance === 4) {
+            this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: this.state })
+        }
+        else if (this.props.reduxState.user.security_clearance === 2) {
+            this.props.dispatch({ type: 'SAVE_RUN_DETAILS_WITH_ID', payload: this.state, payload2: searchObject });
+        }
+
+
+
         console.log(`current runTeam state`, this.state.runTeam);
         console.log(`current run state`, this.state.newRun);
         // this.props.history.push('/practice-run/runScoring');
