@@ -135,7 +135,7 @@ class SelectRunDetails extends Component {
 
     handleSubmit = event => {
         event.preventDefault();
-        // this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: this.state.runTeam })
+        this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: this.state })
         console.log(`current runTeam state`, this.state.runTeam);
         console.log(`current run state`, this.state.newRun);
         // this.props.history.push('/practice-run/runScoring');
