@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-class SelectMissions extends Component {
+class SelectRunDetails extends Component {
 
     state = {
         newRun: {
@@ -183,4 +183,4 @@ const mapReduxStateToProps = reduxState => ({
     reduxState,
 })
 
-export default connect( mapReduxStateToProps )( SelectMissions );
+export default connect( mapReduxStateToProps )( SelectRunDetails );
