@@ -26,7 +26,7 @@ class AddPenalty extends Component {
             ...this.state,
             [event.target.name]: event.target.value,
         })
-        console.log( `new state:`, this.state );
+        // console.log( `new state:`, this.state );
     }
 
     routeBack = () => {

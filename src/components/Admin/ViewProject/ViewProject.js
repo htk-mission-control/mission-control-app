@@ -91,10 +91,10 @@ class ViewProject extends Component {
         }
         else if (mission.goal_type_id === 2) {
             return (
-                this.state.projectEitherOr.map( either => {
+                this.state.projectEitherOr.map(either => {
                     console.log('mission.goal_id', mission.goal_id);
                     console.log('either.goal_id', either.goal_id);
-                    
+
                     if (mission.goal_id == either.goal_id) {
                         return (
                             <div>
@@ -116,11 +116,11 @@ class ViewProject extends Component {
             )
         }
     }
-//-----TODO-----
-//finish OR render to DOM
+    //-----TODO-----
+    //finish OR render to DOM
     renderOrText = (either) => {
-        console.log('either length', either); 
-                return <h5>OR</h5>
+        console.log('either length', either);
+        return <h5>OR</h5>
     }
 
     handleDeletePenalty = (event) => {
@@ -129,7 +129,7 @@ class ViewProject extends Component {
             penaltyId: event.target.value,
         }
         // console.log('event.target.value', info);
-        this.props.dispatch({type: 'DELETE_PENALTY', payload: info})
+        this.props.dispatch({ type: 'DELETE_PENALTY', payload: info })
     }
 
     handleDeleteMission = (event) => {
@@ -138,11 +138,15 @@ class ViewProject extends Component {
             missionId: event.target.value
         }
         console.log('event.target.value', info);
-        this.props.dispatch({type: 'DELETE_MISSION', payload: info});
+        this.props.dispatch({ type: 'DELETE_MISSION', payload: info });
     }
 
     addPenalty = () => {
         this.props.history.push(`projects/add-penalty?projectId=${this.state.projectId}`);
+    }
+
+    editPenalty = (event) => {
+        this.props.history.push(`projects/edit-penalty?penaltyId=${event.target.value}`)
     }
 
     render() {
@@ -167,8 +171,8 @@ class ViewProject extends Component {
                                 <h3>{penalty.name}</h3>
                                 <p>Description: {penalty.description}</p>
                                 <p>Max Penalties: {penalty.max}</p>
-                                <p>Points: -{penalty.points}</p>
-                                <button>EDIT</button>
+                                <p>Points: {penalty.points}</p>
+                                <button value={penalty.id} onClick={this.editPenalty}>EDIT</button>
                                 <button value={penalty.id} onClick={this.handleDeletePenalty}>DELETE</button>
                             </div>
                         )
