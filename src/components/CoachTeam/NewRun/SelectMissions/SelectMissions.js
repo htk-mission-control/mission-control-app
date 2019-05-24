@@ -23,8 +23,10 @@ class SelectMissions extends Component {
 
     missionHandleChangeFor = event => {
         this.setState({
-            ...this.state.newRun,
-            runName: event.target.value,
+            newRun: {
+                ...this.state.newRun,
+                runName: event.target.value,
+            }
         })
     }
 
@@ -86,9 +88,15 @@ class SelectMissions extends Component {
     }
 
     changeView() {
-        this.setState({
-            stepOne: !this.state.stepOne,
-        })
+
+        if ( this.state.newRun.runName === '' ) { 
+            alert('You need to include a run name!');
+        }
+        else { 
+            this.setState({
+                stepOne: !this.state.stepOne,
+            })
+        }
 
     }
 
@@ -158,10 +166,6 @@ class SelectMissions extends Component {
                 </form>
             </div>
         )
-    }
-
-    runNameAlert = () => {
-        alert( 'You need to include a run name!')
     }
 
     render() {
