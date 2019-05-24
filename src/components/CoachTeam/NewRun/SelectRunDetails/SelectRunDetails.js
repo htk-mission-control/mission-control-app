@@ -137,10 +137,10 @@ class SelectRunDetails extends Component {
         console.log(`user security clearance`, this.props.reduxState.user.security_clearance);
 
         if (this.props.reduxState.user.security_clearance === 4) {
-            this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: this.state })
+            this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: {runDetails: this.state } })
         }
         else if (this.props.reduxState.user.security_clearance === 2) {
-            this.props.dispatch({ type: 'SAVE_RUN_DETAILS_WITH_ID', payload: this.state, payload2: searchObject });
+            this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: { runDetails: this.state, id: searchObject } });
         }
 
 
