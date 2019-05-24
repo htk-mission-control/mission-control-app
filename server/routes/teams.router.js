@@ -11,7 +11,7 @@ router.get('/members', rejectUnauthenticated, (req, res) => {
     let sqlText = `SELECT "team_members"."id" AS "member_id", "team_members"."team_id", "team_members"."name", "users"."id" AS "user_id" 
                    FROM "team_members"
                    LEFT JOIN "teams" ON "team_members"."team_id" = "teams"."id"
-                   LEFT JOIN "users" ON "teams"."team_user_id" = "users"."id" OR "teams"."coach_user_id" = "users"."id"
+                   LEFT JOIN "users" ON "teams"."team_user_id" = "users"."id"
                    WHERE "users"."id"=$1
                    ORDER BY "team_members"."id";`;
     pool.query(sqlText, [req.user.id])
@@ -31,12 +31,11 @@ router.get('/members', rejectUnauthenticated, (req, res) => {
  * GET team members by team id for coach
  */
 router.get('/members/:id', rejectUnauthenticated, (req, res) => {
-    console.log(`team members user id`, req.user);
-    let sqlText = `SELECT "team_members"."id" AS "member_id", "team_members"."team_id", "team_members"."name", "users"."id" AS "user_id" 
+    console.log(`team members user id`, req.params.id);
+    let sqlText = `SELECT "team_members"."id" AS "member_id", "team_members"."team_id", "team_members"."name"
                    FROM "team_members"
                    LEFT JOIN "teams" ON "team_members"."team_id" = "teams"."id"
-                   LEFT JOIN "users" ON "teams"."team_user_id" = "users"."id" OR "teams"."coach_user_id" = "users"."id"
-                   WHERE "users"."id"=$1
+                   WHERE "teams"."id"=$1
                    ORDER BY "team_members"."id";`;
     pool.query(sqlText, [req.params.id])
         .then(results => {

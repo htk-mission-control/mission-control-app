@@ -25,15 +25,17 @@ class SelectRunDetails extends Component {
     
     componentDidMount() {
         const searchObject = qs.parse(this.props.location.search);
-        console.log('searchObject', searchObject);
+        console.log('searchObject', this.props.location.search.teamId);
         this.setState({
             teamId: searchObject.teamId,
         })
+        console.log(`user security clearance`, this.props.reduxState.user.security_clearance);
+        
         // gets all the team members for logged in team
-        if ( this.state.teamId === 0) {
+        if ( this.props.reduxState.user.security_clearance === 4) {
             this.props.dispatch({ type: 'GET_TEAM_MEMBERS' });
         }
-        else {
+        else if (this.props.reduxState.user.security_clearance === 2) {
             this.props.dispatch({ type: 'GET_TEAM_MEMBERS_WITH_ID', payload: searchObject }); 
         }
     }
@@ -174,21 +176,18 @@ class SelectRunDetails extends Component {
                 <form>
                     <label>Driver:</label>
                     <select value={this.state.runTeam.driverId} onChange={this.runTeamHandleChangeFor('driverId')}>
-                        <option value='coach' key='coach'>Coach</option>
                         {this.props.reduxState.teamMembers.map((teamMember, i) =>
                             <option value={teamMember.member_id} key={i}>{teamMember.name}</option>
                         )}
                     </select>
                     <label>Assistant:</label>
                     <select value={this.state.runTeam.assistantId} onChange={this.runTeamHandleChangeFor('assistantId')}>
-                        <option value='coach' key='coach'>Coach</option>
                         {this.props.reduxState.teamMembers.map((teamMember, i) =>
                             <option value={teamMember.member_id} key={i}>{teamMember.name}</option>
                         )}
                     </select>
                     <label>Scorekeeper:</label>
                     <select value={this.state.runTeam.scorekeeperId} onChange={this.runTeamHandleChangeFor('scorekeeperId')}>
-                        <option value='coach' key='coach'>Coach</option>
                         {this.props.reduxState.teamMembers.map((teamMember, i) =>
                             <option value={teamMember.member_id} key={i}>{teamMember.name}</option>
                         )}
@@ -204,7 +203,7 @@ class SelectRunDetails extends Component {
         return (
             <div>
                 { this.state.stepOne === true ? ( this.selectedMissionsView() ) : ( this.selectedRunTeam() ) }
-                {/* {JSON.stringify(this.props.location.search)} */}
+                {JSON.stringify(this.props.location.search)}
                 <button onClick={() => { this.changeView() }}>{ this.state.stepOne === true? 'Select Run Team' : 'Back to Missions' }</button>
             </div>
         )

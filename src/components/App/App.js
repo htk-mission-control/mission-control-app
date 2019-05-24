@@ -62,7 +62,7 @@ class App extends Component {
               path="/admin/home"
               component={HomeAdmin}
             />
-            <ProtectedCoach
+            <ProtectedCoachAndTeams
               exact 
               path="/practice-run"
               component={CreateRun}
