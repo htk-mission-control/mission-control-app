@@ -44,6 +44,16 @@ function* getMissions(action) {
     }
 }
 
+function* getEitherOr(action) {
+    try {
+        const response = yield axios.get(`/api/projects/missions/either-or/${action.payload.projectId}`);
+        yield put({ type: 'SET_EITHER_OR', payload: response.data })
+    }
+    catch (error) {
+        console.log(`Couldn't get either/or goals info`);
+    }
+}
+
 function* addProject(action) {
     try {
         const response = yield axios.post(`/api/projects`, action.payload);
@@ -61,6 +71,7 @@ function* projectSaga() {
     yield takeLatest('GET_PROJECT_DETAILS', getProjectDetails);
     yield takeLatest('GET_PENALTIES', getPenalties);
     yield takeLatest('GET_MISSIONS', getMissions);
+    yield takeLatest('GET_EITHER_OR', getEitherOr);
     yield takeLatest('ADD_PROJECT', addProject);
 }
 

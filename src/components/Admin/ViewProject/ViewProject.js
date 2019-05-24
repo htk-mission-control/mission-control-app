@@ -9,6 +9,7 @@ class ViewProject extends Component {
         projectDetails: {},
         projectPenalties: [],
         projectMissions: [],
+        projectEitherOr: [],
     }
 
     componentDidMount() {
@@ -20,6 +21,7 @@ class ViewProject extends Component {
         this.props.dispatch({ type: 'GET_PROJECT_DETAILS', payload: searchObject });
         this.props.dispatch({ type: 'GET_PENALTIES', payload: searchObject });
         this.props.dispatch({ type: 'GET_MISSIONS', payload: searchObject });
+        this.props.dispatch({ type: 'GET_EITHER_OR', payload: searchObject});
     }
 
     componentDidUpdate(prevProps) {
@@ -36,6 +38,11 @@ class ViewProject extends Component {
         if (this.props.reduxState.projectMission !== prevProps.reduxState.projectMission) {
             this.setState({
                 projectMissions: this.props.reduxState.projectMission
+            })
+        };
+        if (this.props.reduxState.eitherOr !== prevProps.reduxState.eitherOr) {
+            this.setState({
+                projectEitherOr: this.props.reduxState.eitherOr
             })
         };
     }
@@ -62,11 +69,13 @@ class ViewProject extends Component {
                     return (
                         <div key={i}>
                             <h3>Mission {i + 1}: {mission[0].mission_name}</h3>
+                            <button>Edit</button>
+                            <button>Delete</button>
                             <h4>{mission[0].description}</h4>
                             {mission.map( mission => {
                                 return (
                                     <div>
-                                        <h5>Goal: {mission.name} = {mission.points} points</h5>
+                                        {this.renderGoals(mission)}
                                     </div>
                                 )
                             })}
@@ -76,13 +85,30 @@ class ViewProject extends Component {
         )
     }
 
+    renderGoals = (mission) => {
+        if (mission.goal_type_id === 1) {
+           return <h5>Goal: {mission.name} = {mission.points} points</h5>
+        }
+        else if (mission.goal_type_id === 2) {
+            return <h5>Working on it</h5>
+        }
+        else if (mission.goal_type_id === 3) {
+            return (
+                <div>
+                    <h5>Goal: {mission.name} = {mission.points} points each</h5>
+                    <h6></h6>
+                </div>
+            )
+        }
+    }
+
     render() {
         return (
             <div>
                 {/* {JSON.stringify(this.props.reduxState.projectMission)} */}
                 {/* {JSON.stringify(this.state.projectPenalties)} */}
                 {/* {JSON.stringify(this.state.projectDetails)} */}
-                {JSON.stringify(this.state.projectMissions)}
+                {JSON.stringify(this.state.projectEitherOr)}
                 <h1>{this.state.projectDetails.name}</h1>
                 <h2>The Project</h2>
                 <p>{this.state.projectDetails.description}</p>

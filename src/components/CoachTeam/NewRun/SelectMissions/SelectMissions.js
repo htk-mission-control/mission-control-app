@@ -70,7 +70,7 @@ class SelectMissions extends Component {
             <div>
                 <form>
                     <input type='text' placeholder='Run Name' value={this.state.runName} required onChange={this.handleChangeFor} />
-                    {JSON.stringify(this.state)}
+                    {/* {JSON.stringify(this.state)} */}
                     <h2>Select Missions</h2>
                     <div className='mission-selection'>
                         {missionList}

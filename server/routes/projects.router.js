@@ -61,7 +61,27 @@ router.get('/missions/:id', (req, res) => {
             res.send(results.rows);
         })
         .catch((error) => {
-            console.log('Something went wrong getting missions', error);
+            console.log('Something went wrong getting missions and goals', error);
+            res.sendStatus(500);
+        })
+});
+
+router.get('/missions/either-or/:id', (req, res) => {
+    let sqlText = (`SELECT 
+                        "either_or"."id", 
+                        "either_or"."goal_id", 
+                        "either_or"."name", 
+                        "either_or"."points"
+                    FROM "missions"
+                    JOIN "goals" ON "goals"."mission_id" = "missions"."id"
+                    JOIN "either_or" ON "either_or"."goal_id" = "goals"."id"
+                    WHERE "missions"."project_id" = $1;`)
+    pool.query(sqlText, [req.params.id])
+        .then((results) => {
+            res.send(results.rows);
+        })
+        .catch((error) => {
+            console.log('Something went wrong getting either/or goals', error);
             res.sendStatus(500);
         })
 });
