@@ -141,6 +141,10 @@ class ViewProject extends Component {
         this.props.dispatch({type: 'DELETE_MISSION', payload: info});
     }
 
+    addPenalty = () => {
+        this.props.history.push(`projects/add-penalty?projectId=${this.state.projectId}`);
+    }
+
     render() {
         return (
             <div>
@@ -155,7 +159,7 @@ class ViewProject extends Component {
                 <p>{this.state.projectDetails.description}</p>
                 <div>
                     <h2>Penalties</h2>
-                    <button>Add Penalty</button>
+                    <button onClick={this.addPenalty}>Add Penalty</button>
                     <hr />
                     {this.state.projectPenalties.map(penalty => {
                         return (

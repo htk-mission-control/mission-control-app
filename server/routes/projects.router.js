@@ -88,7 +88,7 @@ router.delete('/missions/:id', rejectUnauthenticated, async (req, res) => {
     
         await client.query('BEGIN')
         let maybe = await client.query(goalId, [id])
-        console.log('maybe', maybe.rows[0].id);
+        // console.log('maybe', maybe.rows[0].id);
         await client.query(eitherOr, [maybe.rows[0].id])
         await client.query(goalQuery, [id]);
         await client.query(missionQuery, [id]);

@@ -1,15 +1,24 @@
 import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {withRouter} from 'react-router-dom';
+import qs from 'query-string';
 
 class AddPenalty extends Component {
 
     state = {
-        project_id: this.props.reduxState.projects.id || 1,
+        project_id: 0,
         name: '',
         description: '',
         max: 1,
         points: -1
+    }
+
+    componentDidMount() {
+        const searchObject = qs.parse(this.props.location.search);
+        console.log('searchObject', searchObject);
+        this.setState({
+            project_id: searchObject.projectId,
+        })
     }
 
     handleChange = (event) => {
