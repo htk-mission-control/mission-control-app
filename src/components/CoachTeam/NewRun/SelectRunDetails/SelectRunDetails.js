@@ -4,23 +4,28 @@ import { connect } from 'react-redux';
 class SelectRunDetails extends Component {
 
     state = {
+        // stores selected mission details
         newRun: {
             runName: '',
             selectedMissions: this.props.reduxState.missions,
             allSelected: false,
         },
+        // stores details for team roles
         runTeam: {
             driverId: '',
             assistantId: '',
             scorekeeperId: '',
         },
+        // used for view toggle
         stepOne: true,
     }
     
     componentDidMount() {
+        // gets all the team members for logged in team
         this.props.dispatch({ type: 'GET_TEAM_MEMBERS' });
     }
 
+    // function to change runName for current run
     missionHandleChangeFor = event => {
         this.setState({
             newRun: {
@@ -30,6 +35,7 @@ class SelectRunDetails extends Component {
         })
     }
 
+    // function to set current runTeam
     runTeamHandleChangeFor = propertyName => event => {
         event.preventDefault();
         this.setState({
@@ -40,10 +46,13 @@ class SelectRunDetails extends Component {
         })
     }
     
+    // function to run on button click to select all of the missions for the current project, takes in allMissionsReducer state
     selectAllMissions ( missions ) {
         console.log(`this is selectAllMissions`);
         console.log(`missions props`, missions);
         let newSelection = [...missions];
+
+        // changes selected state of all individual missions within reducer to true
         if( this.state.newRun.allSelected === false ){
             console.log(`selectAllMissions false turning true`);
             
@@ -51,12 +60,16 @@ class SelectRunDetails extends Component {
                 mission.selected = true;
             }
         }
+
+        // changes selected state of all individual missions within reducer to false
         if( this.state.newRun.allSelected === true ){
             console.log(`selectAllMissions true turning false`);
             for( let mission of newSelection ) {
                 mission.selected = false;
             }
         }
+
+        // sets selectedMissions to updated newSelection array, toggles allSelected between true and false
         this.setState({
             newRun: {
                 ...this.state.newRun,
@@ -68,10 +81,13 @@ class SelectRunDetails extends Component {
 
     }
 
+    // function to set selected missions with state
     setSelectedMissions = () => {
+        // sets selectedMissionsReducer with current state.newRun
         this.props.dispatch({ type: 'SET_SELECTED_MISSIONS', payload: this.state.newRun })
     }
 
+    // function to select mission at index i to selected, updates newSelection array with new selected value
     updateMission (i) {
         console.log('i is', i)
         console.log('current state', this.state.newRun.selectedMissions)
@@ -79,6 +95,8 @@ class SelectRunDetails extends Component {
         let newSelection = [...this.props.reduxState.missions];
         console.log('newSelection[i]', newSelection[i])
         newSelection[i].selected = !newSelection[i].selected;
+
+        // sets selectedMissions to updated newSelection array
         this.setState({
             newRun: {
                 ...this.state.newRun,
