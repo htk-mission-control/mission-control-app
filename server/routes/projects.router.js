@@ -4,9 +4,6 @@ const pool = require('../modules/pool');
 var moment = require('moment');
 const router = express.Router();
 
-/**
- * GET route template
- */
 router.get('/', (req, res) => {
     let sqlText = (`SELECT * FROM "projects" ORDER BY "id" DESC;`)
     pool.query(sqlText)
@@ -43,6 +40,18 @@ router.get('/penalties/:id', (req, res) => {
         })
 });
 
+router.delete('/penalties/:id', (req, res) => {
+    let sqlText = (`DELETE FROM "penalties" WHERE "id" = $1;`)
+    pool.query(sqlText, [req.params.id])
+        .then((response) => {
+            res.sendStatus(201);
+        })
+        .catch((error) => {
+            console.log('Something went wrong deleting penalty info', error);
+            res.sendStatus(500);
+        })
+})
+
 router.get('/missions/:id', (req, res) => {
     let sqlText = (`SELECT "missions"."id" AS "mission_id", 
                            "missions"."name" AS "mission_name", 
@@ -65,6 +74,36 @@ router.get('/missions/:id', (req, res) => {
             res.sendStatus(500);
         })
 });
+
+router.delete('/missions/:id', rejectUnauthenticated, async (req, res) => {
+    const client = await pool.connect();
+    let id = req.params.id;
+
+    try {
+        let goalId = (`SELECT "id" FROM "goals" WHERE "mission_id" = $1;`);
+        let missionQuery = (`DELETE FROM "missions" WHERE "id" = $1;`);
+        let goalQuery = (`DELETE FROM "goals" WHERE "mission_id" = $1;`);
+        let eitherOr = (`DELETE FROM "either_or" WHERE "goal_id" = $1;`);
+        
+    
+        await client.query('BEGIN')
+        let maybe = await client.query(goalId, [id])
+        console.log('maybe', maybe.rows[0].id);
+        await client.query(eitherOr, [maybe.rows[0].id])
+        await client.query(goalQuery, [id]);
+        await client.query(missionQuery, [id]);
+
+        
+        await client.query('COMMIT')
+        res.sendStatus(201);
+      } catch (error) {
+        await client.query('ROLLBACK')
+        console.log('Error deleting lyrics', error);
+        res.sendStatus(500);
+      } finally {
+        client.release()
+      }
+})
 
 router.get('/missions/either-or/:id', (req, res) => {
     let sqlText = (`SELECT 

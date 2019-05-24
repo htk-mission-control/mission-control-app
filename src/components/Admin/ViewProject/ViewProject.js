@@ -70,7 +70,7 @@ class ViewProject extends Component {
                     <div key={i}>
                         <h3>Mission {i + 1}: {mission[0].mission_name}</h3>
                         <button>Edit</button>
-                        <button>Delete</button>
+                        <button value={mission[0].mission_id} onClick={this.handleDeleteMission}>Delete</button>
                         <h4>{mission[0].description}</h4>
                         {mission.map(mission => {
                             return (
@@ -99,6 +99,7 @@ class ViewProject extends Component {
                         return (
                             <div>
                                 <h5>Goal: {either.name} = {either.points} points</h5>
+                                {this.renderOrText(either)}
                             </div>
                         )
                     }
@@ -115,15 +116,39 @@ class ViewProject extends Component {
             )
         }
     }
+//-----TODO-----
+//finish OR render to DOM
+    renderOrText = (either) => {
+        console.log('either length', either); 
+                return <h5>OR</h5>
+    }
+
+    handleDeletePenalty = (event) => {
+        let info = {
+            projectId: this.state.projectId,
+            penaltyId: event.target.value,
+        }
+        // console.log('event.target.value', info);
+        this.props.dispatch({type: 'DELETE_PENALTY', payload: info})
+    }
+
+    handleDeleteMission = (event) => {
+        let info = {
+            projectId: this.state.projectId,
+            missionId: event.target.value
+        }
+        console.log('event.target.value', info);
+        this.props.dispatch({type: 'DELETE_MISSION', payload: info});
+    }
 
     render() {
         return (
             <div>
-                {/* {JSON.stringify(this.props.reduxState.projectMission)} */}
+                {/* {JSON.stringify(this.props.location)} */}
                 {/* {JSON.stringify(this.state.projectPenalties)} */}
                 {/* {JSON.stringify(this.state.projectDetails)} */}
-                {JSON.stringify(this.state.projectEitherOr)}
-                <h1></h1>
+                {/* {JSON.stringify(this.state.projectEitherOr)}
+                <h1></h1> */}
                 {JSON.stringify(this.state.projectMissions)}
                 <h1>{this.state.projectDetails.name}</h1>
                 <h2>The Project</h2>
@@ -140,7 +165,7 @@ class ViewProject extends Component {
                                 <p>Max Penalties: {penalty.max}</p>
                                 <p>Points: -{penalty.points}</p>
                                 <button>EDIT</button>
-                                <button>DELETE</button>
+                                <button value={penalty.id} onClick={this.handleDeletePenalty}>DELETE</button>
                             </div>
                         )
                     })}
