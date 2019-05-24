@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
+import EitherOr from './EitherOr';
 
 class AddMission extends Component {
 
@@ -21,7 +22,7 @@ class AddMission extends Component {
             ...this.state,
             [event.target.name]: event.target.value,
         })
-        console.log( `new state:`, this.state );
+        // console.log( `new state:`, this.state );
     }
 
     addGoal = () => {
@@ -40,7 +41,7 @@ class AddMission extends Component {
     }
 
     handleGoal = (i, name) => (event) => {
-        console.log( `State:`, this.state );
+        // console.log( `State:`, this.state );
         let newGoals = [...this.state.goals];
         newGoals[i][name] = event.target.value;
 
@@ -50,18 +51,6 @@ class AddMission extends Component {
         })
     }
 
-    addOption = (i) => {
-        let newGoals = [...this.state.goals];
-        newGoals[i].option = {
-            name: '',
-            points: ''
-        }
-
-        this.setState({
-            ...this.state,
-            goals: newGoals,
-        })
-    }
 
     render() {
         let goalList;
@@ -80,20 +69,8 @@ class AddMission extends Component {
                     </div>
 
                 } else if( goal.type === 'Either/Or' ){
-                    goalTypeForm = goal.map( (option, i) => {
-
-
-                        return <div>
-                            <label>Option {goal.option}</label>
-                            <input type="text" name="optionName" placeholder="Option Name"
-                                onChange={this.handleGoalOption(i, 'optionName')} />
-                            <label>Points</label>
-                            <input type="number" name="points" placeholder="0"
-                                onChange={this.handleGoalOption(i, 'points')} />
-
-                            <button onClick={this.addOption} >Add Option</button>
-                        </div>
-                    })
+                    
+                    goalTypeForm = <EitherOr index={i} goal={goal} />
                     
 
                 } else if( goal.type === 'How Many' ){
@@ -123,6 +100,8 @@ class AddMission extends Component {
                     <label>Type</label>
                     <select name="type" value={goal.type}
                         onChange={this.handleGoal(i, 'type')} >
+                        <option value="" disabled
+                            selected >Choose a Type</option>
                         <option value="Yes/No">Yes/No</option>
                         <option value="Either/Or">Either/Or</option>
                         <option value="How Many">How Many</option>
