@@ -14,7 +14,7 @@ class SelectRunTeam extends Component {
         this.props.dispatch({ type: 'GET_TEAM_MEMBERS' });
     }
 
-    handleChangeFor = propertyName => event => {
+    runTeamHandleChangeFor = propertyName => event => {
         event.preventDefault();
         this.setState({
             runTeam: {
@@ -35,23 +35,24 @@ class SelectRunTeam extends Component {
         return(
             <div>
                 {/* {JSON.stringify(this.state)} */}
+                <h2>{this.props.reduxState.selectedMissions.runName}</h2>
                 <form>
                     <label>Driver:</label>
-                    <select value={this.state.runTeam.driverId} onChange={this.handleChangeFor('driverId')}>
+                    <select value={this.state.runTeam.driverId} onChange={this.runTeamHandleChangeFor('driverId')}>
                         <option value='coach' key='coach'>Coach</option>
                         {this.props.reduxState.teamMembers.map((teamMember, i) => 
                             <option value={teamMember.member_id} key={i}>{teamMember.name}</option>
                         )}
                     </select>
                     <label>Assistant:</label>
-                    <select value={this.state.runTeam.assistantId} onChange={this.handleChangeFor('assistantId')}>
+                    <select value={this.state.runTeam.assistantId} onChange={this.runTeamHandleChangeFor('assistantId')}>
                         <option value='coach' key='coach'>Coach</option>
                         {this.props.reduxState.teamMembers.map((teamMember, i) =>
                             <option value={teamMember.member_id} key={i}>{teamMember.name}</option>
                         )}
                     </select>
                     <label>Scorekeeper:</label>
-                    <select value={this.state.runTeam.scorekeeperId} onChange={this.handleChangeFor('scorekeeperId')}>
+                    <select value={this.state.runTeam.scorekeeperId} onChange={this.runTeamHandleChangeFor('scorekeeperId')}>
                         <option value='coach' key='coach'>Coach</option>
                         {this.props.reduxState.teamMembers.map((teamMember, i) =>
                             <option value={teamMember.member_id} key={i}>{teamMember.name}</option>
