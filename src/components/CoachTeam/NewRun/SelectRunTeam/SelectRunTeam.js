@@ -11,6 +11,8 @@ class SelectRunTeam extends Component {
     }
 
     componentDidMount () {
+
+        
         this.props.dispatch({ type: 'GET_TEAM_MEMBERS' });
     }
 

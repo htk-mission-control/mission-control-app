@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import qs from 'query-string';
 
 class SelectRunDetails extends Component {
 
@@ -18,11 +20,22 @@ class SelectRunDetails extends Component {
         },
         // used for view toggle
         stepOne: true,
+        teamId: 0
     }
     
     componentDidMount() {
+        const searchObject = qs.parse(this.props.location.search);
+        console.log('searchObject', searchObject);
+        this.setState({
+            teamId: searchObject.teamId,
+        })
         // gets all the team members for logged in team
-        this.props.dispatch({ type: 'GET_TEAM_MEMBERS' });
+        if ( this.state.teamId === 0) {
+            this.props.dispatch({ type: 'GET_TEAM_MEMBERS' });
+        }
+        else {
+            this.props.dispatch({ type: 'GET_TEAM_MEMBERS_WITH_ID', payload: searchObject }); 
+        }
     }
 
     // function to change runName for current run
@@ -123,6 +136,7 @@ class SelectRunDetails extends Component {
         // this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: this.state.runTeam })
         console.log(`current runTeam state`, this.state.runTeam);
         console.log(`current run state`, this.state.newRun);
+        // this.props.history.push('/practice-run/runScoring');
     }
 
     selectedMissionsView = () => {
@@ -141,7 +155,6 @@ class SelectRunDetails extends Component {
             <div>
                 <form>
                     <input type='text' placeholder='Run Name' value={this.state.newRun.runName} required onChange={this.missionHandleChangeFor} />
-                    {JSON.stringify(this.state.newRun)}
                     <h2>Select Missions</h2>
                     <div className='mission-selection'>
                         {missionList}
@@ -191,6 +204,7 @@ class SelectRunDetails extends Component {
         return (
             <div>
                 { this.state.stepOne === true ? ( this.selectedMissionsView() ) : ( this.selectedRunTeam() ) }
+                {/* {JSON.stringify(this.props.location.search)} */}
                 <button onClick={() => { this.changeView() }}>{ this.state.stepOne === true? 'Select Run Team' : 'Back to Missions' }</button>
             </div>
         )
@@ -201,4 +215,4 @@ const mapReduxStateToProps = reduxState => ({
     reduxState,
 })
 
-export default connect( mapReduxStateToProps )( SelectRunDetails );
+export default withRouter( connect( mapReduxStateToProps )(SelectRunDetails ) );

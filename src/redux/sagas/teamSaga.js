@@ -14,10 +14,22 @@ function* getAllTeams(action) {
     }
 }
 
-// Getting team members of logged in user
+// Getting team members of logged in team
 function* getTeamMembers(action) {
     try {
         const response = yield axios.get(`/api/teams/members`);
+        yield put({ type: 'SET_TEAM_MEMBERS', payload: response.data });
+    }
+    catch (error) {
+        console.log(`Couldn't get team members for logged in user.`, error);
+        alert(`Sorry, couldn't get team members. Try again later.`);
+    }
+}
+
+// Getting team members of logged in user
+function* getTeamMembersWithId(action) {
+    try {
+        const response = yield axios.get(`/api/teams/members/${action.payload.teamId}`);
         yield put({ type: 'SET_TEAM_MEMBERS', payload: response.data });
     }
     catch (error) {
@@ -43,6 +55,7 @@ function* teamSaga() {
     yield takeLatest( 'GET_ALL_TEAMS', getAllTeams );
     yield takeLatest( 'UPDATE_TEAM_ACCESS', updateTeamAccess );
     yield takeLatest( 'GET_TEAM_MEMBERS', getTeamMembers );
+    yield takeLatest( 'GET_TEAM_MEMBERS_WITH_ID', getTeamMembersWithId )
 }
 
 export default teamSaga;
