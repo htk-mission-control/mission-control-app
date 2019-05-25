@@ -184,19 +184,22 @@ class SelectRunDetails extends Component {
                 <h2>{this.props.reduxState.selectedMissions.runName}</h2>
                 <form>
                     <label>Driver:</label>
-                    <select value={this.state.runTeam.driverId} onChange={this.runTeamHandleChangeFor('driverId')}>
+                    <select value={this.state.runTeam.driverId} onChange={this.runTeamHandleChangeFor('driverId')} required>
+                        <option value="" disabled selected>Select your driver</option>
                         {this.props.reduxState.teamMembers.map((teamMember, i) =>
                             <option value={teamMember.member_id} key={i}>{teamMember.name}</option>
                         )}
                     </select>
                     <label>Assistant:</label>
                     <select value={this.state.runTeam.assistantId} onChange={this.runTeamHandleChangeFor('assistantId')}>
+                        <option value="" disabled selected>Select your assistant</option>
                         {this.props.reduxState.teamMembers.map((teamMember, i) =>
                             <option value={teamMember.member_id} key={i}>{teamMember.name}</option>
                         )}
                     </select>
                     <label>Scorekeeper:</label>
-                    <select value={this.state.runTeam.scorekeeperId} onChange={this.runTeamHandleChangeFor('scorekeeperId')}>
+                    <select value={this.state.runTeam.scorekeeperId} onChange={this.runTeamHandleChangeFor('scorekeeperId')} required>
+                        <option value="" disabled selected>Select your scorekeeper</option>
                         {this.props.reduxState.teamMembers.map((teamMember, i) =>
                             <option value={teamMember.member_id} key={i}>{teamMember.name}</option>
                         )}
