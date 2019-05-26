@@ -8,14 +8,14 @@ class EitherOr extends Component {
         count: 1,
     }
 
-    componentDidUpdate(prevProps){
-        if(this.props.reduxState.goalOptions !== prevProps.goalOptions){
-            // I DON'T KNOW WHAT TO DOOOO
-        }
-    }
-
     addOption = () => {
         this.props.dispatch( {type: 'ADD_OPTION'} );
+
+        // need to update state in order to update the mapping of goalOptionReducer
+        this.setState({
+            ...this.state,
+            count: this.state.count + 1
+        })
     }
 
     handleOption = (i, name) => (event) => {
@@ -25,21 +25,12 @@ class EitherOr extends Component {
         this.props.dispatch( {type: 'SET_GOAL_OPTIONS', payload: newOptions} );
     }
 
-    add = () => {
-        this.setState({
-            ...this.state,
-            count: this.state.count + 1
-        })
-        console.log( `CHANGING STATE`, this.state.count );
-        
-    }
-
     render() {
         let optionList = this.props.reduxState.goalOptions.optionList;
         let optionMap;
 
         if(optionList){
-            optionMap = this.state.optionArray.map( (option, i) => 
+            optionMap = optionList.map( (option, i) => 
                 <div key={i} >
                     <label>Option {option.optionNum}</label>
                     <input type="text" name="name" placeholder="Option Name"
@@ -56,10 +47,8 @@ class EitherOr extends Component {
             <div>
 
                 {optionMap}
-                <p>{this.state.count}</p> 
 
                 <button onClick={this.addOption} >Add Option</button>
-                <button onClick={this.add} >Add</button>
 
             </div>
         )

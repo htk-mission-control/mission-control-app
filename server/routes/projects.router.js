@@ -103,14 +103,12 @@ router.get( '/goalTypes', rejectUnauthenticated, (req, res) => {
 
 // save mission data
 router.post( '/mission', rejectUnauthenticated, async(req, res) => {
-    console.log( 'in mission POST...' );
+    console.log( 'in mission POST...', req.body );
     
     const client = await pool.connect();
-    let mission = req.body;
+    let mission = req.body.mission;
     let goals = mission.goals;
-
-    // let sqlText3 = `INSERT INTO "either_or" ("goal_id", "name", "points")
-    //                 VALUES ( $1, $2, $3 );`;
+    let eitherOrOptions = req.body.options;
     
     try {
         console.log( 'in mission POST try...' );
@@ -141,9 +139,18 @@ router.post( '/mission', rejectUnauthenticated, async(req, res) => {
                 console.log( `in E/O..` );
                 let sqlText2 = `INSERT INTO "goals" 
                                 ("mission_id", "goal_type_id")
-                                VALUES ( $1, $2);`;
-                const goalId = await client.query( sqlText2, [missionId, goal.type]);
-                // await client.query( sqlText3, [goalId[0].id,  ]);
+                                VALUES ( $1, $2) 
+                                RETURNING "id";`;
+                const id = await client.query( sqlText2, [missionId, goal.type]);
+                const goalId = id.rows[0].id;
+
+                for( let option of eitherOrOptions ){
+                    console.log( `In option loop...`, option );
+                    let sqlText3 = `INSERT INTO "either_or" ("goal_id", "name", "points")
+                                    VALUES ( $1, $2, $3 );`;
+                    
+                    await client.query( sqlText3, [ goalId, option.name, option.points ]);
+                }
 
             } else if(goal.type === '3'){
                 console.log( `in How many..` );

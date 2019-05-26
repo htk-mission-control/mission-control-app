@@ -57,7 +57,13 @@ class AddMission extends Component {
     }
 
     handleSave = () => {
-        this.props.dispatch( {type: 'ADD_MISSION', payload: this.state} );
+        let eitherOrOptions = this.props.reduxState.goalOptions.optionList;
+        let addMissionPayload = {
+            mission: this.state,
+            options: eitherOrOptions
+        };
+
+        this.props.dispatch( {type: 'ADD_MISSION', payload: addMissionPayload} );
     }
 
     render() {
