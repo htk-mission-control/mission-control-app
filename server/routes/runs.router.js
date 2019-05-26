@@ -7,8 +7,9 @@ const moment = require('moment');
  * GET to get all missions for current project
  */
 router.get('/missions', (req, res) => {
-    const sqlText = `SELECT "id", "project_id", "name", "description", MAX("project_id") FROM "missions"
-GROUP BY "id";`
+    const sqlText = `SELECT "id", "project_id", "name", "description",
+                     MAX("project_id") FROM "missions"
+                     GROUP BY "id";`
 pool.query( sqlText )
 .then ( result => {
     console.log(`in missions get result`, result.rows);
@@ -34,9 +35,9 @@ router.post('/saveDetails', async (req, res) => {
         try{
             teamId = req.body.id.teamId
             let sqlText1 = `INSERT INTO "runs" (team_id, name, date, driver, assistant, score_keeper)
-                    VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;`
+                            VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;`
             let sqlText2 = `INSERT INTO "selected_missions" (run_id, mission_id)
-                    VALUES ($1, $2);`
+                            VALUES ($1, $2);`
             await client.query('BEGIN')
             const runsInsertResponse = await client.query(sqlText1, [teamId, runDetails.runName, currentDate, runTeam.driverId, runTeam.assistantId, runTeam.scorekeeperId])
             const runId = runsInsertResponse.rows[0].id;
@@ -63,9 +64,9 @@ router.post('/saveDetails', async (req, res) => {
         try {
             teamId = req.body.id
             let sqlText1 = `INSERT INTO "runs" (team_id, name, date, driver, assistant, score_keeper)
-                    VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;`
+                            VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;`
             let sqlText2 = `INSERT INTO "selected_missions" (run_id, mission_id)
-                    VALUES ($1, $2);`
+                            VALUES ($1, $2);`
             await client.query('BEGIN')
             const runsInsertResponse = await client.query(sqlText1, [teamId, runDetails.runName, currentDate, runTeam.driverId, runTeam.assistantId, runTeam.scorekeeperId])
             const runId = runsInsertResponse.rows[0].id;
