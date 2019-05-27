@@ -29,6 +29,10 @@ const goalOptionReducer = (state = options, action) => {
             }]
             return options;
 
+        case 'REMOVE_OPTION':
+            options.optionList = action.payload;
+            return options;
+
         default:
             return state;
     }

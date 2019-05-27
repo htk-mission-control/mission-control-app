@@ -42,7 +42,7 @@ class AddMission extends Component {
                 }
             ]
         })
-        console.log( `Last state:`, this.state );
+        // console.log( `Last state:`, this.state );
     }
 
     handleGoal = (i, name) => (event) => {
@@ -64,7 +64,7 @@ class AddMission extends Component {
 
     removeGoal = (i) => (event) => {
         event.preventDefault();
-        console.log( `ready to remove a goal!`, i );
+        // console.log( `ready to remove a goal:`, i );
         let newGoals = [...this.state.goals];
 
         for( let goal of newGoals){
@@ -80,7 +80,7 @@ class AddMission extends Component {
             goalCount: this.state.goalCount -1,
             goals: newGoals,
         })
-        console.log( `New state:`, this.state.goals );
+        // console.log( `New state:`, this.state.goals );
     }
 
     handleSave = () => {
