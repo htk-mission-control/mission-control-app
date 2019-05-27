@@ -161,6 +161,7 @@ router.get('/selectedMissions/eitherOr', async (req, res) => {
                             WHERE "team_user_id" = $1
                             ORDER BY "id" DESC LIMIT 1;`
         let sqlText2 = `SELECT
+                            "either_or"."goal_id" AS "either_or_goal_id",
                             "either_or"."id" AS "either_or_id",
                             "either_or"."name" AS "either_or_name",
                             "either_or"."points" AS "either_or_points"

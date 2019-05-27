@@ -51,20 +51,20 @@ class RunScoring extends Component {
 
     renderGoals = (mission) => {
         if (mission.goal_type_id === 1) {
-            return <button><div>{mission.goal_name}</div> <div>{mission.goal_points} pts</div></button>
+            return <button onClick={ () => { this.yesNoOnClick(mission) }}><div>{mission.goal_name}</div> <div>{mission.goal_points} pts</div></button>
         }
         else if (mission.goal_type_id === 2) {
             // console.log(`this.state.eitherOr`, this.props.reduxState.eitherOr);
             
             return (
-                this.state.eitherOr.map((either, i) => {
+                this.props.reduxState.eitherOr.map((either, i) => {
                     console.log('mission.goal_id', mission.goal_id);
-                    console.log('either.goal_id', either.goal_id);
+                    console.log('either.goal_id', either);
 
-                    if (mission.goal_id == either.id) {
+                    if (mission.goal_id == either.either_or_goal_id) {
                         return (
                             <div>
-                                <button><div>{either.either_or_name}</div> <div>{either.either_or_points} pts</div></button>
+                                <button onClick={ () => { this.eitherOrOnClick(either) }}><div>{either.either_or_name}</div> <div>{either.either_or_points} pts</div></button>
                                 {this.renderOrText(i)}
                             </div>
                         )
@@ -76,15 +76,15 @@ class RunScoring extends Component {
 
             return (
                 <div>
-                    <button><div>{mission.goal_name}</div><div>{mission.goal_points} pts each</div></button>
+                    <button onClick={() => { this.howManyOnClick(mission) }}><div>{mission.goal_name}</div><div>{mission.goal_points} pts each</div></button>
                 </div>
             )
         }
     }
 
     renderOrText = (i) => {
-        console.log('either length', this.state.eitherOr.length);
-        if (i< this.state.eitherOr) {
+        console.log('either length', this.props.reduxState.eitherOr.length);
+        if (i < this.props.reduxState.eitherOr.length-1) {
             return <h5>OR</h5>
         }
         else {
@@ -92,43 +92,43 @@ class RunScoring extends Component {
         }
     }
 
-    // // function to add points for how many goal type on click and disable button when max is reached
-    // howManyOnClick = ( goal ) => {
-    //     goal.count = goal.count + 1
-    //     if( goal.count <= goal.how_many_max ){
-    //         this.setState({
-    //             score: (this.state.score + goal.points),
-    //         })
-    //     }
-    //     else {
-    //         goal.disabled = true;
-    //     }
-    // console.log(`this.state.goals`, this.state.goals);
-    // console.log(`this.state.score`, this.state.score);
+    // function to add points for how many goal type on click and disable button when max is reached
+    howManyOnClick = ( goal ) => {
+        goal.count = goal.count + 1
+        if( goal.count <= goal.how_many_max ){
+            this.setState({
+                score: (this.state.score + goal.goal_points),
+            })
+        }
+        else {
+            goal.disabled = true;
+        }
+    console.log(`this.state.goals`, this.state.goals);
+    console.log(`this.state.score`, this.state.score);
 
-    // }
+    }
 
-    // // function to add points for yes/no goal type on click and disable button after click
-    // yesNoOnClick = ( goal ) => {
-    //     this.setState({
-    //         score: (this.state.score + goal.points),
-    //     })
-    //     goal.disabled = true;
-        // console.log(`this.state.goals`, this.state.goals);
-        // console.log(`this.state.score`, this.state.score);
-    // }
+    // function to add points for yes/no goal type on click and disable button after click
+    yesNoOnClick = ( goal ) => {
+        this.setState({
+            score: (this.state.score + goal.goal_points),
+        })
+        goal.disabled = true;
+        console.log(`this.state.goals`, this.state.goals);
+        console.log(`this.state.score`, this.state.score);
+    }
 
-    // // function to add points for either/or goal type on click and disable all options after click
-    // eitherOrOnClick = ( goal ) => {
-    //     this.setState({
-    //         score: (this.state.score + goal.points),
-    //     })
-    //     for ( item of this.props.reduxState.eitherOr) {
-    //         item.disabled = true;
-    //     }
-        // console.log(`this.state.goals`, this.state.goals);
-        // console.log(`this.state.score`, this.state.score);
-    // }
+    // function to add points for either/or goal type on click and disable all options after click
+    eitherOrOnClick = ( goal ) => {
+        this.setState({
+            score: (this.state.score + goal.either_or_points),
+        })
+        for ( let item of this.props.reduxState.eitherOr) {
+            item.disabled = true;
+        }
+        console.log(`this.state.goals`, goal);
+        console.log(`this.state.score`, this.state.score);
+    }
 
     render() {
         console.log(`reduxState details in RunScoring`, this.props.reduxState.selectedMissions);
@@ -138,6 +138,7 @@ class RunScoring extends Component {
             
             <div>
                 <h2>{this.props.reduxState.runDetails.name}</h2>
+                <p>Score: {this.state.score}</p>
                 {this.missionList(this.props.reduxState.selectedMissions)}
                     
             </div>
