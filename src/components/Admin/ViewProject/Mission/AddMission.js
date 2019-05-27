@@ -135,7 +135,7 @@ class AddMission extends Component {
 
                 return <div key={index}>
                     <h3>Goal {/* {goal.goal} */}   &nbsp;  
-                        <i onClick={this.removeGoal(index)} class="fas fa-trash"></i>
+                        <i onClick={this.removeGoal(index)} className="fas fa-trash"></i>
                     </h3>
 
                     <label>Type </label>

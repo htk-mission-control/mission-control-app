@@ -27,6 +27,7 @@ import ProtectedCoachAndTeams from '../ProtectedRoutes/ProtectedCoachAndTeams/Pr
 import AddPenalty from '../Admin/ViewProject/Penalty/AddPenalty';
 import EditPenalty from '../Admin/ViewProject/Penalty/EditPenalty';
 import AddMission from '../Admin/ViewProject/Mission/AddMission';
+import EditMission from '../Admin/ViewProject/Mission/EditMission';
 
 class App extends Component {
   componentDidMount() {
@@ -96,6 +97,11 @@ class App extends Component {
               // exact
               path="/admin/projects/add-mission"
               component={AddMission}
+            />
+            <ProtectedAdmin
+              // exact
+              path="/admin/projects/edit-mission"
+              component={EditMission}
             />
             <Route render={() => <h1>404</h1>} />
           </Switch>

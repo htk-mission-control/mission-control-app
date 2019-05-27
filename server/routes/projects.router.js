@@ -101,7 +101,7 @@ router.get( '/goalTypes', rejectUnauthenticated, (req, res) => {
         })
 })
 
-// save mission data
+// add mission data
 router.post( '/mission', rejectUnauthenticated, async(req, res) => {
     console.log( 'in mission POST...', req.body );
     
@@ -170,6 +170,33 @@ router.post( '/mission', rejectUnauthenticated, async(req, res) => {
     } finally {
         client.release()
       }
+})
+
+
+// get mission data for edit
+router.get( `/mission/:id`, rejectUnauthenticated, (req, res) => {
+    let mission_id = req.params.id;
+
+    let sqlText = `SELECT m."name", m."description", 
+                    g."goal_type_id", g."name" AS "goal_name",
+                    g."points", g."how_many_max",
+                    g."how_many_min", 
+                    o."name" AS "option_name",
+                    o."points" AS "option_points"
+                    FROM "missions" AS m
+                    JOIN "goals" AS g ON "mission_id" = m."id"
+                    LEFT JOIN "either_or" AS o ON "goal_id" = g."id"
+                    WHERE m."id" = $1
+                    ORDER BY g."id";`;
+
+    pool.query( sqlText, [mission_id] )
+        .then( (result) => {
+            res.send(result.rows);
+        })
+        .catch( (error) => {
+            console.log( `Couldn't get mission data.`, error );
+            res.sendStatus(500);
+        })
 })
 
 /**

@@ -3,10 +3,10 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import EitherOr from './EitherOr';
 
-class AddMission extends Component {
+class EditMission extends Component {
 
     state = {
-        project_id: this.props.reduxState.projects.id || 1,
+        mission_id: this.props.reduxState.projects.mission_id || 34,
         name: '',
         description: '',
         goalCount: 1,
@@ -20,6 +20,7 @@ class AddMission extends Component {
 
     componentDidMount(){
         this.props.dispatch( {type: 'GET_GOAL_TYPES'} );
+        this.props.dispatch( {type: `GET_MISSION_DETAILS`, payload: this.state.mission_id} );
     }
 
     handleChange = (event) => {
@@ -135,7 +136,7 @@ class AddMission extends Component {
 
                 return <div key={index}>
                     <h3>Goal {/* {goal.goal} */}   &nbsp;  
-                        <i onClick={this.removeGoal(index)} class="fas fa-trash"></i>
+                        <i onClick={this.removeGoal(index)} className="fas fa-trash"></i>
                     </h3>
 
                     <label>Type </label>
@@ -154,7 +155,7 @@ class AddMission extends Component {
     
         return(
             <div>
-                <h2>Add Mission</h2>
+                <h2>Edit Mission</h2>
 
                 <label>Name</label>
                 <input type="text" placeholder="Mission Name"
@@ -185,4 +186,4 @@ const mapReduxStateToProps = (reduxState) => ({
     reduxState,
 });
 
-export default connect(mapReduxStateToProps)(withRouter(AddMission));
+export default connect(mapReduxStateToProps)(withRouter(EditMission));
