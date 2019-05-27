@@ -17,6 +17,7 @@ function* getSelectedMissions( action ) {
         const response = yield axios.get( `/api/runs/selectedMissions` )
         console.log(`get response is`, response.data)
         yield put({ type: 'SET_SELECTED_MISSIONS', payload: response.data.runDetails })
+        yield put({ type: 'SET_RUN_DETAILS', payload: {id: response.data.id, name: response.data.runName }})
     }
     catch( error ) {
         console.log( `Couldn't get selected missions from db` );

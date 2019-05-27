@@ -99,7 +99,7 @@ router.post('/saveDetails', async (req, res) => {
 
 router.get('/selectedMissions', async (req, res) => {
     const client = await pool.connect();
-    console.log(`in getSelectedMissions`, req.user);
+    // console.log(`in getSelectedMissions`, req.user);
     let teamId = req.user.id;
         try {
             let sqlText1 = `SELECT "runs"."id", "runs"."name" FROM "runs"
