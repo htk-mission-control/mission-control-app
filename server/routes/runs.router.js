@@ -191,4 +191,42 @@ router.get('/selectedMissions/eitherOr', async (req, res) => {
 
 });
 
+// /**
+//  * GET for all penalties for current project
+//  */
+
+router.get('/penalties', async (req, res) => {
+    const client = await pool.connect();
+    try {
+        let sqlText1 = `SELECT "id" FROM "projects"
+                        WHERE "published"= TRUE
+                        ORDER BY "id" DESC LIMIT 1;`
+        let sqlText2 = `SELECT
+                        "penalties"."id",
+                        "penalties"."name",
+                        "penalties"."points",
+                        "penalties"."max"
+                        FROM "penalties"
+                        JOIN "projects" ON "projects"."id" = "penalties"."project_id"
+                        WHERE "projects"."id"='2';`
+        await client.query('BEGIN')
+        const runsIdResponse = await client.query(sqlText1, [teamId])
+        const runId = runsIdResponse.rows[0].id;
+        const eitherOrGetResponse = await client.query(sqlText2, [runId])
+        await client.query('COMMIT')
+        // console.log(`response in get selected missions request`, eitherOrGetResponse.rows);
+        // console.log(`runInfo in selected missions get`, runInfo);
+        res.send(eitherOrGetResponse.rows);
+    }
+    catch (error) {
+        await client.query('ROLLBACK')
+        console.log(`error getting your selected missions details`, error)
+        res.sendStatus(500);
+    }
+    finally {
+        client.release();
+    }
+
+});
+
 module.exports = router;

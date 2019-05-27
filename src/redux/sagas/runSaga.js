@@ -14,8 +14,21 @@ function* saveRun(action) {
     }
 }
 
+
+function* getSelectedPenalties(action) {
+    try {
+
+        const response = yield axios.get(`/api/runs/penalties`);
+        yield put({ type: 'SET_PENALTIES', payload: response.data })
+    }
+    catch (error) {
+        console.log(`Couldn't get penalties info`);
+    }
+}
+
 function* runSaga() {
     yield takeLatest( 'SAVE_RUN_DETAILS', saveRun );
+    yield takeLatest( 'GET_SELECTED_PENALTIES', getSelectedPenalties)
 }
 
 export default runSaga;

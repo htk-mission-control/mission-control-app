@@ -7,6 +7,7 @@ import missions from './allMissionsReducer';
 import selectedMissions from './selectedMissionsReducer';
 import allTeams from './allTeamsReducer';
 import teamMembers from './teamMembersReducer';
+import penalties from './penaltiesReducer';
 import penalty from './penaltyReducer';
 import runDetails from './runDetailsReducer';
 import eitherOr from './eitherOrReducer';
@@ -26,6 +27,7 @@ const rootReducer = combineReducers({
   selectedMissions, // holds missions selected for run creation
   allTeams, // holds teams with specific coach/user id
   teamMembers, // holds team members for logged in user
+  penalties,
   penalty,
   runDetails,
   eitherOr,
