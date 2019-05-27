@@ -149,6 +149,10 @@ class ViewProject extends Component {
         this.props.history.push(`projects/edit-penalty?penaltyId=${event.target.value}`)
     }
 
+    deleteProject = () => {
+        this.props.dispatch({ type: 'DELETE_PROJECT', payload: this.state.projectId})
+    }
+
     render() {
         return (
             <div>
@@ -157,9 +161,10 @@ class ViewProject extends Component {
                 {/* {JSON.stringify(this.state.projectDetails)} */}
                 {/* {JSON.stringify(this.state.projectEitherOr)}
                 <h1></h1> */}
-                {JSON.stringify(this.state.projectMissions)}
+                {/* {JSON.stringify(this.state.projectMissions)} */}
                 <h1>{this.state.projectDetails.name}</h1>
                 <h2>The Project</h2>
+                <button onClick={this.deleteProject}>Delete Project</button>
                 <p>{this.state.projectDetails.description}</p>
                 <div>
                     <h2>Penalties</h2>
