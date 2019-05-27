@@ -1,7 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import RunScoring from '../RunScoring/RunScoring';
 
-class RunScoring extends Component {
+class StartRun extends Component {
 
     componentDidMount = () => {
         // get selectedMission details
@@ -21,4 +22,4 @@ const mapReduxStateToProps = (reduxState) => ({
     reduxState,
 });
 
-export default connect(mapReduxStateToProps)(RunScoring);
+export default connect(mapReduxStateToProps)(StartRun);

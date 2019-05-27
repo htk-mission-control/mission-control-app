@@ -3,16 +3,20 @@ import { connect } from 'react-redux';
 
 class RunScoring extends Component {
 
+    missionList = (runDetails) => {
+        console.log(`reduxState details in RunScoring`, runDetails[0]);
+
+    }
+
     render() {
-        console.log(`reduxState in RunScoring`, this.props.reduxState.selectedMissions);
         return (
             
             <div>
-                {/* {this.props.reduxState.selctedMissions.runDetails.map( mission =>{
-                    <p>{mission.mission_id}</p>
-                })} */}
+                <h2>Run Name</h2>
+                {this.missionList(this.props.reduxState.selectedMissions)}
+                    
             </div>
-        );
+        )
     }
 }
 
