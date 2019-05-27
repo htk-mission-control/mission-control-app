@@ -7,6 +7,7 @@ class StartRun extends Component {
     componentDidMount = () => {
         // get selectedMission details
         this.props.dispatch({ type: 'GET_SELECTED_MISSIONS' });
+        this.props.dispatch({ type: 'GET_SELECTED_EITHER_OR' });
     }
 
     render() {

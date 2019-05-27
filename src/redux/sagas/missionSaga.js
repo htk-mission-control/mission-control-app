@@ -24,6 +24,16 @@ function* getSelectedMissions( action ) {
     }
 }
 
+function* getSelectedEitherOr(action) {
+    try {
+        const response = yield axios.get(`/api/runs/selectedMissions/eitherOr`);
+        yield put({ type: 'SET_EITHER_OR', payload: response.data })
+    }
+    catch (error) {
+        console.log(`Couldn't get either/or goals info`);
+    }
+}
+
 // function* getSelectedMissionsWithId( action ) {
 //     try {
 //         const response = yield axios.get(`/api/runs/selectedMissions/${action.payload.teamId}`)
@@ -38,6 +48,7 @@ function* getSelectedMissions( action ) {
 function* missionSaga() {
     yield takeLatest( 'GET_ALL_MISSIONS', getMissions );
     yield takeLatest( 'GET_SELECTED_MISSIONS', getSelectedMissions );
+    yield takeLatest( 'GET_SELECTED_EITHER_OR', getSelectedEitherOr );
     // yield takeLatest( 'GET_SELECTED_MISSIONS_WITH_ID', getSelectedMissionsWithId );
 }
 

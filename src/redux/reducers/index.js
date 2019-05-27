@@ -9,6 +9,7 @@ import allTeams from './allTeamsReducer';
 import teamMembers from './teamMembersReducer';
 import penalty from './penaltyReducer';
 import runDetails from './runDetailsReducer';
+import eitherOr from './eitherOrReducer';
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -27,6 +28,7 @@ const rootReducer = combineReducers({
   teamMembers, // holds team members for logged in user
   penalty,
   runDetails,
+  eitherOr,
 });
 
 export default rootReducer;

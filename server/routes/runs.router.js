@@ -94,7 +94,7 @@ router.post('/saveDetails', async (req, res) => {
 });
 
 // /**
-//  * GET to get details for latest run for logged in team
+//  * GET to get details for yes/no and how many goals for latest run for logged in team
 //  */
 
 router.get('/selectedMissions', async (req, res) => {
@@ -107,6 +107,7 @@ router.get('/selectedMissions', async (req, res) => {
                             WHERE "team_user_id" = $1
                             ORDER BY "id" DESC LIMIT 1;`
             let sqlText2 = `SELECT
+                            "run_id",
                             "selected_missions"."mission_id",
                             "missions"."name" AS "mission_name",
                             "missions"."description" AS "mission_description", 
@@ -116,15 +117,11 @@ router.get('/selectedMissions', async (req, res) => {
                             "goals"."points" AS "goal_points", 
                             "goals"."how_many_max", 
                             "goals"."how_many_min",
-                            "goal_types"."type" AS "goal_type",
-                            "either_or"."id" AS "either_or_id",
-                            "either_or"."name" AS "either_or_name",
-                            "either_or"."points" AS "either_or_points"
+                            "goal_types"."type" AS "goal_type"
                             FROM "selected_missions"
                             JOIN "missions" ON "selected_missions"."mission_id" = "missions"."id"
                             JOIN "goals" ON "goals"."mission_id" = "missions"."id"
                             JOIN "goal_types" ON "goal_types"."id" = "goals"."goal_type_id"
-                            LEFT JOIN "either_or" ON "goal_id" = "goals"."id"
                             WHERE "selected_missions"."run_id" = $1
                             ORDER BY "selected_missions"."mission_id";`
 
@@ -147,6 +144,49 @@ router.get('/selectedMissions', async (req, res) => {
         finally {
             client.release();
         }
+
+});
+
+// /**
+//  * GET to get details for either/or goals for latest run for logged in team
+//  */
+
+router.get('/selectedMissions/eitherOr', async (req, res) => {
+    const client = await pool.connect();
+    // console.log(`in getSelectedMissions`, req.user);
+    let teamId = req.user.id;
+    try {
+        let sqlText1 = `SELECT "runs"."id", "runs"."name" FROM "runs"
+                            JOIN "teams" ON "teams"."id" = "runs"."team_id"
+                            WHERE "team_user_id" = $1
+                            ORDER BY "id" DESC LIMIT 1;`
+        let sqlText2 = `SELECT
+                            "either_or"."id" AS "either_or_id",
+                            "either_or"."name" AS "either_or_name",
+                            "either_or"."points" AS "either_or_points"
+                            FROM "selected_missions"
+                            JOIN "missions" ON "selected_missions"."mission_id" = "missions"."id"
+                            JOIN "goals" ON "goals"."mission_id" = "missions"."id"
+                            JOIN "either_or" ON "goal_id" = "goals"."id"
+                            WHERE "selected_missions"."run_id" = $1
+                            ORDER BY "selected_missions"."mission_id";`
+        await client.query('BEGIN')
+        const runsIdResponse = await client.query(sqlText1, [teamId])
+        const runId = runsIdResponse.rows[0].id;
+        const eitherOrGetResponse = await client.query(sqlText2, [runId])
+        await client.query('COMMIT')
+        // console.log(`response in get selected missions request`, eitherOrGetResponse.rows);
+        // console.log(`runInfo in selected missions get`, runInfo);
+        res.send(eitherOrGetResponse.rows);
+    }
+    catch (error) {
+        await client.query('ROLLBACK')
+        console.log(`error getting your selected missions details`, error)
+        res.sendStatus(500);
+    }
+    finally {
+        client.release();
+    }
 
 });
 
