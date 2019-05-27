@@ -48,12 +48,39 @@ class AddMission extends Component {
     handleGoal = (i, name) => (event) => {
         // console.log( `State:`, this.state );
         let newGoals = [...this.state.goals];
-        newGoals[i][name] = event.target.value;
+        for( let goal of newGoals){
+            if( goal.goal -1 === i ){
+                let index =  newGoals.indexOf( goal );
+                console.log( `index:`, index );
+                newGoals[index][name] = event.target.value;
+            }
+        }
 
         this.setState({
             ...this.state,
             goals: newGoals,
         })
+    }
+
+    removeGoal = (i) => (event) => {
+        event.preventDefault();
+        console.log( `ready to remove a goal!`, i );
+        let newGoals = [...this.state.goals];
+
+        for( let goal of newGoals){
+            if( goal.goal -1 === i ){
+                let index =  newGoals.indexOf( goal );
+                console.log( `index:`, index );
+                newGoals.splice(index, 1);
+            }
+        }
+
+        this.setState({
+            ...this.state,
+            goalCount: this.state.goalCount -1,
+            goals: newGoals,
+        })
+        console.log( `New state:`, this.state.goals );
     }
 
     handleSave = () => {
@@ -64,52 +91,56 @@ class AddMission extends Component {
         };
 
         this.props.dispatch( {type: 'ADD_MISSION', payload: addMissionPayload} );
+        this.props.history.goBack();
     }
 
     render() {
         let goalList = 
-            this.state.goals.map( (goal, i) => {
+            this.state.goals.map( (goal, index) => {
+                index = goal.goal -1;
                 let goalTypeForm;
                 if( goal.type === '1' ){
                     goalTypeForm = <div>
                         <label>Name</label>
                         <input type="text" name="name" placeholder="Goal Name"
-                            onChange={this.handleGoal(i, 'name')} />
+                            onChange={this.handleGoal(index, 'name')} />
                         <label>Points</label>
                         <input type="number" name="points" placeholder="0"
-                            onChange={this.handleGoal(i, 'points')} />
+                            onChange={this.handleGoal(index, 'points')} />
                     </div>
 
                 } else if( goal.type === '2' ){
-                    goalTypeForm = <EitherOr index={i} goal={goal} />
+                    goalTypeForm = <EitherOr index={index} goal={goal} />
                     
                 } else if( goal.type === '3' ){
                     goalTypeForm = <div>
                         <label>Name</label>
                         <input type="text" name="name" placeholder="Goal Name"
-                            onChange={this.handleGoal(i, 'name')} />
+                            onChange={this.handleGoal(index, 'name')} />
                         <label>Points</label>
                         <input type="number" name="points" placeholder="0"
-                            onChange={this.handleGoal(i, 'points')} />
+                            onChange={this.handleGoal(index, 'points')} />
                         <br/>
                         <label>Min</label>
                         <input type="number" name="min" placeholder="0"
-                            onChange={this.handleGoal(i, 'min')} />
+                            onChange={this.handleGoal(index, 'min')} />
                         <label>Max</label>
                         <input type="number" name="max" placeholder="0"
-                            onChange={this.handleGoal(i, 'max')} />
+                            onChange={this.handleGoal(index, 'max')} />
                     </div>
 
                 } else {
                     goalTypeForm = null;
                 }
 
-                return <div key={i}>
-                    <h3>Goal {goal.goal}</h3>
+                return <div key={index}>
+                    <h3>Goal {/* {goal.goal} */}   &nbsp;  
+                        <i onClick={this.removeGoal(index)} class="fas fa-trash"></i>
+                    </h3>
 
                     <label>Type </label>
                     <select name="type" value={goal.type}
-                        onChange={this.handleGoal(i, 'type')} >
+                        onChange={this.handleGoal(index, 'type')} >
                         <option value="" disabled
                             selected >Choose a Type</option>
                         {this.props.reduxState.goalTypes.map( type => 
