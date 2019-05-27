@@ -3,14 +3,15 @@ import { connect } from 'react-redux';
 
 class RunScoring extends Component {
 
+    componentDidMount = () => {
+        // get selectedMission details
+        this.props.dispatch({ type: 'GET_SELECTED_MISSIONS' });
+    }
+
     render() {
-        console.log(`reduxState in RunScoring`, this.props.reduxState.selectedMissions);
         return (
-            
             <div>
-                {/* {this.props.reduxState.selctedMissions.runDetails.map( mission =>{
-                    <p>{mission.mission_id}</p>
-                })} */}
+                <RunScoring />
             </div>
         );
     }

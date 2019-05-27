@@ -138,16 +138,14 @@ class SelectRunDetails extends Component {
 
         if (this.props.reduxState.user.security_clearance === 4) {
             this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: {runDetails: this.state } })
+            this.props.history.push(`/practice-run/run-scoring`);
         }
         else if (this.props.reduxState.user.security_clearance === 2) {
             this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: { runDetails: this.state, id: searchObject } });
+            this.props.history.push(`/practice-run/run-scoring?teamId=${searchObject}`);
         }
-
-
-
         console.log(`current runTeam state`, this.state.runTeam);
         console.log(`current run state`, this.state.newRun);
-        // this.props.history.push('/practice-run/runScoring');
     }
 
     selectedMissionsView = () => {
@@ -215,7 +213,7 @@ class SelectRunDetails extends Component {
         return (
             <div>
                 { this.state.stepOne === true ? ( this.selectedMissionsView() ) : ( this.selectedRunTeam() ) }
-                {JSON.stringify(this.props.location.search)}
+                {/* {JSON.stringify(this.props.location.search)} */}
                 <button onClick={() => { this.changeView() }}>{ this.state.stepOne === true? 'Select Run Team' : 'Back to Missions' }</button>
             </div>
         )

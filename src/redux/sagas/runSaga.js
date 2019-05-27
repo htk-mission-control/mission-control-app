@@ -14,7 +14,6 @@ function* saveRun(action) {
     }
 }
 
-
 function* runSaga() {
     yield takeLatest( 'SAVE_RUN_DETAILS', saveRun );
 }

@@ -22,6 +22,7 @@ import HomeTeam from '../CoachTeam/HomeTeam/HomeTeam';
 import ViewProject from '../Admin/ViewProject/ViewProject';
 import CoachHome from '../CoachTeam/HomeCoach/HomeCoach';
 import ViewAllTeams from '../CoachTeam/ManageTeam/ViewAllTeams/ViewAllTeams';
+import StartRun from '../CoachTeam/NewRun/StartRun/StartRun';
 
 import './App.css';
 import ProtectedCoachAndTeams from '../ProtectedRoutes/ProtectedCoachAndTeams/ProtectedCoachAndTeams';
@@ -66,6 +67,11 @@ class App extends Component {
               exact 
               path="/practice-run"
               component={CreateRun}
+            />
+            <ProtectedCoachAndTeams
+              exact
+              path="/practice-run/run-scoring"
+              component={StartRun}
             />
             <ProtectedAdmin
               exact

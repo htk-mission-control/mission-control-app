@@ -12,7 +12,7 @@ router.get('/missions', (req, res) => {
                      GROUP BY "id";`
 pool.query( sqlText )
 .then ( result => {
-    console.log(`in missions get result`, result.rows);
+    // console.log(`in missions get result`, result.rows);
     res.send( result.rows )
 }).catch ( error => {
     res.sendStatus( 500 );
@@ -94,11 +94,60 @@ router.post('/saveDetails', async (req, res) => {
 });
 
 // /**
-//  * POST to post all rundetails for coach with team id
+//  * GET to get details for latest run for logged in team
 //  */
-// router.post('/saveDetails/:id', (req, res) => {
-//     console.log(`req.body in saveDetails/id`, req.body);
-//     console.log(`req.params.id in saveDetails/id`, req.params.id);
-// });
+
+router.get('/selectedMissions', async (req, res) => {
+    const client = await pool.connect();
+    console.log(`in getSelectedMissions`, req.user);
+    let teamId = req.user.id;
+        try {
+            let sqlText1 = `SELECT "runs"."id", "runs"."name" FROM "runs"
+                            JOIN "teams" ON "teams"."id" = "runs"."team_id"
+                            WHERE "team_user_id" = $1
+                            ORDER BY "id" DESC LIMIT 1;`
+            let sqlText2 = `SELECT
+                            "selected_missions"."mission_id",
+                            "missions"."name" AS "mission_name",
+                            "missions"."description" AS "mission_description", 
+                            "goals"."id" AS "goal_id",
+                            "goals"."goal_type_id", 
+                            "goals"."name" AS "goal_name", 
+                            "goals"."points" AS "goal_points", 
+                            "goals"."how_many_max", 
+                            "goals"."how_many_min",
+                            "goal_types"."type" AS "goal_type",
+                            "either_or"."id" AS "either_or_id",
+                            "either_or"."name" AS "either_or_name",
+                            "either_or"."points" AS "either_or_points"
+                            FROM "selected_missions"
+                            JOIN "missions" ON "selected_missions"."mission_id" = "missions"."id"
+                            JOIN "goals" ON "goals"."mission_id" = "missions"."id"
+                            JOIN "goal_types" ON "goal_types"."id" = "goals"."goal_type_id"
+                            LEFT JOIN "either_or" ON "goal_id" = "goals"."id"
+                            WHERE "selected_missions"."run_id" = $1
+                            ORDER BY "selected_missions"."mission_id";`
+
+            await client.query('BEGIN')
+            const runsIdResponse = await client.query(sqlText1, [teamId])
+            const runId = runsIdResponse.rows[0].id;
+            const selectedMissionsGetResponse = await client.query(sqlText2, [runId])
+            await client.query('COMMIT')
+            // console.log(`response in get selected missions request`, selectedMissionsGetResponse.rows);
+            const runInfo = {
+                id: runsIdResponse.rows[0].id, runName: runsIdResponse.rows[0].name, runDetails: selectedMissionsGetResponse.rows };
+            // console.log(`runInfo in selected missions get`, runInfo);
+            res.send(runInfo);
+        }
+        catch (error) {
+            await client.query('ROLLBACK')
+            console.log(`error getting your selected missions details`, error)
+            res.sendStatus(500);
+        }
+        finally {
+            client.release();
+        }
+
+});
 
 module.exports = router;
