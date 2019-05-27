@@ -45,11 +45,22 @@ function* getMissionDetails( action ){
     }
 } 
 
+function* updateMission( action ) {
+    try{
+        yield axios.put( `/api/projects/mission`, action.payload );
+    }
+    catch(error) {
+        console.log( `Couldn't update mission details.`, error );
+        alert( `Sorry, could not update info at this time. Try again later.` );
+    }
+}
+
 function* missionSaga() {
     yield takeLatest('GET_ALL_MISSIONS', getMissions);
     yield takeLatest( 'GET_GOAL_TYPES', getGoalTypes );
     yield takeLatest( 'ADD_MISSION', addMission );
     yield takeLatest( 'GET_MISSION_DETAILS', getMissionDetails );
+    yield takeLatest( 'UPDATE_MISSION', updateMission );
 }
 
 export default missionSaga;

@@ -180,7 +180,7 @@ router.get( `/mission/:id`, rejectUnauthenticated, (req, res) => {
     let sqlText = `SELECT m."name", m."description", 
                     g."goal_type_id", g."name" AS "goal_name",
                     g."points", g."how_many_max",
-                    g."how_many_min", 
+                    g."how_many_min",  g."id" AS "goal_id",
                     o."name" AS "option_name",
                     o."points" AS "option_points"
                     FROM "missions" AS m
@@ -197,6 +197,25 @@ router.get( `/mission/:id`, rejectUnauthenticated, (req, res) => {
             console.log( `Couldn't get mission data.`, error );
             res.sendStatus(500);
         })
+})
+
+router.put( `/mission`, rejectUnauthenticated, (req, res) => {
+    let mission = req.body;
+    console.log( mission );
+
+    let sqlText = `UPDATE "missions"
+                    SET "name" = $1, "description" = $2
+                    WHERE "id" = $3;`;
+
+    pool.query( sqlText, [ mission.name, mission.description, mission.mission_id ])
+        .then( (response) => {
+            res.sendStatus(200);
+        })
+        .catch( (error) => {
+            console.log( `Couldn't update mission.` );
+            res.sendStatus(500);
+        })
+    
 })
 
 /**
