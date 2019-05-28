@@ -79,7 +79,8 @@ class App extends Component {
               // exact
               path="/admin/projects/edit-penalty"
               component={EditPenalty}
-            <ProtectedTeams
+            />
+            <ProtectedAdmin
               exact
               path="/team/home"
               component={HomeTeam}
