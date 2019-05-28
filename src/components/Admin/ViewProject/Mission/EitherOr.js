@@ -40,7 +40,7 @@ class EitherOr extends Component {
         }
         
         // need to update state in order to update the mapping of goalOptionReducer
-        this.setState({ ...this.state, count: this.state.count + 1 });
+        this.setState({ state: this.state });
     }
 
     handleOption = (i, name) => (event) => {
@@ -57,7 +57,7 @@ class EitherOr extends Component {
 
         this.props.dispatch( {type: 'SET_GOAL_OPTIONS', payload: newOptions} );
         // need to update state in order to update the mapping of missionDetails.goals
-        this.setState({ ...this.state, count: this.state.count + 1 });
+        this.setState({ state: this.state });
     }
 
     removeOption = (i) => (event) => {
@@ -85,7 +85,7 @@ class EitherOr extends Component {
         }
 
         // need to update state in order to update the mapping of goalOptionReducer
-        this.setState({ ...this.state, count: this.state.count + 1 });
+        this.setState({ state: this.state });
     }
 
     render() {
