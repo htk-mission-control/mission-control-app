@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { FaUndo } from 'react-icons/fa';
 
 class RunScoring extends Component {
 
@@ -7,7 +8,8 @@ class RunScoring extends Component {
         score: 0,
         runId: this.props.reduxState.runDetails.id,
         goals: this.props.reduxState.selectedMissions,
-        eitherOr: this.props.reduxState.eitherOr
+        eitherOr: this.props.reduxState.eitherOr,
+        penaltyCount: 0,
     }
 
     missionList = (runInfo) => {
@@ -47,7 +49,18 @@ class RunScoring extends Component {
         )
     }
 
-    
+    penaltyList = (penalties) => {
+        return (
+            penalties.map((penalty, i) => {
+                return (
+                    <div key={penalty.id}>
+                        <button onClick={ () => {this.penaltyOnClick(penalty)}}>{penalty.name}</button>
+                        <button><FaUndo /></button>
+                    </div>
+                )  
+            })
+        )
+    }
 
     renderGoals = (mission) => {
         if (mission.goal_type_id === 1) {
@@ -92,10 +105,25 @@ class RunScoring extends Component {
         }
     }
 
+    penaltyOnClick = (penalty) => {
+        if( penalty.count < penalty.max){
+            penalty.count = penalty.count + 1
+        }
+        else {
+            penalty.disabled = true;
+        }
+        if( penalty.disabled === false ){
+            this.setState({
+                ...this.state,
+                penaltyCount: this.state.penaltyCount + 1
+            })
+    }
+    }
+
     // function to add points for how many goal type on click and disable button when max is reached
     howManyOnClick = ( goal ) => {
         goal.count = goal.count + 1
-        if( goal.count <= goal.how_many_max ){
+        if( goal.count < goal.how_many_max ){
             this.setState({
                 score: (this.state.score + goal.goal_points),
             })
@@ -103,26 +131,30 @@ class RunScoring extends Component {
         else {
             goal.disabled = true;
         }
-    console.log(`this.state.goals`, this.state.goals);
+    console.log(`this.state.goals`, goal);
     console.log(`this.state.score`, this.state.score);
 
     }
 
     // function to add points for yes/no goal type on click and disable button after click
     yesNoOnClick = ( goal ) => {
-        this.setState({
-            score: (this.state.score + goal.goal_points),
-        })
+        if (goal.disabled === false) {
+            this.setState({
+                score: (this.state.score + goal.goal_points),
+            })
+        }
         goal.disabled = true;
-        console.log(`this.state.goals`, this.state.goals);
+        console.log(`this.state.goals`, goal);
         console.log(`this.state.score`, this.state.score);
     }
 
     // function to add points for either/or goal type on click and disable all options after click
     eitherOrOnClick = ( goal ) => {
-        this.setState({
-            score: (this.state.score + goal.either_or_points),
-        })
+        if( goal.disabled === false ){
+            this.setState({
+                score: (this.state.score + goal.either_or_points),
+            })
+        }
         for ( let item of this.props.reduxState.eitherOr) {
             item.disabled = true;
         }
@@ -134,11 +166,14 @@ class RunScoring extends Component {
         console.log(`reduxState details in RunScoring`, this.props.reduxState.selectedMissions);
         console.log(`local state id in RunScoring`, this.props.reduxState.runDetails.id);
         console.log(`either/or in RunScoring`, this.props.reduxState.eitherOr);
+        console.log(`penalties in RunScoring`, this.props.reduxState.penalties);
+        
         return (
             
             <div>
                 <h2>{this.props.reduxState.runDetails.name}</h2>
                 <p>Score: {this.state.score}</p>
+                {this.penaltyList(this.props.reduxState.penalties)}
                 {this.missionList(this.props.reduxState.selectedMissions)}
                     
             </div>

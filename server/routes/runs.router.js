@@ -208,15 +208,15 @@ router.get('/penalties', async (req, res) => {
                         "penalties"."max"
                         FROM "penalties"
                         JOIN "projects" ON "projects"."id" = "penalties"."project_id"
-                        WHERE "projects"."id"='2';`
+                        WHERE "projects"."id"=$1;`
         await client.query('BEGIN')
-        const runsIdResponse = await client.query(sqlText1, [teamId])
-        const runId = runsIdResponse.rows[0].id;
-        const eitherOrGetResponse = await client.query(sqlText2, [runId])
+        const runsIdResponse = await client.query(sqlText1)
+        const projectId = runsIdResponse.rows[0].id;
+        const penaltiesResponse = await client.query(sqlText2, [projectId])
         await client.query('COMMIT')
-        // console.log(`response in get selected missions request`, eitherOrGetResponse.rows);
-        // console.log(`runInfo in selected missions get`, runInfo);
-        res.send(eitherOrGetResponse.rows);
+        // console.log(`response in get penalties for run request`, penaltiesResponse.rows);
+        // console.log(`runInfo in selected missions get`, projectId);
+        res.send(penaltiesResponse.rows);
     }
     catch (error) {
         await client.query('ROLLBACK')

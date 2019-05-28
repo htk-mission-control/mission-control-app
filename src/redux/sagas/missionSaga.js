@@ -27,7 +27,7 @@ function* getSelectedMissions( action ) {
 function* getSelectedEitherOr(action) {
     try {
         const response = yield axios.get(`/api/runs/selectedMissions/eitherOr`);
-        yield put({ type: 'SET_EITHER_OR', payload: response.data })
+        yield put({ type: 'SET_SELECTED_EITHER_OR', payload: response.data })
     }
     catch (error) {
         console.log(`Couldn't get either/or goals info`);

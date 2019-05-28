@@ -19,7 +19,7 @@ function* getSelectedPenalties(action) {
     try {
 
         const response = yield axios.get(`/api/runs/penalties`);
-        yield put({ type: 'SET_PENALTIES', payload: response.data })
+        yield put({ type: 'SET_SELECTED_PENALTIES', payload: response.data })
     }
     catch (error) {
         console.log(`Couldn't get penalties info`);
