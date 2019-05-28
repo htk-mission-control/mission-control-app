@@ -157,7 +157,8 @@ class RunScoring extends Component {
 
     // function to add points for how many goal type on click and disable button when max is reached
     howManyOnClick = ( goal ) => {
-        goal.count = goal.count + 1
+        goal.count = goal.count + 1;
+        goal.isCompleted = true;
         if( goal.count <= goal.how_many_max ){
             this.setState({
                 score: (this.state.score + goal.goal_points),
@@ -166,7 +167,7 @@ class RunScoring extends Component {
         else {
             goal.disabled = true;
         }
-    // console.log(`goal.count`, goal.count);
+    // console.log(`how many goal`, goal);
     // console.log(`this.state.score`, this.state.score);
 
     }
@@ -178,8 +179,9 @@ class RunScoring extends Component {
                 score: (this.state.score + goal.goal_points),
             })
         }
+        goal.isCompleted = true;
         goal.disabled = true;
-        // console.log(`this.state.goals`, goal);
+        // console.log(`yes/no goal`, goal);
         // console.log(`this.state.score`, this.state.score);
     }
 
@@ -193,13 +195,19 @@ class RunScoring extends Component {
         for ( let item of this.state.eitherOr) {
             item.disabled = true;
         }
-        // console.log(`this.state.goals`, goal);
+        for( let mission of this.state.goals ) {
+            if (mission.goal_id === goal.either_or_goal_id){
+                mission.isCompleted = true;
+                // console.log(`either or goal`, mission);
+            }
+        }
+
         // console.log(`this.state.score`, this.state.score);
     }
 
     handleSubmit = () => {
         console.log(`final state`, this.state);
-        
+        this.props.dispatch({ type: 'UPDATE_RUN_DETAILS', payload: this.state})
     }
 
     render() {

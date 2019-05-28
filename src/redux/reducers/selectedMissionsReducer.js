@@ -8,7 +8,8 @@ const selectedMissionsReducer = (state = [], action) => {
           item = {
             ...item,
             count: 0,
-            disabled: false
+            disabled: false,
+            isCompleted: false
           }
           selectedMissions.push(item);
         }
