@@ -79,7 +79,6 @@ class AddMission extends Component {
 
         this.setState({
             ...this.state,
-            goalCount: this.state.goalCount -1,
             goals: newGoals,
         })
         // console.log( `New state:`, this.state.goals );
@@ -97,10 +96,13 @@ class AddMission extends Component {
     }
 
     render() {
+        let goalCount = 0;
         let goalList = 
             this.state.goals.map( (goal, index) => {
                 index = goal.goal -1;
                 let goalTypeForm;
+                goalCount += 1;
+
                 if( goal.type === '1' ){
                     goalTypeForm = <div>
                         <label>Name</label>
@@ -136,7 +138,7 @@ class AddMission extends Component {
                 }
 
                 return <div key={index}>
-                    <h3>Goal {/* {goal.goal} */}   &nbsp;  
+                    <h3>Goal {goalCount}   &nbsp;  
                         <i onClick={this.removeGoal(index)} className="fas fa-trash"></i>
                     </h3>
 

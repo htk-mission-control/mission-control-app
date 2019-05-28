@@ -50,10 +50,12 @@ class GoalList extends Component {
     render() {
         let missionDetails = this.props.reduxState.missionDetails;
         let goalList;
+        let goalCount = 0;
 
         if( missionDetails.goals ){
             goalList = missionDetails.goals.map( goal => {
                 let goalTypeForm;
+                goalCount += 1;
 
                 if( goal.goal_type_id === 1 ) {
                     goalTypeForm = <div>
@@ -87,7 +89,7 @@ class GoalList extends Component {
                 }
 
                 return <div key={goal.goal_id}>
-                        <h3>Goal   &nbsp;  
+                        <h3>Goal {goalCount}   &nbsp;  
                             <i onClick={this.removeGoal(goal.goal_id, goal)} className="fas fa-trash"></i>
                         </h3>
     

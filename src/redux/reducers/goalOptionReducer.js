@@ -7,7 +7,9 @@ const goalOptionReducer = (state = options, action) => {
     switch (action.type) {
         case 'SET_GOAL_OPTIONS':
             options.optionList = action.payload;
-            options.optionCount = options.optionList.length;
+            if(options.optionCount === 0){
+                options.optionCount = options.optionList.length;
+            }
             return options;
     
         case 'ADD_OPTION':

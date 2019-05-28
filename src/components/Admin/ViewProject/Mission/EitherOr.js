@@ -14,8 +14,6 @@ class EitherOr extends Component {
         }
         // need to update state in order to update the mapping of goalOptionReducer
         this.setState({ ...this.state, count: this.state.count + 1 });
-        console.log( 'Either/Or componentDidMount' );
-        
     }
 
     addOption = () => {
@@ -63,13 +61,14 @@ class EitherOr extends Component {
         let optionList = this.props.reduxState.goalOptions.optionList;
         let optionCount = this.props.reduxState.goalOptions.optionCount;
         let optionMap;
+        let optionNum = 0;
 
         if(optionCount > 1){
             optionMap = optionList.map( option => {
+                optionNum += 1;
                 if( option.goal_id === this.props.goal ){
                 return <div key={option.id} >
-                    <label>Option {/* {option.optionNum} */}
-                        </label>
+                    <label>Option {optionNum} </label>
                     <input type="text" name="option_name" placeholder="Option Name"
                         value={option.option_name}
                         onChange={this.handleOption(option.id, 'option_name')} />
@@ -77,7 +76,7 @@ class EitherOr extends Component {
                     <input type="number" name="option_points" placeholder="0"
                         value={option.option_points}
                         onChange={this.handleOption(option.id, 'option_points')} />
-                    <i onClick={this.removeOption(option.id)} class="fas fa-trash"></i>
+                    <i onClick={this.removeOption(option.id)} className="fas fa-trash"></i>
                 </div>}
             }
         )} else {
