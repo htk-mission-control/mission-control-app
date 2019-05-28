@@ -4,8 +4,8 @@ const pool = require('../modules/pool');
 var moment = require('moment');
 const router = express.Router();
 
-router.get('/', (req, res) => {
-    let sqlText = (`SELECT * FROM "projects" ORDER BY "id" DESC;`)
+router.get('/', rejectUnauthenticated, (req, res) => {
+    let sqlText = (`SELECT * FROM "projects" WHERE "hidden" = false ORDER BY "id" DESC;`)
     pool.query(sqlText)
         .then((results) => {
             res.send(results.rows);
@@ -16,7 +16,7 @@ router.get('/', (req, res) => {
         })
 });
 
-router.get('/:id', (req, res) => {
+router.get('/:id', rejectUnauthenticated, (req, res) => {
     let sqlText = (`SELECT * FROM "projects" WHERE "id" = $1;`)
     pool.query(sqlText, [req.params.id])
         .then((results) => {
@@ -28,48 +28,19 @@ router.get('/:id', (req, res) => {
         })
 });
 
-router.delete('/:id', rejectUnauthenticated, async (req, res) => {
-    const client = await pool.connect();
+router.put('/:id', rejectUnauthenticated, async (req, res) => {
     let id = req.params.id;
     console.log('id', id);
     
-
-    try {
-        let missionInfo = (`SELECT "id" FROM "missions" WHERE "project_id" = $1;`);
-        let goal = (`SELECT "id" FROM "goals" WHERE "mission_id" = $1 AND "goal_type_id" = 2;`);
-        let eitherOr = (`DELETE FROM "either_or" WHERE "goal_id" = $1;`);
-        let goalQuery = (`DELETE FROM "goals" WHERE "mission_id" = $1;`);
-        let missionQuery = (`DELETE FROM "missions" WHERE "project_id" = $1;`);
-        let penalties = (`DELETE FROM "penalties" WHERE "project_id" = $1;`);
-        let project = (`DELETE FROM "projects" WHERE "id" = $1;`);
-        
-    
-        await client.query('BEGIN')
-        let missionId = await client.query(missionInfo, [id]);
-        console.log('missionId', missionId.rows[0].id);
-        let goalId = await client.query(goal, [id]);
-        console.log('goalId', goalId.rows);
-
-        for (let i = 0; i < goalId.length; i++) {
-            await client.query(eitherOr, [goalId.rows[i].id]);                  
-        }
-        for (let i = 0; i < missionId.length; i++) {
-            await client.query(goalQuery, [missionId.rows[i].id]);  
-        }
-        await client.query(missionQuery, [id]);
-        await client.query(penalties, [id]);
-        await client.query(project, [id]);
-
-        
-        await client.query('COMMIT')
-        res.sendStatus(201);
-      } catch (error) {
-        await client.query('ROLLBACK')
-        console.log('Error deleting project', error);
-        res.sendStatus(500);
-      } finally {
-        client.release()
-      }
+    let sqlText = (`UPDATE "projects" SET "hidden" = NOT "hidden" WHERE "id" = $1`)
+    pool.query(sqlText, [id])
+        .then((result) => {
+            res.sendStatus(200);
+        })
+        .catch((error) => {
+            console.log('Error deleting published status', error);
+            res.sendStatus(500);
+        })
 })
 
 router.put('/publish/:id', (req, res) => {
@@ -140,20 +111,22 @@ router.delete('/missions/:id', rejectUnauthenticated, async (req, res) => {
     let id = req.params.id;
 
     try {
-        let goalId = (`SELECT "id" FROM "goals" WHERE "mission_id" = $1;`);
+        let goalId = (`SELECT "id" FROM "goals" WHERE "mission_id" = $1 AND "goal_type_id" = '2';`);
         let missionQuery = (`DELETE FROM "missions" WHERE "id" = $1;`);
         let goalQuery = (`DELETE FROM "goals" WHERE "mission_id" = $1;`);
         let eitherOr = (`DELETE FROM "either_or" WHERE "goal_id" = $1;`);
         
     
         await client.query('BEGIN')
+        
         let maybe = await client.query(goalId, [id])
-        // console.log('maybe', maybe.rows[0].id);
-        await client.query(eitherOr, [maybe.rows[0].id])
+        console.log('maybe', maybe.rows.length);
+        if (maybe.rows.length != 0) {
+            await client.query(eitherOr, [maybe.rows[0].id])           
+        } 
         await client.query(goalQuery, [id]);
         await client.query(missionQuery, [id]);
 
-        
         await client.query('COMMIT')
         res.sendStatus(201);
       } catch (error) {

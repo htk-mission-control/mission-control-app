@@ -57,13 +57,13 @@ class ViewProject extends Component {
             test = missionArr.filter(x => x.mission_id == count)
 
             if (test.length !== 0) {
-                console.log('test length', test.length);
+                // console.log('test length', test.length);
 
                 newArr.push(test)
             }
 
         }
-        console.log('newArr', newArr);
+        // console.log('newArr', newArr);
         return (
             newArr.map((mission, i) => {
                 return (
@@ -72,9 +72,9 @@ class ViewProject extends Component {
                         <button>Edit</button>
                         <button value={mission[0].mission_id} onClick={this.handleDeleteMission}>Delete</button>
                         <h4>{mission[0].description}</h4>
-                        {mission.map(mission => {
+                        {mission.map( (mission, i) => {
                             return (
-                                <div>
+                                <div key={i}>
                                     {this.renderGoals(mission)}
                                 </div>
                             )
@@ -91,13 +91,13 @@ class ViewProject extends Component {
         }
         else if (mission.goal_type_id === 2) {
             return (
-                this.state.projectEitherOr.map(either => {
-                    console.log('mission.goal_id', mission.goal_id);
-                    console.log('either.goal_id', either.goal_id);
+                this.state.projectEitherOr.map( (either, i) => {
+                    // console.log('mission.goal_id', mission.goal_id);
+                    // console.log('either.goal_id', either.goal_id);
 
                     if (mission.goal_id == either.goal_id) {
                         return (
-                            <div>
+                            <div key={i}>
                                 <h5>Goal: {either.name} = {either.points} points</h5>
                                 {this.renderOrText(either)}
                             </div>
@@ -119,7 +119,7 @@ class ViewProject extends Component {
     //-----TODO-----
     //finish OR render to DOM
     renderOrText = (either) => {
-        console.log('either length', either);
+        // console.log('either length', either);
         return <h5>OR</h5>
     }
 
@@ -137,7 +137,7 @@ class ViewProject extends Component {
             projectId: this.state.projectId,
             missionId: event.target.value
         }
-        console.log('event.target.value', info);
+        // console.log('event.target.value', info);
         this.props.dispatch({ type: 'DELETE_MISSION', payload: info });
     }
 
@@ -151,6 +151,7 @@ class ViewProject extends Component {
 
     deleteProject = () => {
         this.props.dispatch({ type: 'DELETE_PROJECT', payload: this.state.projectId })
+        this.props.history.push('/admin/home')
     }
 
     publishProject = () => {
@@ -162,7 +163,7 @@ class ViewProject extends Component {
             <div>
                 {/* {JSON.stringify(this.props.location)} */}
                 {/* {JSON.stringify(this.state.projectPenalties)} */}
-                {JSON.stringify(this.state.projectDetails)}
+                {/* {JSON.stringify(this.state.projectDetails)} */}
                 {/* {JSON.stringify(this.state.projectEitherOr)}
                 <h1></h1> */}
                 {/* {JSON.stringify(this.state.projectMissions)} */}

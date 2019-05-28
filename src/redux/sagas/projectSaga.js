@@ -81,7 +81,7 @@ function* deleteProject(action) {
     try {
         console.log('action.payload', action.payload);
         
-        yield axios.delete(`/api/projects/${action.payload}`);
+        yield axios.put(`/api/projects/${action.payload}`);
         yield put({ type: 'GET_ALL_PROJECTS'});
     }
     catch (error) {
