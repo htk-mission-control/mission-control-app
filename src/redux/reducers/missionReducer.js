@@ -24,7 +24,7 @@ const missionDetails = (state = {}, action) => {
             mission.goalCount += 1;
             mission.goals.push({
                     goal_id: mission.goalCount,
-                    type: '',
+                    goal_type_id: '',
                 }
             );
             return mission;

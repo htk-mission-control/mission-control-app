@@ -15,7 +15,11 @@ class GoalList extends Component {
             if( goal.goal_id === i ){
                 let index =  newGoals.indexOf( goal );
                 console.log( `index:`, index, name );
-                newGoals[index][name] = event.target.value;
+                if(name === 'goal_type_id'){
+                    newGoals[index][name] = Number(event.target.value);
+                } else {
+                    newGoals[index][name] = event.target.value;
+                }
             }
         }
         this.props.dispatch( {type: 'UPDATE_GOALS', payload: newGoals} );
@@ -30,11 +34,17 @@ class GoalList extends Component {
         this.setState({ ...this.state, count: this.state.count + 1 });
     }
 
-    removeGoal = (id) => (event) => {
+    removeGoal = (id, goal) => (event) => {
         event.preventDefault();
         console.log( `in removeGoal`, id );
-        // write a delete function that recalls GET_MISSION_DETAILS
-        this.props.dispatch( {type: 'DELETE_GOAL', payload: id} );
+        if( goal.name ){
+            // write a delete function that recalls GET_MISSION_DETAILS
+            this.props.dispatch( {type: 'DELETE_GOAL', payload: id} );
+        } else {
+            // remove from missionReducer
+            // BUT ALSO.... what about put vs post???? 
+            // OR addGoal can post and run a get immediately
+        }
     }
 
     render() {
@@ -57,6 +67,7 @@ class GoalList extends Component {
                     
                 } else if( goal.goal_type_id === 2 ) {
                     goalTypeForm = <EitherOr goal={goal.goal_id} />;
+
                 } else if( goal.goal_type_id === 3 ) {
                     goalTypeForm = <div>
                         <label>Name</label>
@@ -75,17 +86,16 @@ class GoalList extends Component {
                     </div>;
                 }
 
-
                 return <div key={goal.goal_id}>
                         <h3>Goal   &nbsp;  
-                            <i onClick={this.removeGoal(goal.goal_id)} className="fas fa-trash"></i>
+                            <i onClick={this.removeGoal(goal.goal_id, goal)} className="fas fa-trash"></i>
                         </h3>
     
                         <label>Type </label>
                         <select name="goal_type_id" value={goal.goal_type_id}
                             onChange={this.handleGoal(goal.goal_id, 'goal_type_id')} >
                             <option value="" disabled
-                                // selected 
+                                selected 
                                 >Choose a Type</option>
                             {this.props.reduxState.goalTypes.map( type => 
                                     <option key={type.id} value={type.id}>{type.type}</option>
