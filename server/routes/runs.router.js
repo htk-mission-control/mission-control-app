@@ -83,12 +83,17 @@ router.post('/saveDetails', async (req, res) => {
     else if (req.user.security_clearance === 4) {
         console.log(`in save run details`, req.user.id);
         try {
+            teamId = req.user.id;
+            let sqlText0 = `SELECT "id" FROM "teams"
+                            WHERE "team_user_id"=$1;`;
             let sqlText1 = `INSERT INTO "runs" (team_id, name, date, driver, assistant, score_keeper)
-                            VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;`
+                            VALUES ($1, $2, $3, $4, $5, $6)
+                            RETURNING id;`
             let sqlText2 = `INSERT INTO "selected_missions" (run_id, mission_id)
                             VALUES ($1, $2);`
             await client.query('BEGIN')
-            const runsInsertResponse = await client.query(sqlText1, [teamId, runDetails.runName, currentDate, runTeam.driverId, runTeam.assistantId, runTeam.scorekeeperId])
+            const idResponse = await client.query(sqlText0, [teamId])
+            const runsInsertResponse = await client.query(sqlText1, [idResponse.rows[0].id, runDetails.runName, currentDate, runTeam.driverId, runTeam.assistantId, runTeam.scorekeeperId])
             const runId = runsInsertResponse.rows[0].id;
             for (mission of selectedMissions) {
                 if (mission.selected === true) {
