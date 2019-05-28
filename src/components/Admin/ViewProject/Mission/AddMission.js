@@ -15,11 +15,13 @@ class AddMission extends Component {
                 goal: 1,
                 type: '',
             }
-        ]
+        ],
+        editState: false,
     }
 
     componentDidMount(){
         this.props.dispatch( {type: 'GET_GOAL_TYPES'} );
+        this.props.dispatch( {type: 'REFRESH_OPTIONS'} );
     }
 
     handleChange = (event) => {
@@ -110,7 +112,7 @@ class AddMission extends Component {
                     </div>
 
                 } else if( goal.type === '2' ){
-                    goalTypeForm = <EitherOr index={index} goal={goal} />
+                    goalTypeForm = <EitherOr index={index} goal={goal} editState={this.state.editState} />
                     
                 } else if( goal.type === '3' ){
                     goalTypeForm = <div>
@@ -156,24 +158,26 @@ class AddMission extends Component {
             <div>
                 <h2>Add Mission</h2>
 
-                <label>Name</label>
-                <input type="text" placeholder="Mission Name"
-                    name="name"
-                    value={this.state.name}
-                    onChange={this.handleChange} />
-                <br/>
-                <label>Description</label>
-                <input type="text" placeholder="Mission Description"
-                    name="description"
-                    value={this.state.description}
-                    onChange={this.handleChange} />
+                <div>
+                    <label>Name</label>
+                    <input type="text" placeholder="Mission Name"
+                        name="name"
+                        value={this.state.name}
+                        onChange={this.handleChange} />
+                    <br/>
+                    <label>Description</label>
+                    <input type="text" placeholder="Mission Description"
+                        name="description"
+                        value={this.state.description}
+                        onChange={this.handleChange} />
+                </div>
                 <br/><br/>
 
                 {goalList}
                 <br/><br/>
 
                 <button onClick={this.addGoal} >Add a Goal</button>
-                <br/>
+                <br/><br/>
                 <button onClick={this.handleSave} >Save Mission</button>
 
             </div>

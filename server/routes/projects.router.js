@@ -120,7 +120,7 @@ router.post( '/mission', rejectUnauthenticated, async(req, res) => {
                         RETURNING "id";`;
 
         const id = await client.query( sqlText1, 
-            [mission.project_id, mission.name, mission.description]);
+            [mission.project_id, mission.name, mission.description] );
 
         const missionId = id.rows[0].id;
 
@@ -136,7 +136,8 @@ router.post( '/mission', rejectUnauthenticated, async(req, res) => {
                 await client.query( sqlText2, [missionId, goal.type, goal.name, goal.points]);
 
             } else if(goal.type === '2'){
-                console.log( `in E/O..` );
+                console.log( `in E/O..`, goal.goal );
+
                 let sqlText2 = `INSERT INTO "goals" 
                                 ("mission_id", "goal_type_id")
                                 VALUES ( $1, $2) 
@@ -145,11 +146,13 @@ router.post( '/mission', rejectUnauthenticated, async(req, res) => {
                 const goalId = id.rows[0].id;
 
                 for( let option of eitherOrOptions ){
-                    console.log( `In option loop...`, option );
-                    let sqlText3 = `INSERT INTO "either_or" ("goal_id", "name", "points")
-                                    VALUES ( $1, $2, $3 );`;
-                    
-                    await client.query( sqlText3, [ goalId, option.name, option.points ]);
+                    if( goal.goal === option.goal_id ){
+                        console.log( `In option loop...`, option );
+                        let sqlText3 = `INSERT INTO "either_or" ("goal_id", "name", "points")
+                                        VALUES ( $1, $2, $3 );`;
+                        
+                        await client.query( sqlText3, [ goalId, option.option_name, option.option_points ]);
+                    }
                 }
 
             } else if(goal.type === '3'){
@@ -174,29 +177,53 @@ router.post( '/mission', rejectUnauthenticated, async(req, res) => {
 
 
 // get mission data for edit
-router.get( `/mission/:id`, rejectUnauthenticated, (req, res) => {
+router.get( `/mission/:id`, rejectUnauthenticated, async(req, res) => {
+    const client = await pool.connect();
     let mission_id = req.params.id;
 
-    let sqlText = `SELECT m."name", m."description", 
-                    g."goal_type_id", g."name" AS "goal_name",
-                    g."points", g."how_many_max",
-                    g."how_many_min",  g."id" AS "goal_id",
-                    o."name" AS "option_name",
-                    o."points" AS "option_points"
-                    FROM "missions" AS m
-                    JOIN "goals" AS g ON "mission_id" = m."id"
-                    LEFT JOIN "either_or" AS o ON "goal_id" = g."id"
-                    WHERE m."id" = $1
-                    ORDER BY g."id";`;
+    try {
+        await client.query('BEGIN');
 
-    pool.query( sqlText, [mission_id] )
-        .then( (result) => {
-            res.send(result.rows);
-        })
-        .catch( (error) => {
-            console.log( `Couldn't get mission data.`, error );
-            res.sendStatus(500);
-        })
+        let sqlText = `SELECT m."name", m."description", 
+                        g."goal_type_id", g."name" AS "goal_name",
+                        g."points", g."how_many_max",
+                        g."how_many_min",  g."id" AS "goal_id"
+                        FROM "missions" AS m
+                        JOIN "goals" AS g ON "mission_id" = m."id"
+                        WHERE m."id" = $1
+                        ORDER BY g."id";`;
+        const result = await client.query( sqlText, [mission_id] );
+        console.log( `Result from 1:`, result.rows );
+
+        let result2;
+
+        for( let row of result.rows ){
+            if( row.goal_type_id === 2 ){
+                let sqlText2 = `SELECT "goal_id", "name" AS "option_name",
+                                "points" AS "option_points"
+                                FROM "either_or"
+                                WHERE "goal_id" = $1
+                                ORDER BY "id";`;
+                
+                result2 = await client.query( sqlText2, [row.goal_id] );
+            }
+        }
+        console.log( `Result2:`, result2.rows );
+
+        const allResults = {
+            missionGoals: result.rows,
+            eitherOrOptions: result2.rows,
+        }
+
+        await client.query('COMMIT');
+        res.send( allResults );
+    } catch(error) {   
+        await client.query('ROLLBACK');
+        console.log( `Couldn't get mission and goal details.`, error );
+        res.sendStatus(500);
+    } finally {
+        client.release()
+    }
 })
 
 router.put( `/mission`, rejectUnauthenticated, (req, res) => {

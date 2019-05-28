@@ -1,14 +1,17 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
-import EitherOr from './EitherOr';
+// import EitherOr from './EitherOr';
+import GoalList from './GoalList';
 
 class EditMission extends Component {
 
     state = {
+        // need to fix alternate form of getting mission_id
         mission_id: this.props.reduxState.projects.mission_id || 34,
         name: this.props.reduxState.missionDetails.name || '',
         description: this.props.reduxState.missionDetails.description || '',
+        goals: this.props.reduxState.projects.mission_id || [],
     }
 
     componentDidMount(){
@@ -67,11 +70,11 @@ class EditMission extends Component {
                 {missionIntro}
                 <br/><br/>
 
-                {/* {goalList} */}
+                <GoalList />
                 <br/><br/>
 
-                <button onClick={this.addGoal} >Add a Goal</button>
-                <br/>
+                {/* <button onClick={this.addGoal} >Add a Goal</button> */}
+                <br/><br/>
                 <button onClick={this.handleSave} >Save Mission</button>
 
             </div>

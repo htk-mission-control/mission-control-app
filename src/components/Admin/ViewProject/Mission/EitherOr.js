@@ -8,22 +8,33 @@ class EitherOr extends Component {
         count: 1,
     }
 
+    componentDidMount() {
+        if( this.props.editState === false ){
+            this.props.dispatch( {type: 'ADD_STARTER_OPTIONS', payload: this.props.goal.goal} );
+        }
+        // need to update state in order to update the mapping of goalOptionReducer
+        this.setState({ ...this.state, count: this.state.count + 1 });
+    }
+
     addOption = () => {
-        this.props.dispatch( {type: 'ADD_OPTION'} );
+        this.props.dispatch( {type: 'ADD_OPTION', payload: this.props.goal.goal} );
 
         // need to update state in order to update the mapping of goalOptionReducer
         this.setState({ ...this.state, count: this.state.count + 1 });
     }
 
+    // TO FIX:
+    // Index/goal_num issues!!! 
     handleOption = (i, name) => (event) => {
         event.preventDefault();
         let newOptions = [...this.props.reduxState.goalOptions.optionList];
 
         for( let option of newOptions){
-            if( option.optionNum -1 === i ){
+            if( option.optionNum === i ){
                 let index =  newOptions.indexOf( option );
                 console.log( `index:`, index );
                 newOptions[index][name] = event.target.value;
+                newOptions[index].goal_id = this.props.goal.goal;
             }
         }
 
@@ -35,7 +46,7 @@ class EitherOr extends Component {
         let newOptions = [...this.props.reduxState.goalOptions.optionList];
 
         for( let option of newOptions){
-            if( option.optionNum -1 === i ){
+            if( option.optionNum === i ){
                 let index =  newOptions.indexOf( option );
                 console.log( `index:`, index );
                 newOptions.splice(index, 1);
@@ -53,17 +64,18 @@ class EitherOr extends Component {
 
         if(optionList){
             optionMap = optionList.map( (option, i) => {
-                i = option.optionNum-1;
+                i = option.optionNum;
+                if( option.goal_id === this.props.goal.goal ){
                 return <div key={i} >
                     <label>Option {/* {option.optionNum} */}
                         </label>
-                    <input type="text" name="name" placeholder="Option Name"
-                        onChange={this.handleOption(i, 'name')} />
+                    <input type="text" name="option_name" placeholder="Option Name"
+                        onChange={this.handleOption(i, 'option_name')} />
                     <label>Points</label>
-                    <input type="number" name="points" placeholder="0"
-                        onChange={this.handleOption(i, 'points')} />
+                    <input type="number" name="option_points" placeholder="0"
+                        onChange={this.handleOption(i, 'option_points')} />
                     <i onClick={this.removeOption(i)} class="fas fa-trash"></i>
-                </div>
+                </div>}
             }
         )} else {
             optionMap = null;
