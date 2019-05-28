@@ -6,8 +6,19 @@ import EitherOr from './EitherOr';
 class GoalList extends Component {
 
     state = {
+        // Need to update this:
         mission_id: this.props.mission_id,
-        goals: this.props.reduxState.projects.mission_id || [],
+        goals: this.props.reduxState.missionDetails.goals || [],
+    }
+
+    componentDidUpdate(prevProps){
+        console.log( `in componentDidUpdate, GoalList`, this.state );
+        if( this.props.reduxState.missionDetails !== prevProps.reduxState.missionDetails ){
+            this.setState({
+                ...this.state, 
+                goals: this.props.reduxState.missionDetails.goals,
+            })
+        }
     }
 
     handleGoal = (i, name) => (event) => {
@@ -24,29 +35,23 @@ class GoalList extends Component {
             }
         }
         this.props.dispatch( {type: 'UPDATE_GOALS', payload: newGoals} );
-
-        // need to update state in order to update the mapping of missionDetails.goals
-        this.setState({ ...this.state, count: this.state.count + 1 });
+        this.setState({
+            ...this.state, 
+            goals: newGoals,
+        })
     }
 
     addGoal = () => {
         this.props.dispatch( {type: 'ADD_GOAL_TO_MISSION', payload: this.state} );
-        // console.log( `Last state:`, this.state );
+        // need to update state in order to update the mapping of missionDetails.goals
         this.setState({ ...this.state, count: this.state.count + 1 });
     }
 
     removeGoal = (id, goal) => (event) => {
         event.preventDefault();
         console.log( `in removeGoal`, id );
-        if( goal.name ){
-            let removePayload = { goal_id: id, mission_id: this.state.mission_id };
-            // write a delete function that recalls GET_MISSION_DETAILS
-            this.props.dispatch( {type: 'DELETE_GOAL', payload: removePayload} );
-        } else {
-            // remove from missionReducer
-            // BUT ALSO.... what about put vs post???? 
-            // OR addGoal can post and run a get immediately
-        }
+        let removePayload = { goal_id: id, mission_id: this.state.mission_id };
+        this.props.dispatch( {type: 'DELETE_GOAL', payload: removePayload} );
     }
 
     render() {
@@ -55,7 +60,7 @@ class GoalList extends Component {
         let goalCount = 0;
 
         if( missionDetails.goals ){
-            goalList = missionDetails.goals.map( goal => {
+            goalList = this.state.goals.map( goal => {
                 let goalTypeForm;
                 goalCount += 1;
 
@@ -98,9 +103,7 @@ class GoalList extends Component {
                         <label>Type </label>
                         <select name="goal_type_id" value={goal.goal_type_id}
                             onChange={this.handleGoal(goal.goal_id, 'goal_type_id')} >
-                            <option value="" disabled
-                                selected 
-                                >Choose a Type</option>
+                            <option value="" disabled >Choose a Type</option>
                             {this.props.reduxState.goalTypes.map( type => 
                                     <option key={type.id} value={type.id}>{type.type}</option>
                                 )}
@@ -113,6 +116,7 @@ class GoalList extends Component {
     
         return(
             <div>
+                {JSON.stringify(this.state)}
                 {goalList}
                 <br/><br/>
 

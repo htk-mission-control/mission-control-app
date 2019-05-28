@@ -8,15 +8,26 @@ class EditMission extends Component {
 
     state = {
         // need to fix alternate form of getting mission_id
-        mission_id: this.props.reduxState.projects.mission_id || 34,
-        name: this.props.reduxState.missionDetails.name || '',
-        description: this.props.reduxState.missionDetails.description || '',
-        goals: this.props.reduxState.projects.mission_id || [],
+        mission_id: 34,
+        name: '',
+        description: '',
+        goals: []
     }
 
     componentDidMount(){
         this.props.dispatch( {type: 'GET_GOAL_TYPES'} );
         this.props.dispatch( {type: `GET_MISSION_DETAILS`, payload: this.state.mission_id} );
+    }
+
+    componentDidUpdate(prevProps){
+        if( this.props.reduxState.missionDetails !== prevProps.reduxState.missionDetails ){
+            this.setState({
+                ...this.state, 
+                name: this.props.reduxState.missionDetails.name,
+                description: this.props.reduxState.missionDetails.description,
+                goals: this.props.reduxState.missionDetails.goals,
+            })
+        }
     }
 
     handleChange = (event) => {
@@ -35,6 +46,8 @@ class EditMission extends Component {
             mission_id: this.state.mission_id || missionDetails.mission_id,
             name: this.state.name || missionDetails.name,
             description: this.state.description || missionDetails.description,
+            goals: missionDetails.goals,
+            eitherOrOptions: this.props.reduxState.goalOptions.optionList,
         }
 
         this.props.dispatch( {type: 'UPDATE_MISSION', payload: missionUpdate} );
@@ -50,13 +63,13 @@ class EditMission extends Component {
                 <label>Name</label>
                 <input type="text" placeholder="Mission Name"
                     name="name"
-                    value={this.state.name || missionDetails.name}
+                    value={this.state.name}
                     onChange={this.handleChange} />
                 <br/>
                 <label>Description</label>
                 <input type="text" placeholder="Mission Description"
                     name="description"
-                    value={this.state.description || missionDetails.description}
+                    value={this.state.description}
                     onChange={this.handleChange} />
             </div>
         } else {

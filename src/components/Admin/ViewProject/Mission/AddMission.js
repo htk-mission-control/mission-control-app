@@ -145,8 +145,7 @@ class AddMission extends Component {
                     <label>Type </label>
                     <select name="type" value={goal.type}
                         onChange={this.handleGoal(index, 'type')} >
-                        <option value="" disabled
-                            selected >Choose a Type</option>
+                        <option value="" disabled >Choose a Type</option>
                         {this.props.reduxState.goalTypes.map( type => 
                                 <option key={type.id} value={type.id}>{type.type}</option>
                             )}

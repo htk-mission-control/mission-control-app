@@ -172,7 +172,7 @@ router.post( '/mission', rejectUnauthenticated, async(req, res) => {
         res.sendStatus(500);
     } finally {
         client.release()
-      }
+    }
 })
 
 // get mission data for edit
@@ -225,22 +225,78 @@ router.get( `/mission/:id`, rejectUnauthenticated, async(req, res) => {
     }
 })
 
-router.put( `/mission`, rejectUnauthenticated, (req, res) => {
+router.put( `/mission`, rejectUnauthenticated, async(req, res) => {
+    const client = await pool.connect();
     let mission = req.body;
-    console.log( mission );
+    let goalList = mission.goals;
+    let eitherOrOptions = mission.eitherOrOptions;
+    console.log( goalList );
 
-    let sqlText = `UPDATE "missions"
-                    SET "name" = $1, "description" = $2
-                    WHERE "id" = $3;`;
+    try {
+        console.log( 'in mission PUT try...' );
+        
+        await client.query('BEGIN');
 
-    pool.query( sqlText, [ mission.name, mission.description, mission.mission_id ])
-        .then( (response) => {
-            res.sendStatus(200);
-        })
-        .catch( (error) => {
-            console.log( `Couldn't update mission.` );
-            res.sendStatus(500);
-        })
+        let sqlText = `UPDATE "missions"
+                        SET "name" = $1, "description" = $2
+                        WHERE "id" = $3;`;
+
+        await client.query( sqlText, [ mission.name, mission.description, mission.mission_id ]);
+        
+        for( let goal of goalList ){
+            console.log( `in PUT loop`);
+            
+            if(goal.goal_type_id === 1){
+                console.log( `in PUT if`, goal.goal_id  );
+                let sqlText2 = `UPDATE "goals"
+                                SET "goal_type_id" = $1,
+                                "name" = $2,
+                                "points" = $3
+                                WHERE "id" = $4;`;
+            
+                await client.query( sqlText2, [goal.goal_type_id, goal.goal_name, goal.points, goal.goal_id] )
+
+            } else if(goal.goal_type_id === 2){
+                let sqlText2 = `UPDATE "goals"
+                                SET "goal_type_id" = $1
+                                WHERE "id" = $2;`;
+            
+                await client.query( sqlText2, [goal.goal_type_id, goal.goal_id] );
+
+                for( let option of eitherOrOptions ){
+                    console.log( `In option loop...`, option );
+                    
+                    if( goal.goal_id === option.goal_id ){
+                        let sqlText3 = `UPDATE "either_or" 
+                                        SET "name" = $1, "points" = $2
+                                        WHERE "id" = $3;`;
+                        
+                        await client.query( sqlText3, [ option.option_name, option.option_points, option.id ]);
+                    }
+                }
+
+            } else if(goal.goal_type_id === 3){
+                let sqlText2 = `UPDATE "goals"
+                                SET "goal_type_id" = $1, "name" = $2,
+                                "points" = $3, "how_many_max" = $4,
+                                "how_many_min" = $5
+                                WHERE "id" = $6;`;
+            
+                await client.query( sqlText2, 
+                    [goal.goal_type_id, goal.goal_name, goal.points, 
+                    goal.how_many_max, goal.how_many_min, goal.goal_id] );
+            }
+        }
+
+        await client.query('COMMIT');
+        res.sendStatus(201);
+    } catch(error) {   
+        await client.query('ROLLBACK');
+        console.log( `Couldn't POST mission, goal data.`, error );
+        res.sendStatus(500);
+    } finally {
+        client.release()
+    }
     
 })
 
@@ -288,6 +344,7 @@ router.delete( '/goal/:id', rejectUnauthenticated, (req, res) => {
             res.sendStatus(500);
         })
 })
+
 
 /**
  * POST route template

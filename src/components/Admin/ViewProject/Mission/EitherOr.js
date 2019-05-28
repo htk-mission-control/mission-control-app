@@ -4,16 +4,29 @@ import {connect} from 'react-redux';
 class EitherOr extends Component {
 
     state = {
-        optionArray: this.props.reduxState.goalOptions.optionList,
+        optionArray: [],
+        optionCount: 0,
         count: 1,
     }
 
     componentDidMount() {
+        this.setState({ ...this.state, count: this.state.count + 1 });
+        this.props.dispatch( {type: 'GET_GOAL_TYPES'} );
+
         if( this.props.editState === false ){
             this.props.dispatch( {type: 'ADD_STARTER_OPTIONS', payload: this.props.goal} );
         }
         // need to update state in order to update the mapping of goalOptionReducer
-        this.setState({ ...this.state, count: this.state.count + 1 });
+    }
+
+    componentDidUpdate(prevProps){
+        console.log( `in componentDidUpdate, E/O`, this.state );
+        if( this.props.reduxState.goalOptions.optionList !== prevProps.reduxState.goalOptions.optionList ){
+            this.setState({
+                optionArray: this.props.reduxState.goalOptions.optionList,
+                optionCount: this.props.reduxState.goalOptions.optionCount,
+            })
+        }
     }
 
     addOption = () => {
@@ -58,13 +71,13 @@ class EitherOr extends Component {
     }
 
     render() {
-        let optionList = this.props.reduxState.goalOptions.optionList;
+        let optionArray = this.props.reduxState.goalOptions.optionList;
         let optionCount = this.props.reduxState.goalOptions.optionCount;
         let optionMap;
         let optionNum = 0;
 
         if(optionCount > 1){
-            optionMap = optionList.map( option => {
+            optionMap = optionArray.map( option => {
                 optionNum += 1;
                 if( option.goal_id === this.props.goal ){
                 return <div key={option.id} >
@@ -85,7 +98,7 @@ class EitherOr extends Component {
 
         return(
             <div>
-
+                {/* {JSON.stringify(this.state)} */}
                 {optionMap}
 
                 <button onClick={this.addOption} >Add Option</button>
