@@ -199,7 +199,7 @@ router.get( `/mission/:id`, rejectUnauthenticated, async(req, res) => {
 
         for( let row of result.rows ){
             if( row.goal_type_id === 2 ){
-                let sqlText2 = `SELECT "goal_id", "name" AS "option_name",
+                let sqlText2 = `SELECT "id", "goal_id", "name" AS "option_name",
                                 "points" AS "option_points"
                                 FROM "either_or"
                                 WHERE "goal_id" = $1

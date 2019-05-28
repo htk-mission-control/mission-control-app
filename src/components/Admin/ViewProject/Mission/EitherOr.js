@@ -10,35 +10,36 @@ class EitherOr extends Component {
 
     componentDidMount() {
         if( this.props.editState === false ){
-            this.props.dispatch( {type: 'ADD_STARTER_OPTIONS', payload: this.props.goal.goal} );
+            this.props.dispatch( {type: 'ADD_STARTER_OPTIONS', payload: this.props.goal} );
         }
         // need to update state in order to update the mapping of goalOptionReducer
         this.setState({ ...this.state, count: this.state.count + 1 });
+        console.log( 'Either/Or componentDidMount' );
+        
     }
 
     addOption = () => {
-        this.props.dispatch( {type: 'ADD_OPTION', payload: this.props.goal.goal} );
+        this.props.dispatch( {type: 'ADD_OPTION', payload: this.props.goal} );
 
         // need to update state in order to update the mapping of goalOptionReducer
         this.setState({ ...this.state, count: this.state.count + 1 });
     }
 
-    // TO FIX:
-    // Index/goal_num issues!!! 
     handleOption = (i, name) => (event) => {
-        event.preventDefault();
         let newOptions = [...this.props.reduxState.goalOptions.optionList];
 
         for( let option of newOptions){
-            if( option.optionNum === i ){
+            if( option.id === i ){
                 let index =  newOptions.indexOf( option );
                 console.log( `index:`, index );
                 newOptions[index][name] = event.target.value;
-                newOptions[index].goal_id = this.props.goal.goal;
+                newOptions[index].goal_id = this.props.goal;
             }
         }
 
         this.props.dispatch( {type: 'SET_GOAL_OPTIONS', payload: newOptions} );
+        // need to update state in order to update the mapping of missionDetails.goals
+        this.setState({ ...this.state, count: this.state.count + 1 });
     }
 
     removeOption = (i) => (event) => {
@@ -46,7 +47,7 @@ class EitherOr extends Component {
         let newOptions = [...this.props.reduxState.goalOptions.optionList];
 
         for( let option of newOptions){
-            if( option.optionNum === i ){
+            if( option.id === i ){
                 let index =  newOptions.indexOf( option );
                 console.log( `index:`, index );
                 newOptions.splice(index, 1);
@@ -60,21 +61,23 @@ class EitherOr extends Component {
 
     render() {
         let optionList = this.props.reduxState.goalOptions.optionList;
+        let optionCount = this.props.reduxState.goalOptions.optionCount;
         let optionMap;
 
-        if(optionList){
-            optionMap = optionList.map( (option, i) => {
-                i = option.optionNum;
-                if( option.goal_id === this.props.goal.goal ){
-                return <div key={i} >
+        if(optionCount > 1){
+            optionMap = optionList.map( option => {
+                if( option.goal_id === this.props.goal ){
+                return <div key={option.id} >
                     <label>Option {/* {option.optionNum} */}
                         </label>
                     <input type="text" name="option_name" placeholder="Option Name"
-                        onChange={this.handleOption(i, 'option_name')} />
+                        value={option.option_name}
+                        onChange={this.handleOption(option.id, 'option_name')} />
                     <label>Points</label>
                     <input type="number" name="option_points" placeholder="0"
-                        onChange={this.handleOption(i, 'option_points')} />
-                    <i onClick={this.removeOption(i)} class="fas fa-trash"></i>
+                        value={option.option_points}
+                        onChange={this.handleOption(option.id, 'option_points')} />
+                    <i onClick={this.removeOption(option.id)} class="fas fa-trash"></i>
                 </div>}
             }
         )} else {

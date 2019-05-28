@@ -7,12 +7,13 @@ const goalOptionReducer = (state = options, action) => {
     switch (action.type) {
         case 'SET_GOAL_OPTIONS':
             options.optionList = action.payload;
+            options.optionCount = options.optionList.length;
             return options;
     
         case 'ADD_OPTION':
             options.optionCount += 1;
             options.optionList = [...options.optionList, {
-                optionNum: options.optionCount,
+                id: options.optionCount,
                 goal_id: action.payload,
                 option_name: '',
                 option_points: '',
@@ -23,13 +24,13 @@ const goalOptionReducer = (state = options, action) => {
             options.optionCount += 2;
             options.optionList.push(
                 {
-                    optionNum: options.optionCount -1,
+                    id: options.optionCount -1,
                     goal_id: action.payload,
                     option_name: '',
                     option_points: '',
                 },
                 {
-                    optionNum: options.optionCount,
+                    id: options.optionCount,
                     goal_id: action.payload,
                     option_name: '',
                     option_points: '',

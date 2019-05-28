@@ -18,11 +18,23 @@ class GoalList extends Component {
                 newGoals[index][name] = event.target.value;
             }
         }
-
         this.props.dispatch( {type: 'UPDATE_GOALS', payload: newGoals} );
 
         // need to update state in order to update the mapping of missionDetails.goals
         this.setState({ ...this.state, count: this.state.count + 1 });
+    }
+
+    addGoal = () => {
+        this.props.dispatch( {type: 'ADD_GOAL'} );
+        // console.log( `Last state:`, this.state );
+        this.setState({ ...this.state, count: this.state.count + 1 });
+    }
+
+    removeGoal = (id) => (event) => {
+        event.preventDefault();
+        console.log( `in removeGoal`, id );
+        // write a delete function that recalls GET_MISSION_DETAILS
+        this.props.dispatch( {type: 'DELETE_GOAL', payload: id} );
     }
 
     render() {
@@ -44,15 +56,15 @@ class GoalList extends Component {
                     </div>
                     
                 } else if( goal.goal_type_id === 2 ) {
-                    goalTypeForm = <EitherOr />;
+                    goalTypeForm = <EitherOr goal={goal.goal_id} />;
                 } else if( goal.goal_type_id === 3 ) {
                     goalTypeForm = <div>
                         <label>Name</label>
                         <input type="text" name="name" value={goal.goal_name}
-                            onChange={this.handleGoal(goal.goal_id, 'name')} />
+                            onChange={this.handleGoal(goal.goal_id, 'goal_name')} />
                         <label>Points</label>
                         <input type="number" name="points" value={goal.points}
-                            onChange={this.handleGoal(goal.goal_id, 'points')} />
+                            onChange={this.handleGoal(goal.goal_id, 'goal_points')} />
                         <br/>
                         <label>Min</label>
                         <input type="number" name="min" value={goal.how_many_min || 0}
@@ -66,7 +78,7 @@ class GoalList extends Component {
 
                 return <div key={goal.goal_id}>
                         <h3>Goal   &nbsp;  
-                            {/* <i onClick={this.removeGoal(goal.goal_id)} className="fas fa-trash"></i> */}
+                            <i onClick={this.removeGoal(goal.goal_id)} className="fas fa-trash"></i>
                         </h3>
     
                         <label>Type </label>
@@ -88,6 +100,9 @@ class GoalList extends Component {
         return(
             <div>
                 {goalList}
+                <br/><br/>
+
+                <button onClick={this.addGoal} >Add a Goal</button>
             </div>
         );
     }

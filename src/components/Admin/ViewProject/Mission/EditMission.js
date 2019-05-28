@@ -72,9 +72,6 @@ class EditMission extends Component {
 
                 <GoalList />
                 <br/><br/>
-
-                {/* <button onClick={this.addGoal} >Add a Goal</button> */}
-                <br/><br/>
                 <button onClick={this.handleSave} >Save Mission</button>
 
             </div>

@@ -112,7 +112,7 @@ class AddMission extends Component {
                     </div>
 
                 } else if( goal.type === '2' ){
-                    goalTypeForm = <EitherOr index={index} goal={goal} editState={this.state.editState} />
+                    goalTypeForm = <EitherOr goal={goal.goal} editState={this.state.editState} />
                     
                 } else if( goal.type === '3' ){
                     goalTypeForm = <div>
