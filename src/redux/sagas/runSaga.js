@@ -1,7 +1,7 @@
 import { takeLatest, put } from 'redux-saga/effects';
 import axios from 'axios';
 
-// Getting coach's teams by the user id
+
 function* saveRun(action) {
     try {
         console.log('in save run saga', action.payload);        

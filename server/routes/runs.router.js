@@ -6,18 +6,39 @@ const moment = require('moment');
 /**
  * GET to get all missions for current project
  */
-router.get('/missions', (req, res) => {
-    const sqlText = `SELECT "id", "project_id", "name", "description",
-                     MAX("project_id") FROM "missions"
-                     GROUP BY "id";`
-pool.query( sqlText )
-.then ( result => {
-    // console.log(`in missions get result`, result.rows);
-    res.send( result.rows )
-}).catch ( error => {
-    res.sendStatus( 500 );
-})
-}); // end transaction
+
+router.get('/missions', async (req, res) => {
+    const client = await pool.connect();
+    try {
+        let sqlText1 = `SELECT "id" FROM "projects"
+                        WHERE "published"= TRUE
+                        ORDER BY "id" DESC LIMIT 1;`
+        let sqlText2 = `SELECT
+                        "id", 
+                        "project_id", 
+                        "name", 
+                        "description"
+                        FROM "missions"
+                        WHERE "project_id"=$1
+                        GROUP BY "id";`
+        await client.query('BEGIN')
+        const runsIdResponse = await client.query(sqlText1)
+        const projectId = runsIdResponse.rows[0].id;
+        const missionsResponse = await client.query(sqlText2, [projectId])
+        await client.query('COMMIT')
+        // console.log(`response in get missions for run request`, missionsResponse.rows);
+        // console.log(`projectId in selected missions get`, projectId);
+        res.send(missionsResponse.rows);
+    }
+    catch (error) {
+        await client.query('ROLLBACK')
+        console.log(`error getting your selected missions details`, error)
+        res.sendStatus(500);
+    }
+    finally {
+        client.release();
+    }
+});
 
 /**
  * POST to post all rundetails for logged in team
@@ -33,7 +54,7 @@ router.post('/saveDetails', async (req, res) => {
 
     if (req.user.security_clearance === 2) {
         try{
-            teamId = req.body.id.teamId
+            teamId = req.body.id.teamId;
             let sqlText1 = `INSERT INTO "runs" (team_id, name, date, driver, assistant, score_keeper)
                             VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;`
             let sqlText2 = `INSERT INTO "selected_missions" (run_id, mission_id)
@@ -60,9 +81,8 @@ router.post('/saveDetails', async (req, res) => {
 
     }
     else if (req.user.security_clearance === 4) {
-        teamId = req.user.id
+        console.log(`in save run details`, req.user.id);
         try {
-            teamId = req.body.id
             let sqlText1 = `INSERT INTO "runs" (team_id, name, date, driver, assistant, score_keeper)
                             VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;`
             let sqlText2 = `INSERT INTO "selected_missions" (run_id, mission_id)
