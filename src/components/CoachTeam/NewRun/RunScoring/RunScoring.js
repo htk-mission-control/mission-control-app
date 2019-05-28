@@ -106,13 +106,13 @@ class RunScoring extends Component {
     }
 
     penaltyOnClick = (penalty) => {
-        if( penalty.count < penalty.max){
+        if (penalty.count < penalty.max && this.state.score >= penalty.points){
             penalty.count = penalty.count + 1
         }
         else {
             penalty.disabled = true;
         }
-        if( penalty.disabled === false ){
+        if( penalty.disabled === false && this.state.score >= penalty.points){
             this.setState({
                 score: (this.state.score - penalty.points),
                 penaltyCount: this.state.penaltyCount + 1
