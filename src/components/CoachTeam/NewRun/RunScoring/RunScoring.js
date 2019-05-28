@@ -117,7 +117,11 @@ class RunScoring extends Component {
                 score: (this.state.score - penalty.points),
                 penaltyCount: this.state.penaltyCount + 1
             })
+            console.log(`this.state.penaltyCount`, this.state.penaltyCount);
     }
+    console.log(`penalty.count is`, penalty.count);
+    
+    
     }
 
     undoOnClick = ( penalty ) => {
@@ -130,7 +134,7 @@ class RunScoring extends Component {
     // function to add points for how many goal type on click and disable button when max is reached
     howManyOnClick = ( goal ) => {
         goal.count = goal.count + 1
-        if( goal.count < goal.how_many_max ){
+        if( goal.count <= goal.how_many_max ){
             this.setState({
                 score: (this.state.score + goal.goal_points),
             })
@@ -138,7 +142,7 @@ class RunScoring extends Component {
         else {
             goal.disabled = true;
         }
-    console.log(`this.state.goals`, goal);
+    console.log(`goal.count`, goal.count);
     console.log(`this.state.score`, this.state.score);
 
     }
