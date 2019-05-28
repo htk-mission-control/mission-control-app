@@ -114,7 +114,7 @@ class RunScoring extends Component {
         }
         if( penalty.disabled === false ){
             this.setState({
-                ...this.state,
+                score: (this.state.score - penalty.points),
                 penaltyCount: this.state.penaltyCount + 1
             })
     }
