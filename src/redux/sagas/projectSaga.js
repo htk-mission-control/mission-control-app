@@ -13,11 +13,19 @@ function* getAllProjects(action) {
 }
 
 function* getProjectDetails(action) {
-    console.log('action.payload', action.payload.projectId);
-    
     try {
         const response = yield axios.get(`/api/projects/${action.payload.projectId}`);
         yield put({ type: 'SET_PROJECT_DETAILS', payload: response.data })
+    }
+    catch (error) {
+        console.log(`Couldn't get project info`);
+    }
+}
+
+function* publishProject(action) {
+    try {
+        yield axios.put(`/api/projects/publish/${action.payload}`);
+        yield put({ type: 'GET_PROJECT_DETAILS', payload: action.payload })
     }
     catch (error) {
         console.log(`Couldn't get project info`);
@@ -38,7 +46,6 @@ function* getPenalties(action) {
 
 function* deletePenalty(action) {
     try {
-
         yield axios.delete(`/api/projects/penalties/${action.payload.penaltyId}`);
         yield put({ type: 'GET_PENALTIES', payload: action.payload});
     }
@@ -62,6 +69,18 @@ function* deleteMission(action) {
 
         yield axios.delete(`/api/projects/missions/${action.payload.missionId}`);
         yield put({ type: 'GET_MISSIONS', payload: action.payload});
+    }
+    catch (error) {
+        console.log(`Couldn't delete penalty`);
+    }
+}
+
+function* deleteProject(action) {
+    try {
+        console.log('action.payload', action.payload);
+        
+        yield axios.delete(`/api/projects/${action.payload}`);
+        yield put({ type: 'GET_ALL_PROJECTS'});
     }
     catch (error) {
         console.log(`Couldn't delete penalty`);
@@ -93,6 +112,8 @@ function* addProject(action) {
 function* projectSaga() {
     yield takeLatest('GET_ALL_PROJECTS', getAllProjects);
     yield takeLatest('GET_PROJECT_DETAILS', getProjectDetails);
+    yield takeLatest('PUBLISH_PROJECT', publishProject);
+    yield takeLatest('DELETE_PROJECT', deleteProject)
     yield takeLatest('GET_PENALTIES', getPenalties);
     yield takeLatest('DELETE_PENALTY', deletePenalty);
     yield takeLatest('GET_MISSIONS', getMissions);

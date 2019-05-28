@@ -150,7 +150,11 @@ class ViewProject extends Component {
     }
 
     deleteProject = () => {
-        this.props.dispatch({ type: 'DELETE_PROJECT', payload: this.state.projectId})
+        this.props.dispatch({ type: 'DELETE_PROJECT', payload: this.state.projectId })
+    }
+
+    publishProject = () => {
+        this.props.dispatch({ type: 'PUBLISH_PROJECT', payload: this.state.projectId })
     }
 
     render() {
@@ -158,13 +162,18 @@ class ViewProject extends Component {
             <div>
                 {/* {JSON.stringify(this.props.location)} */}
                 {/* {JSON.stringify(this.state.projectPenalties)} */}
-                {/* {JSON.stringify(this.state.projectDetails)} */}
+                {JSON.stringify(this.state.projectDetails)}
                 {/* {JSON.stringify(this.state.projectEitherOr)}
                 <h1></h1> */}
                 {/* {JSON.stringify(this.state.projectMissions)} */}
                 <h1>{this.state.projectDetails.name}</h1>
                 <h2>The Project</h2>
                 <button onClick={this.deleteProject}>Delete Project</button>
+                {this.state.projectDetails.published === false ? 
+                    <button onClick={this.publishProject}>Publish Project</button>
+                :
+                    <button onClick={this.publishProject}>Unpublish Project</button>
+                }
                 <p>{this.state.projectDetails.description}</p>
                 <div>
                     <h2>Penalties</h2>
