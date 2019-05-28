@@ -24,7 +24,9 @@ function* getProjectDetails(action) {
 
 function* publishProject(action) {
     try {
-        yield axios.put(`/api/projects/publish/${action.payload}`);
+        console.log('action.payload', action.payload.projectId);
+        
+        yield axios.put(`/api/projects/publish/${action.payload.projectId}`);
         yield put({ type: 'GET_PROJECT_DETAILS', payload: action.payload })
     }
     catch (error) {

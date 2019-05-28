@@ -154,7 +154,7 @@ class ViewProject extends Component {
     }
 
     publishProject = () => {
-        this.props.dispatch({ type: 'PUBLISH_PROJECT', payload: this.state.projectId })
+        this.props.dispatch({ type: 'PUBLISH_PROJECT', payload: {projectId: this.state.projectId} })
     }
 
     render() {
