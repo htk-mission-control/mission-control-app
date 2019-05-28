@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 // import EitherOr from './EitherOr';
-import GoalList from './GoalList';
+import EditMissionGoals from './EditMissionGoals';
 
 class EditMission extends Component {
 
@@ -83,7 +83,7 @@ class EditMission extends Component {
                 {missionIntro}
                 <br/><br/>
 
-                <GoalList mission_id={this.state.mission_id} />
+                <EditMissionGoals mission_id={this.state.mission_id} />
                 <br/><br/>
                 <button onClick={this.handleSave} >Save Mission</button>
 
