@@ -6,15 +6,34 @@ class RunScoring extends Component {
 
     state = {
         score: 0,
-        runId: this.props.reduxState.runDetails.id,
-        goals: this.props.reduxState.selectedMissions,
-        eitherOr: this.props.reduxState.eitherOr,
+        runId: 0,
+        goals: [],
+        eitherOr: [],
         penaltyCount: 0,
+        penaltyMax: 0,
     }
+
+    componentDidUpdate(prevProps) {
+        if (this.props.reduxState.runDetails !== prevProps.reduxState.runDetails) {
+            this.setState({
+                runId: this.props.reduxState.runDetails.id,
+            })
+        }
+        if (this.props.reduxState.selectedMissions !== prevProps.reduxState.selectedMissions) {
+            this.setState({
+                goals: this.props.reduxState.selectedMissions,
+            })
+        }
+        if (this.props.reduxState.eitherOr !== prevProps.reduxState.eitherOr) {
+            this.setState({
+                eitherOr: this.props.reduxState.eitherOr,
+            })
+        }
+    };
 
     missionList = (runInfo) => {
         let missionArr = runInfo;
-        console.log(`mission array`, missionArr);
+        // console.log(`mission array`, missionArr);
         
         let newArr = [];
         let test = [];
@@ -24,13 +43,13 @@ class RunScoring extends Component {
             test = missionArr.filter(x => x.mission_id == count)
 
             if (test.length !== 0) {
-                console.log('test length', test.length);
+                // console.log('test length', test.length);
 
                 newArr.push(test)
             }
 
         }
-        console.log('newArr', newArr);
+        // console.log('newArr', newArr);
         return (
             newArr.map((mission, i) => {
                 return (
@@ -70,9 +89,9 @@ class RunScoring extends Component {
             // console.log(`this.state.eitherOr`, this.props.reduxState.eitherOr);
             
             return (
-                this.props.reduxState.eitherOr.map((either, i) => {
-                    console.log('mission.goal_id', mission.goal_id);
-                    console.log('either.goal_id', either);
+                this.state.eitherOr.map((either, i) => {
+                    // console.log('mission.goal_id', mission.goal_id);
+                    // console.log('either.goal_id', either);
 
                     if (mission.goal_id == either.either_or_goal_id) {
                         return (
@@ -96,8 +115,8 @@ class RunScoring extends Component {
     }
 
     renderOrText = (i) => {
-        console.log('either length', this.props.reduxState.eitherOr.length);
-        if (i < this.props.reduxState.eitherOr.length-1) {
+        // console.log('either length', this.state.eitherOr.length);
+        if (i < this.state.eitherOr.length-1) {
             return <h5>OR</h5>
         }
         else {
@@ -106,10 +125,12 @@ class RunScoring extends Component {
     }
 
     penaltyOnClick = (penalty) => {
-        if (penalty.count < penalty.max && this.state.score >= penalty.points){
+        if (penalty.count < penalty.max && this.state.score >= penalty.points && penalty.disabled === false){
             penalty.count = penalty.count + 1
+            console.log(`penalty.count is`, penalty.count);
+
         }
-        if (penalty.count === penalty.max) {
+        else if (penalty.count === penalty.max ) {
             penalty.disabled = true;
         }
         if( penalty.disabled === false && this.state.score >= penalty.points){
@@ -117,18 +138,21 @@ class RunScoring extends Component {
                 score: (this.state.score - penalty.points),
                 penaltyCount: this.state.penaltyCount + 1
             })
-            console.log(`this.state.penaltyCount`, this.state.penaltyCount);
-    }
-    console.log(`penalty.count is`, penalty.count);
-    
-    
+            // console.log(`this.state.penaltyCount`, this.state.penaltyCount);
+        }
     }
 
     undoOnClick = ( penalty ) => {
+        penalty.disabled = false; 
+        if (penalty.count <= (penalty.max + 1) && penalty.count > 0) {
+            penalty.count = penalty.count - 1
+            console.log(`penalty.count is undooooo`, penalty.count);
+
             this.setState({
                 score: (this.state.score + penalty.points),
                 penaltyCount: this.state.penaltyCount - 1
             })
+        }
     }
 
     // function to add points for how many goal type on click and disable button when max is reached
@@ -142,8 +166,8 @@ class RunScoring extends Component {
         else {
             goal.disabled = true;
         }
-    console.log(`goal.count`, goal.count);
-    console.log(`this.state.score`, this.state.score);
+    // console.log(`goal.count`, goal.count);
+    // console.log(`this.state.score`, this.state.score);
 
     }
 
@@ -155,8 +179,8 @@ class RunScoring extends Component {
             })
         }
         goal.disabled = true;
-        console.log(`this.state.goals`, goal);
-        console.log(`this.state.score`, this.state.score);
+        // console.log(`this.state.goals`, goal);
+        // console.log(`this.state.score`, this.state.score);
     }
 
     // function to add points for either/or goal type on click and disable all options after click
@@ -166,27 +190,33 @@ class RunScoring extends Component {
                 score: (this.state.score + goal.either_or_points),
             })
         }
-        for ( let item of this.props.reduxState.eitherOr) {
+        for ( let item of this.state.eitherOr) {
             item.disabled = true;
         }
-        console.log(`this.state.goals`, goal);
-        console.log(`this.state.score`, this.state.score);
+        // console.log(`this.state.goals`, goal);
+        // console.log(`this.state.score`, this.state.score);
+    }
+
+    handleSubmit = () => {
+        console.log(`final state`, this.state);
+        
     }
 
     render() {
-        console.log(`reduxState details in RunScoring`, this.props.reduxState.selectedMissions);
-        console.log(`local state id in RunScoring`, this.props.reduxState.runDetails.id);
-        console.log(`either/or in RunScoring`, this.props.reduxState.eitherOr);
-        console.log(`penalties in RunScoring`, this.props.reduxState.penalties);
+        // console.log(`reduxState details in RunScoring`, this.state.selectedMissions);
+        // console.log(`local state id in RunScoring`, this.state.runId);
+        // console.log(`either/or in RunScoring`, this.state.eitherOr);
+        // console.log(`penalties in RunScoring`, this.props.reduxState.penalties);
         
         return (
             
             <div>
                 <h2>{this.props.reduxState.runDetails.name}</h2>
                 <p>Score: {this.state.score}</p>
+                {/* {JSON.stringify(this.state.goals)} */}
                 {this.penaltyList(this.props.reduxState.penalties)}
-                {this.missionList(this.props.reduxState.selectedMissions)}
-                    
+                {this.missionList(this.state.goals)}
+                <button onClick={this.handleSubmit}>End Run</button>
             </div>
         )
     }
