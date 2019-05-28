@@ -72,7 +72,7 @@ class ViewProject extends Component {
                 return (
                     <div key={i}>
                         <h3>Mission {i + 1}: {mission[0].mission_name}</h3>
-                        <button>Edit</button>
+                        <button value={mission[0].mission_id} onClick={this.editMission}>Edit</button>
                         <button value={mission[0].mission_id} onClick={this.handleDeleteMission}>Delete</button>
                         <h4>{mission[0].description}</h4>
                         {mission.map((mission, i) => {
@@ -145,7 +145,11 @@ class ViewProject extends Component {
     }
 
     addMission = () => {
-        
+        this.props.history.push(`projects/add-mission?projectId=${this.state.projectId}`);
+    }
+
+    editMission = (event) => {
+        this.props.history.push(`projects/edit-mission?penaltyId=${event.target.value}`)
     }
 
     addPenalty = () => {
@@ -226,7 +230,7 @@ class ViewProject extends Component {
                 </div>
                 <div>
                     <h2>Missions</h2>
-                    <button>Add Mission</button>
+                    <button onClick={this.addMission}>Add Mission</button>
                     <hr />
                     {this.groundControl()}
                 </div>
