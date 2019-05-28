@@ -4,19 +4,19 @@ import {connect} from 'react-redux';
 class EitherOr extends Component {
 
     state = {
+        mission_id: this.props.mission_id,
+        goal_id: this.props.goal,
         optionArray: [],
         optionCount: 0,
         count: 1,
     }
 
     componentDidMount() {
-        this.setState({ ...this.state, count: this.state.count + 1 });
         this.props.dispatch( {type: 'GET_GOAL_TYPES'} );
 
         if( this.props.editState === false ){
             this.props.dispatch( {type: 'ADD_STARTER_OPTIONS', payload: this.props.goal} );
         }
-        // need to update state in order to update the mapping of goalOptionReducer
     }
 
     componentDidUpdate(prevProps){
@@ -30,8 +30,15 @@ class EitherOr extends Component {
     }
 
     addOption = () => {
-        this.props.dispatch( {type: 'ADD_OPTION', payload: this.props.goal} );
-
+        if(this.props.editState === false){
+            console.log( `In AddMission` );
+            this.props.dispatch( {type: 'ADD_OPTION', payload: this.state} );
+            
+        } else {
+            console.log( `In EditMission` );
+            this.props.dispatch( {type: 'ADD_OPTION_TO_GOAL', payload: this.state} );
+        }
+        
         // need to update state in order to update the mapping of goalOptionReducer
         this.setState({ ...this.state, count: this.state.count + 1 });
     }
@@ -55,17 +62,28 @@ class EitherOr extends Component {
 
     removeOption = (i) => (event) => {
         event.preventDefault();
-        let newOptions = [...this.props.reduxState.goalOptions.optionList];
+        if(this.props.editState === false){
+            let newOptions = [...this.props.reduxState.goalOptions.optionList];
 
-        for( let option of newOptions){
-            if( option.id === i ){
-                let index =  newOptions.indexOf( option );
-                console.log( `index:`, index );
-                newOptions.splice(index, 1);
+            for( let option of newOptions){
+                if( option.id === i ){
+                    let index =  newOptions.indexOf( option );
+                    console.log( `index:`, index );
+                    newOptions.splice(index, 1);
+                }
             }
+
+            this.props.dispatch( {type: 'REMOVE_OPTION', payload: newOptions} );
+        } else {
+            let removeOptionPayload = {
+                option_id: i,
+                mission_id: this.state.mission_id,
+            }
+            console.log( `in delete option:`, removeOptionPayload );
+
+            this.props.dispatch( {type: 'DELETE_OPTION', payload: removeOptionPayload} );
         }
 
-        this.props.dispatch( {type: 'REMOVE_OPTION', payload: newOptions} );
         // need to update state in order to update the mapping of goalOptionReducer
         this.setState({ ...this.state, count: this.state.count + 1 });
     }

@@ -24,6 +24,20 @@ function* addGoalToMission( action ){
     }
 }
 
+function* addOptionToGoal( action ){
+    try{
+        const response = yield axios.post( `/api/projects/option`, action.payload );
+        yield put( { type: 'ADD_OPTION', payload: {option_id: response.data[0].id, goal_id: action.payload.goal_id} } );
+        console.log( response.data );
+        
+        yield put( {type: `GET_MISSION_DETAILS`, payload: action.payload.mission_id} );
+    }
+    catch(error) {
+        console.log( `Couldn't add option to goal.`, error );
+        alert( `Sorry, can't add option at this time. Try again later.` );
+    }
+}
+
 function* deleteGoal( action ){
     try{
         axios.delete( `/api/projects/goal/${action.payload.goal_id}` );
@@ -31,14 +45,27 @@ function* deleteGoal( action ){
     }
     catch(error) {
         console.log( `Couldn't delete goal.`, error );
-        alert( `Sorry, can't delete goal at this time. Try again later.` );
+        alert( `Sorry, can't remove goal at this time. Try again later.` );
+    }
+}
+
+function* deleteOption( action ){
+    try{
+        axios.delete( `/api/projects/option/${action.payload.option_id}` );
+        yield put( {type: `GET_MISSION_DETAILS`, payload: action.payload.mission_id} );
+    }
+    catch(error) {
+        console.log( `Couldn't delete option.`, error );
+        alert( `Sorry, can't remove option at this time. Try again later.` );
     }
 }
 
 function* missionSaga() {
     yield takeLatest( 'GET_GOAL_TYPES', getGoalTypes );
     yield takeLatest( 'ADD_GOAL_TO_MISSION', addGoalToMission );
+    yield takeLatest( 'ADD_OPTION_TO_GOAL', addOptionToGoal );
     yield takeLatest( 'DELETE_GOAL', deleteGoal );
+    yield takeLatest( 'DELETE_OPTION', deleteOption );
 }
 
 export default missionSaga;

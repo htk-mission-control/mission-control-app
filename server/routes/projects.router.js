@@ -327,6 +327,23 @@ router.post( `/goal`, rejectUnauthenticated, async(req, res) => {
     }
 })
 
+router.post( `/option`, rejectUnauthenticated, (req, res) => {
+    const goal_id = req.body.goal_id;
+    console.log( `in option POST:`, goal_id );
+
+    let sqlText = `INSERT INTO "either_or" ("goal_id")
+                    VALUES ($1)
+                    RETURNING "id";`;
+    pool.query( sqlText, [goal_id] )
+        .then( (result) => {
+            res.send(result.rows);
+        })
+        .catch( (error) => {
+            console.log( `Couldn't add option to goal.`, error );
+            res.sendStatus(500);
+        })
+})
+
 router.delete( '/goal/:id', rejectUnauthenticated, (req, res) => {
     console.log( `in delete goal`, req.params.id );
     
@@ -345,6 +362,23 @@ router.delete( '/goal/:id', rejectUnauthenticated, (req, res) => {
         })
 })
 
+router.delete( '/option/:id', rejectUnauthenticated, (req, res) => {
+    console.log( `in delete option`, req.params.id );
+    
+    const option_id = req.params.id;
+
+    let sqlText = `DELETE FROM "either_or"
+                    WHERE "id" = $1;`;
+
+    pool.query( sqlText, [option_id] )
+        .then( (response) => {
+            res.sendStatus(200);
+        })
+        .catch( (error) => {
+            console.log( `Couldn't delete option.`, error );
+            res.sendStatus(500);
+        })
+})
 
 /**
  * POST route template

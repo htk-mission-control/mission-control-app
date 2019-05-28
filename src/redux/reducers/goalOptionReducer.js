@@ -15,8 +15,8 @@ const goalOptionReducer = (state = options, action) => {
         case 'ADD_OPTION':
             options.optionCount += 1;
             options.optionList = [...options.optionList, {
-                id: options.optionCount,
-                goal_id: action.payload,
+                id: action.payload.option_id || options.optionCount,
+                goal_id: action.payload.goal_id,
                 option_name: '',
                 option_points: '',
             }];

@@ -75,7 +75,7 @@ class GoalList extends Component {
                     </div>
                     
                 } else if( goal.goal_type_id === 2 ) {
-                    goalTypeForm = <EitherOr goal={goal.goal_id} />;
+                    goalTypeForm = <EitherOr goal={goal.goal_id} mission_id={this.state.mission_id} />;
 
                 } else if( goal.goal_type_id === 3 ) {
                     goalTypeForm = <div>
@@ -84,7 +84,7 @@ class GoalList extends Component {
                             onChange={this.handleGoal(goal.goal_id, 'goal_name')} />
                         <label>Points</label>
                         <input type="number" name="points" value={goal.points}
-                            onChange={this.handleGoal(goal.goal_id, 'goal_points')} />
+                            onChange={this.handleGoal(goal.goal_id, 'points')} />
                         <br/>
                         <label>Min</label>
                         <input type="number" name="min" value={goal.how_many_min || 0}
@@ -116,7 +116,7 @@ class GoalList extends Component {
     
         return(
             <div>
-                {JSON.stringify(this.state)}
+                {/* {JSON.stringify(this.state)} */}
                 {goalList}
                 <br/><br/>
 
