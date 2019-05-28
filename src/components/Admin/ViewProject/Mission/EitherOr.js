@@ -97,15 +97,25 @@ class EitherOr extends Component {
         if(optionCount > 1){
             optionMap = optionArray.map( option => {
                 optionNum += 1;
+
+                let option_name = option.option_name;
+                let option_points = option.option_points;
+                if(option.option_name === null){
+                    option_name = '';
+                }
+                if(option.option_points === null){
+                    option_points = '';
+                }
+
                 if( option.goal_id === this.props.goal ){
                 return <div key={option.id} >
                     <label>Option {optionNum} </label>
                     <input type="text" name="option_name" placeholder="Option Name"
-                        value={option.option_name}
+                        value={option_name}
                         onChange={this.handleOption(option.id, 'option_name')} />
                     <label>Points</label>
                     <input type="number" name="option_points" placeholder="0"
-                        value={option.option_points}
+                        value={option_points}
                         onChange={this.handleOption(option.id, 'option_points')} />
                     <i onClick={this.removeOption(option.id)} className="fas fa-trash"></i>
                 </div>}

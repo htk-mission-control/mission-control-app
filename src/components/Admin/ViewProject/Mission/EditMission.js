@@ -8,7 +8,7 @@ class EditMission extends Component {
 
     state = {
         // need to fix alternate form of getting mission_id
-        mission_id: 34,
+        mission_id: 47,
         name: '',
         description: '',
         goals: []
