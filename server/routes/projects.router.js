@@ -194,7 +194,7 @@ router.get( `/mission/:id`, rejectUnauthenticated, async(req, res) => {
         const result = await client.query( sqlText, [mission_id] );
         // console.log( `Result from 1:`, result.rows );
 
-        let result2;
+        let optionArray = [];
 
         for( let row of result.rows ){
             if( row.goal_type_id === 2 ){
@@ -204,14 +204,21 @@ router.get( `/mission/:id`, rejectUnauthenticated, async(req, res) => {
                                 WHERE "goal_id" = $1
                                 ORDER BY "id";`;
                 
-                result2 = await client.query( sqlText2, [row.goal_id] );
+                let result2 = await client.query( sqlText2, [row.goal_id] );
+                console.log( `Result 2 is:`, result2 );
+                
+                for( let option of result2.rows ){
+                    console.log( `option loop:`, option );
+                    optionArray.push(option);
+                }
             }
         }
         // console.log( `Result2:`, result2.rows );
+        console.log( `optionArray:`, optionArray );
 
         const allResults = {
             missionGoals: result.rows,
-            eitherOrOptions: result2.rows,
+            eitherOrOptions: optionArray,
         }
 
         await client.query('COMMIT');
@@ -225,6 +232,7 @@ router.get( `/mission/:id`, rejectUnauthenticated, async(req, res) => {
     }
 })
 
+// update mission, goals, and either/or options
 router.put( `/mission`, rejectUnauthenticated, async(req, res) => {
     const client = await pool.connect();
     let mission = req.body;

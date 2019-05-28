@@ -92,11 +92,12 @@ class EitherOr extends Component {
         let optionArray = this.props.reduxState.goalOptions.optionList;
         let optionCount = this.props.reduxState.goalOptions.optionCount;
         let optionMap;
-        let optionNum = 0;
+        // let optionNum = 0;
 
         if(optionCount > 1){
             optionMap = optionArray.map( option => {
-                optionNum += 1;
+                // optionNum += 1;
+                console.log( `in goal options:`, option.goal_id );
 
                 let option_name = option.option_name;
                 let option_points = option.option_points;
@@ -109,7 +110,7 @@ class EitherOr extends Component {
 
                 if( option.goal_id === this.props.goal ){
                 return <div key={option.id} >
-                    <label>Option {optionNum} </label>
+                    <label>Option </label>
                     <input type="text" name="option_name" placeholder="Option Name"
                         value={option_name}
                         onChange={this.handleOption(option.id, 'option_name')} />
