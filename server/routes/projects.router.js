@@ -175,7 +175,6 @@ router.post( '/mission', rejectUnauthenticated, async(req, res) => {
       }
 })
 
-
 // get mission data for edit
 router.get( `/mission/:id`, rejectUnauthenticated, async(req, res) => {
     const client = await pool.connect();
@@ -193,7 +192,7 @@ router.get( `/mission/:id`, rejectUnauthenticated, async(req, res) => {
                         WHERE m."id" = $1
                         ORDER BY g."id";`;
         const result = await client.query( sqlText, [mission_id] );
-        console.log( `Result from 1:`, result.rows );
+        // console.log( `Result from 1:`, result.rows );
 
         let result2;
 
@@ -208,7 +207,7 @@ router.get( `/mission/:id`, rejectUnauthenticated, async(req, res) => {
                 result2 = await client.query( sqlText2, [row.goal_id] );
             }
         }
-        console.log( `Result2:`, result2.rows );
+        // console.log( `Result2:`, result2.rows );
 
         const allResults = {
             missionGoals: result.rows,
@@ -243,6 +242,51 @@ router.put( `/mission`, rejectUnauthenticated, (req, res) => {
             res.sendStatus(500);
         })
     
+})
+
+router.post( `/goal`, rejectUnauthenticated, async(req, res) => {
+    const client = await pool.connect();
+    console.log( `in addGoal`, req.body );
+    
+    const mission_id = req.body.mission_id;
+
+    try {
+        await client.query('BEGIN');
+
+        let sqlText = `INSERT INTO "goals" ("mission_id", "goal_type_id")
+                        VALUES ($1, 1)
+                        RETURNING "id";`;
+
+        const result = await client.query( sqlText, [mission_id] );
+        console.log( `Result:`, result.rows );
+
+        await client.query('COMMIT');
+        res.send( result.rows );
+    } catch(error) {   
+        await client.query('ROLLBACK');
+        console.log( `Couldn't add goal.`, error );
+        res.sendStatus(500);
+    } finally {
+        client.release()
+    }
+})
+
+router.delete( '/goal/:id', rejectUnauthenticated, (req, res) => {
+    console.log( `in delete goal`, req.params.id );
+    
+    const goal_id = req.params.id;
+
+    let sqlText = `DELETE FROM "goals"
+                    WHERE "id" = $1;`;
+
+    pool.query( sqlText, [goal_id] )
+        .then( (response) => {
+            res.sendStatus(200);
+        })
+        .catch( (error) => {
+            console.log( `Couldn't delete goal.`, error );
+            res.sendStatus(500);
+        })
 })
 
 /**

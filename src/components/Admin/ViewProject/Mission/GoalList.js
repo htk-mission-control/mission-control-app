@@ -6,6 +6,7 @@ import EitherOr from './EitherOr';
 class GoalList extends Component {
 
     state = {
+        mission_id: this.props.mission_id,
         goals: this.props.reduxState.projects.mission_id || [],
     }
 
@@ -29,7 +30,7 @@ class GoalList extends Component {
     }
 
     addGoal = () => {
-        this.props.dispatch( {type: 'ADD_GOAL'} );
+        this.props.dispatch( {type: 'ADD_GOAL_TO_MISSION', payload: this.state} );
         // console.log( `Last state:`, this.state );
         this.setState({ ...this.state, count: this.state.count + 1 });
     }
@@ -38,8 +39,9 @@ class GoalList extends Component {
         event.preventDefault();
         console.log( `in removeGoal`, id );
         if( goal.name ){
+            let removePayload = { goal_id: id, mission_id: this.state.mission_id };
             // write a delete function that recalls GET_MISSION_DETAILS
-            this.props.dispatch( {type: 'DELETE_GOAL', payload: id} );
+            this.props.dispatch( {type: 'DELETE_GOAL', payload: removePayload} );
         } else {
             // remove from missionReducer
             // BUT ALSO.... what about put vs post???? 

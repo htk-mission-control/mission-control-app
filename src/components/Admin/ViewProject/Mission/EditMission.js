@@ -70,7 +70,7 @@ class EditMission extends Component {
                 {missionIntro}
                 <br/><br/>
 
-                <GoalList />
+                <GoalList mission_id={this.state.mission_id} />
                 <br/><br/>
                 <button onClick={this.handleSave} >Save Mission</button>
 

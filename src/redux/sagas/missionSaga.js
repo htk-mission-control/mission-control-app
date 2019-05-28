@@ -12,17 +12,6 @@ function* getMissions( action ) {
     }
 }
 
-function* getGoalTypes( action ) {
-    try {
-        const response = yield axios.get( `/api/projects/goalTypes`);
-        yield put( {type: 'SET_GOAL_TYPES', payload: response.data} );
-    }
-    catch(error) {
-        console.log( `Couldn't get goal types.`, error );
-        alert( `Sorry, can't get data at this time. Try again later.` );
-    }
-}
-
 function* addMission( action ){
     try {
         // console.log( `in addMission!` );
@@ -58,7 +47,6 @@ function* updateMission( action ) {
 
 function* missionSaga() {
     yield takeLatest('GET_ALL_MISSIONS', getMissions);
-    yield takeLatest( 'GET_GOAL_TYPES', getGoalTypes );
     yield takeLatest( 'ADD_MISSION', addMission );
     yield takeLatest( 'GET_MISSION_DETAILS', getMissionDetails );
     yield takeLatest( 'UPDATE_MISSION', updateMission );
