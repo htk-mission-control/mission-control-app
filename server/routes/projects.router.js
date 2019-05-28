@@ -30,7 +30,7 @@ router.get('/:id', rejectUnauthenticated, (req, res) => {
 
 router.put('/:id', rejectUnauthenticated, async (req, res) => {
     let id = req.params.id;
-    console.log('id', id);
+    // console.log('id', id);
     
     let sqlText = (`UPDATE "projects" SET "hidden" = NOT "hidden" WHERE "id" = $1`)
     pool.query(sqlText, [id])
@@ -45,7 +45,7 @@ router.put('/:id', rejectUnauthenticated, async (req, res) => {
 
 router.put('/publish/:id', (req, res) => {
     let id = req.params.id;
-    console.log('id', id);
+    // console.log('id', id);
     
     let sqlText = (`UPDATE "projects" SET "published" = NOT "published" WHERE "id" = $1`)
     pool.query(sqlText, [id])
@@ -58,6 +58,22 @@ router.put('/publish/:id', (req, res) => {
         })
 });
 
+router.put('/name/:id', (req, res) => {
+    let id = req.params.id;
+    let name = req.body.projectName;
+    console.log('name', name);
+    console.log('id', id);
+    
+    let sqlText = (`UPDATE "projects" SET "name" = $1 WHERE "id" = $2`)
+    pool.query(sqlText, [name, id])
+        .then((result) => {
+            res.sendStatus(200);
+        })
+        .catch((error) => {
+            console.log('Error updating published status', error);
+            res.sendStatus(500);
+        })
+});
 
 router.get('/penalties/:id', (req, res) => {
     let sqlText = (`SELECT * FROM "penalties" WHERE "project_id" = $1;`)
@@ -118,7 +134,7 @@ router.delete('/missions/:id', rejectUnauthenticated, async (req, res) => {
         
     
         await client.query('BEGIN')
-        
+
         let maybe = await client.query(goalId, [id])
         console.log('maybe', maybe.rows.length);
         if (maybe.rows.length != 0) {

@@ -6,6 +6,8 @@ class ViewProject extends Component {
 
     state = {
         projectId: 0,
+        editProject: false,
+        projectName: '',
         projectDetails: {},
         projectPenalties: [],
         projectMissions: [],
@@ -27,6 +29,7 @@ class ViewProject extends Component {
     componentDidUpdate(prevProps) {
         if (this.props.reduxState.projectDetails !== prevProps.reduxState.projectDetails) {
             this.setState({
+                projectName: this.props.reduxState.projectDetails.name,
                 projectDetails: this.props.reduxState.projectDetails
             })
         };
@@ -72,7 +75,7 @@ class ViewProject extends Component {
                         <button>Edit</button>
                         <button value={mission[0].mission_id} onClick={this.handleDeleteMission}>Delete</button>
                         <h4>{mission[0].description}</h4>
-                        {mission.map( (mission, i) => {
+                        {mission.map((mission, i) => {
                             return (
                                 <div key={i}>
                                     {this.renderGoals(mission)}
@@ -91,7 +94,7 @@ class ViewProject extends Component {
         }
         else if (mission.goal_type_id === 2) {
             return (
-                this.state.projectEitherOr.map( (either, i) => {
+                this.state.projectEitherOr.map((either, i) => {
                     // console.log('mission.goal_id', mission.goal_id);
                     // console.log('either.goal_id', either.goal_id);
 
@@ -141,6 +144,10 @@ class ViewProject extends Component {
         this.props.dispatch({ type: 'DELETE_MISSION', payload: info });
     }
 
+    addMission = () => {
+        
+    }
+
     addPenalty = () => {
         this.props.history.push(`projects/add-penalty?projectId=${this.state.projectId}`);
     }
@@ -155,7 +162,21 @@ class ViewProject extends Component {
     }
 
     publishProject = () => {
-        this.props.dispatch({ type: 'PUBLISH_PROJECT', payload: {projectId: this.state.projectId} })
+        this.props.dispatch({ type: 'PUBLISH_PROJECT', payload: { projectId: this.state.projectId } })
+    }
+
+    editProjectName = () => {
+        this.setState({
+            editProject: !this.state.editProject,
+        });
+        this.props.dispatch({ type: 'UPDATE_PROJECT_NAME', payload: { projectName: this.state.projectName, projectId: this.state.projectId } });
+
+    }
+
+    handleChange = (event) => {
+        this.setState({
+            projectName: event.target.value,
+        });
     }
 
     render() {
@@ -167,15 +188,24 @@ class ViewProject extends Component {
                 {/* {JSON.stringify(this.state.projectEitherOr)}
                 <h1></h1> */}
                 {/* {JSON.stringify(this.state.projectMissions)} */}
-                <h1>{this.state.projectDetails.name}</h1>
-                <h2>The Project</h2>
+                {this.state.editProject === false ?
+                    <h1>{this.state.projectDetails.name}</h1>
+                    :
+                    <input onChange={this.handleChange} value={this.state.projectName}></input>
+                }
+                <h2>The Project:</h2>
+                <p>{this.state.projectDetails.description}</p>
                 <button onClick={this.deleteProject}>Delete Project</button>
-                {this.state.projectDetails.published === false ? 
+                {this.state.editProject === false ?
+                    <button onClick={this.editProjectName}>Edit Project Name</button>
+                    :
+                    <button onClick={this.editProjectName}>Save Project Name</button>
+                }
+                {this.state.projectDetails.published === false ?
                     <button onClick={this.publishProject}>Publish Project</button>
-                :
+                    :
                     <button onClick={this.publishProject}>Unpublish Project</button>
                 }
-                <p>{this.state.projectDetails.description}</p>
                 <div>
                     <h2>Penalties</h2>
                     <button onClick={this.addPenalty}>Add Penalty</button>
