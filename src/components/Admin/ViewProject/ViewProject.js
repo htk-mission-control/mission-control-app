@@ -65,7 +65,7 @@ class ViewProject extends Component {
 
         //Find a way to stop loop other than #100
         for (let count = 0; count < 100; count++) {
-            test = missionArr.filter(x => x.mission_id == count)
+            test = missionArr.filter(x => x.mission_id === count)
 
             if (test.length !== 0) {
                 // console.log('test length', test.length);
@@ -103,10 +103,7 @@ class ViewProject extends Component {
         else if (mission.goal_type_id === 2) {
             return (
                 this.state.projectEitherOr.map((either, i) => {
-                    // console.log('mission.goal_id', mission.goal_id);
-                    // console.log('either.goal_id', either.goal_id);
-
-                    if (mission.goal_id == either.goal_id) {
+                    if (mission.goal_id === either.goal_id) {
                         return (
                             <div key={i}>
                                 <h5>Goal: {either.name} = {either.points} points</h5>
@@ -127,8 +124,7 @@ class ViewProject extends Component {
             )
         }
     }
-    //-----TODO-----
-    //finish OR render to DOM
+
     renderOrText = (either) => {
         // console.log('either length', either);
         return <h5>OR</h5>
@@ -148,7 +144,6 @@ class ViewProject extends Component {
             projectId: this.state.projectId,
             missionId: event.target.value
         }
-        // console.log('event.target.value', info);
         this.props.dispatch({ type: 'DELETE_MISSION', payload: info });
     }
 
@@ -199,60 +194,66 @@ class ViewProject extends Component {
     }
 
     render() {
-        return (
-            <div>
-                {this.state.editProject === false ?
-                    <h1>{this.state.projectDetails.name}: {this.state.projectDetails.year}</h1>
-                    :
+        if(this.state.projectDetails.hidden === true) {
+           return <h1>404</h1>
+        }
+        else {
+            return (
+                <div>
+                    {this.state.editProject === false ?
+                        <h1>{this.state.projectDetails.name}: {this.state.projectDetails.year}</h1>
+                        :
+                        <div>
+                            <input onChange={this.handleChange('projectName')} value={this.state.projectInfo.projectName}></input>
+                            <input onChange={this.handleChange('year')} value={this.state.projectInfo.year}></input>
+                        </div>
+                    }
+                    <h2>The Project:</h2>
+                    {this.state.editProject === false ?
+                        <p>{this.state.projectDetails.description}</p>
+                        :
+                        <input onChange={this.handleChange('projectDescription')} value={this.state.projectInfo.projectDescription}></input>
+                    }
+                    <button onClick={this.deleteProject}>Delete Project</button>
+                    {this.state.editProject === false ?
+                        <button onClick={this.editProjectName}>Edit Project Info</button>
+                        :
+                        <button onClick={this.editProjectName}>Save Project Info</button>
+                    }
+                    {this.state.projectDetails.published === false ?
+                        <button onClick={this.publishProject}>Publish Project</button>
+                        :
+                        <button onClick={this.publishProject}>Unpublish Project</button>
+                    }
                     <div>
-                        <input onChange={this.handleChange('projectName')} value={this.state.projectInfo.projectName}></input>
-                        <input onChange={this.handleChange('year')} value={this.state.projectInfo.year}></input>
+                        <h2>Penalties</h2>
+                        <button onClick={this.addPenalty}>Add Penalty</button>
+                        <hr />
+                        {this.state.projectPenalties.map(penalty => {
+                            return (
+                                <div key={penalty.id}>
+                                    <h3>{penalty.name}</h3>
+                                    <p>Description: {penalty.description}</p>
+                                    <p>Max Penalties: {penalty.max}</p>
+                                    <p>Points: {penalty.points}</p>
+                                    <button value={penalty.id} onClick={this.editPenalty}>EDIT</button>
+                                    <button value={penalty.id} onClick={this.handleDeletePenalty}>DELETE</button>
+                                </div>
+                            )
+                        })}
+                        <hr />
                     </div>
-                }
-                <h2>The Project:</h2>
-                {this.state.editProject === false ?
-                    <p>{this.state.projectDetails.description}</p>
-                    :
-                    <input onChange={this.handleChange('projectDescription')} value={this.state.projectInfo.projectDescription}></input>
-                }
-                <button onClick={this.deleteProject}>Delete Project</button>
-                {this.state.editProject === false ?
-                    <button onClick={this.editProjectName}>Edit Project Info</button>
-                    :
-                    <button onClick={this.editProjectName}>Save Project Info</button>
-                }
-                {this.state.projectDetails.published === false ?
-                    <button onClick={this.publishProject}>Publish Project</button>
-                    :
-                    <button onClick={this.publishProject}>Unpublish Project</button>
-                }
-                <div>
-                    <h2>Penalties</h2>
-                    <button onClick={this.addPenalty}>Add Penalty</button>
-                    <hr />
-                    {this.state.projectPenalties.map(penalty => {
-                        return (
-                            <div key={penalty.id}>
-                                <h3>{penalty.name}</h3>
-                                <p>Description: {penalty.description}</p>
-                                <p>Max Penalties: {penalty.max}</p>
-                                <p>Points: {penalty.points}</p>
-                                <button value={penalty.id} onClick={this.editPenalty}>EDIT</button>
-                                <button value={penalty.id} onClick={this.handleDeletePenalty}>DELETE</button>
-                            </div>
-                        )
-                    })}
-                    <hr />
+                    <div>
+                        <h2>Missions</h2>
+                        <button onClick={this.addMission}>Add Mission</button>
+                        <hr />
+                        {this.groundControl()}
+                    </div>
+    
                 </div>
-                <div>
-                    <h2>Missions</h2>
-                    <button onClick={this.addMission}>Add Mission</button>
-                    <hr />
-                    {this.groundControl()}
-                </div>
-
-            </div>
-        )
+            )
+        }
+        
     }
 }
 

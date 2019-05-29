@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import qs from 'query-string';
 
 class ProjectOverview extends Component {
 
@@ -23,7 +22,7 @@ class ProjectOverview extends Component {
     }
 
     componentDidUpdate(prevProps) {
-        if (this.state.projectDetails == 0) {
+        if (this.state.projectDetails.length === 0) {
             this.props.dispatch({ type: 'GET_PROJECT_DETAILS', payload: this.state });
             this.props.dispatch({ type: 'GET_PENALTIES', payload: this.state });
             this.props.dispatch({ type: 'GET_MISSIONS', payload: this.state });
@@ -66,7 +65,7 @@ class ProjectOverview extends Component {
 
         //Find a way to stop loop other than #100
         for (let count = 0; count < 100; count++) {
-            test = missionArr.filter(x => x.mission_id == count)
+            test = missionArr.filter(x => x.mission_id === count)
 
             if (test.length !== 0) {
 
@@ -99,7 +98,7 @@ class ProjectOverview extends Component {
         else if (mission.goal_type_id === 2) {
             return (
                 this.state.projectEitherOr.map((either, i) => {
-                    if (mission.goal_id == either.goal_id) {
+                    if (mission.goal_id === either.goal_id) {
                         return (
                             <div key={i}>
                                 <h5>Goal: {either.name} = {either.points} points</h5>
@@ -107,6 +106,7 @@ class ProjectOverview extends Component {
                             </div>
                         )
                     }
+                    return
                 })
             )
         }

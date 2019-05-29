@@ -38,7 +38,7 @@ router.put('/:id', rejectUnauthenticated, async (req, res) => {
             res.sendStatus(200);
         })
         .catch((error) => {
-            console.log('Error deleting published status', error);
+            console.log('Error deleting project', error);
             res.sendStatus(500);
         })
 })
@@ -62,7 +62,7 @@ router.put('/info/:id', (req, res) => {
     let id = req.params.id;
     let info = req.body.projectInfo;
     
-    let sqlText = (`UPDATE "projects" SET "name" = $1, "description" = $2, "year" = $3 WHERE "id" = $4`)
+    let sqlText = (`UPDATE "projects" SET "name" = $1, "description" = $2, "year" = $3 WHERE "id" = $4 AND "hidden" = FALSE;`)
     pool.query(sqlText, [info.projectName, info.projectDescription, info.year, id])
         .then((result) => {
             res.sendStatus(200);
