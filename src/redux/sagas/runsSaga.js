@@ -5,7 +5,7 @@ function* getRunsAsCoach( action ) {
     try {
         const response = yield axios.get(`/api/runs/coach`);
         console.log(`get response is`, response.data);
-        yield put({ type: 'SET_ALL_MISSIONS', payload: response.data })
+        yield put({ type: 'SET_RUNS', payload: response.data })
     }
     catch (error) {
         console.log(`Couldn't get runs from DB`, error);
@@ -16,7 +16,7 @@ function* getRunsAsTeam( action ) {
     try {
         const response = yield axios.get(`/api/runs/team`);
         console.log(`get response is`, response.data);
-        yield put({ type: 'SET_ALL_MISSIONS', payload: response.data })
+        yield put({ type: 'SET_RUNS', payload: response.data })
     }
     catch (error) {
         console.log(`Couldn't get runs from DB`, error);
