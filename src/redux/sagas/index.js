@@ -6,6 +6,7 @@ import projectSaga from './projectSaga';
 import missionSaga from './missionSaga';
 import teamSaga from './teamSaga';
 import penaltySaga from './penaltySaga';
+import runsSaga from './runsSaga';
 
 // rootSaga is the primary saga.
 // It bundles up all of the other sagas so our project can use them.
@@ -23,5 +24,6 @@ export default function* rootSaga() {
     missionSaga(),
     teamSaga(),
     penaltySaga(),
+    runsSaga(),
   ]);
 }
