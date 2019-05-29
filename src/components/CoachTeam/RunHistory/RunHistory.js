@@ -17,7 +17,20 @@ class RunHistory extends Component {
   }
 
   renderRuns = () => {
-    // console.log((this.props.runs))
+    console.log('all runs', this.props.allRuns)
+    return (
+      <div>
+        { 
+          this.props.allRuns.map( run =>
+            <div key={run.id} >
+              <p>{ run.name } | { run.count } | { run.score }</p>
+            </div>
+          )
+        }
+      </div>
+      
+    )
+    
   }
 
   render () {
@@ -26,6 +39,7 @@ class RunHistory extends Component {
         <h1>{ this.props.user.username }</h1>
         <h2>Practice Runs</h2>
         <hr></hr>
+        <h3>Run Name | Goals Completed | Score</h3>
         { this.renderRuns() }
         <button>Show More</button>
         <Link to="/practice-run" ><button>Create New Run</button></Link>
@@ -34,6 +48,6 @@ class RunHistory extends Component {
   }
 }
 
-const mapStateToProps = ({ user }) => ({ user });
+const mapStateToProps = ({ allRuns, user }) => ({ allRuns, user });
 
 export default connect(mapStateToProps)( RunHistory );
