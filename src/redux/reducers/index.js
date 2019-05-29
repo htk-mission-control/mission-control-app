@@ -5,8 +5,13 @@ import user from './userReducer';
 import projects from './projectsReducer';
 import missions from './allMissionsReducer';
 import selectedMissions from './selectedMissionsReducer';
+import projectMission from './missionReducer';
 import allTeams from './allTeamsReducer';
+import projectDetails from './projectDetailsReducer';
+import penalties from './penaltiesReducer';
 import penalty from './penaltyReducer';
+import eitherOr from './eitherOrReducer';
+
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -19,7 +24,11 @@ const rootReducer = combineReducers({
   loginMode, // will have a value of 'login' or 'registration' to control which screen is shown
   user, // will have an id and username if someone is logged in
   projects,
+  projectDetails,
+  penalties,
+  projectMission,
   missions,
+  eitherOr,
   selectedMissions,
   allTeams, // holds teams with specific coach/user id
   penalty, 
