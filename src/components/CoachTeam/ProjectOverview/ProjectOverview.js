@@ -15,23 +15,32 @@ class ProjectOverview extends Component {
     }
 
     componentDidMount() {
-        const searchObject = qs.parse(this.props.location.search);
-        console.log('searchObject', searchObject);
-        this.setState({
-            projectId: searchObject.projectId,
-        })
-        this.props.dispatch({ type: 'GET_PROJECT_DETAILS', payload: searchObject });
-        this.props.dispatch({ type: 'GET_PENALTIES', payload: searchObject });
-        this.props.dispatch({ type: 'GET_MISSIONS', payload: searchObject });
-        this.props.dispatch({ type: 'GET_EITHER_OR', payload: searchObject });
+        this.props.dispatch({ type: 'GET_ALL_PROJECTS'})
+        this.props.dispatch({ type: 'GET_PROJECT_DETAILS', payload: this.state });
+        this.props.dispatch({ type: 'GET_PENALTIES', payload: this.state });
+        this.props.dispatch({ type: 'GET_MISSIONS', payload: this.state });
+        this.props.dispatch({ type: 'GET_EITHER_OR', payload: this.state });
     }
 
     componentDidUpdate(prevProps) {
-        if (this.props.reduxState.projectDetails !== prevProps.reduxState.projectDetails) {
+        if (this.state.projectDetails == 0) {
+            this.props.dispatch({ type: 'GET_PROJECT_DETAILS', payload: this.state });
+            this.props.dispatch({ type: 'GET_PENALTIES', payload: this.state });
+            this.props.dispatch({ type: 'GET_MISSIONS', payload: this.state });
+            this.props.dispatch({ type: 'GET_EITHER_OR', payload: this.state });
+        }
+        if (this.props.reduxState.projects !== prevProps.reduxState.projects) {
             this.setState({
+                projectId: this.props.reduxState.projects[0].id
+            })
+        };
+        if (this.props.reduxState.projectDetails !== prevProps.reduxState.projectDetails) {            
+            this.setState({
+                projectId: this.props.reduxState.projects[0].id,
                 projectName: this.props.reduxState.projectDetails.name,
                 projectDetails: this.props.reduxState.projectDetails
             })
+
         };
         if (this.props.reduxState.penalties !== prevProps.reduxState.penalties) {
             this.setState({
@@ -121,7 +130,10 @@ class ProjectOverview extends Component {
     render() {
         return (
             <div>
-                <h1>{this.state.projectDetails.name}</h1>
+                {/* {JSON.stringify(this.state.projectId)}
+                <br/>
+                {JSON.stringify(this.props.reduxState.projectDetails)} */}
+                <h1>{this.state.projectDetails.name}: {this.state.projectDetails.year}</h1>
                 <h2>The Project:</h2>
                 <p>{this.state.projectDetails.description}</p>
                 
