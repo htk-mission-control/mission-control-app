@@ -1,16 +1,8 @@
 const allRunsReducer = (state = [], action) => {
   switch (action.type) {
-    case 'SET_ALL_MISSIONS':
-      let allMissions = [];
-      for ( let item of action.payload) {
-        let mission = {
-          project_id: item.project_id,
-          name: item.name,
-          selected: false 
-        }
-        allMissions.push(mission);
-      }
-      return allMissions;
+
+    case 'SET_RUNS':
+      return action.payload;
     default:
       return state;
   }
