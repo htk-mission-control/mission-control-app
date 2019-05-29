@@ -60,7 +60,9 @@ class ViewProject extends Component {
 
     groundControl = () => {
         let missionArr = this.state.projectMissions;
-        let newArr = [];
+        let eitherOrArr = this.state.projectEitherOr;
+        let newMissionArr = [];
+        let newEitherOrArr = [];
         let test = [];
 
         //Find a way to stop loop other than #100
@@ -70,13 +72,25 @@ class ViewProject extends Component {
             if (test.length !== 0) {
                 // console.log('test length', test.length);
 
-                newArr.push(test)
+                newMissionArr.push(test)
             }
 
         }
-        // console.log('newArr', newArr);
+        console.log('newMissionArr', newMissionArr);
+        for (let count = 0; count < 100; count++) {
+            test = eitherOrArr.filter(x => x.goal_id === count)
+
+            if (test.length !== 0) {
+                // console.log('test length', test.length);
+
+                newEitherOrArr.push(test)
+            }
+
+        }
+        console.log('newEitherOrArr', newEitherOrArr);
+        // console.log('eitherOrArr', eitherOrArr);
         return (
-            newArr.map((mission, i) => {
+            newMissionArr.map((mission, i) => {
                 return (
                     <div key={i}>
                         <h3>Mission {i + 1}: {mission[0].mission_name}</h3>
@@ -86,7 +100,7 @@ class ViewProject extends Component {
                         {mission.map((mission, i) => {
                             return (
                                 <div key={i}>
-                                    {this.renderGoals(mission)}
+                                    {this.renderGoals(mission, newEitherOrArr)}
                                 </div>
                             )
                         })}
@@ -96,21 +110,28 @@ class ViewProject extends Component {
         )
     }
 
-    renderGoals = (mission) => {
+    renderGoals = (mission, eitherOr) => {
         if (mission.goal_type_id === 1) {
             return <h5>Goal: {mission.name} = {mission.points} points</h5>
         }
         else if (mission.goal_type_id === 2) {
             return (
-                this.state.projectEitherOr.map((either, i) => {
-                    if (mission.goal_id === either.goal_id) {
-                        return (
-                            <div key={i}>
-                                <h5>Goal: {either.name} = {either.points} points</h5>
-                                {this.renderOrText(either)}
-                            </div>
-                        )
-                    }
+                eitherOr.map((eithers) => {
+                    console.log('either first loop', eithers);
+                    return (
+                        eithers.map( (either, i) => {
+                            if (mission.goal_id === either.goal_id) {
+                                console.log('either second loop', either);
+
+                                return (
+                                    <div key={i}>
+                                        <h5>Goal: {either.name} = {either.points} points</h5>
+                                        {this.renderOrText(eithers, i)}
+                                    </div>
+                                )
+                            }
+                        })
+                    )
                 })
             )
         }
@@ -125,9 +146,12 @@ class ViewProject extends Component {
         }
     }
 
-    renderOrText = (either) => {
-        // console.log('either length', either);
-        return <h5>OR</h5>
+    renderOrText = (either, i) => {
+        console.log('either length', either.length);
+        if (i < (either.length - 1)) {
+            return <h5>OR</h5>
+        }
+        return
     }
 
     handleDeletePenalty = (event) => {
