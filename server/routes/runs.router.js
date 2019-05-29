@@ -17,10 +17,35 @@ pool.query( sqlText )
 }); // end transaction
 
 /**
- * POST route template
+ * GET runs for coach
  */
-router.post('/', (req, res) => {
+router.get('/coach', (req, res) => {
+    const sqlText = `
+        SELECT "runs"."id", "runs"."name", COUNT(CASE WHEN "goals_per_run"."is_completed" THEN 1 end), "runs"."score" FROM "runs"
+        JOIN "selected_missions" ON "run_id" = "runs"."id"
+        JOIN "goals_per_run" ON "selected_missions_id" = "selected_missions"."id"
+        GROUP BY "runs"."id";
+    `
+pool.query( sqlText )
+    .then ( result => {
+        console.log(result.rows);
+        res.send( result.rows );
+    }).catch ( error => {
+        res.sendStatus( 500 );
+    })
+});
 
+/**
+ * GET runs for team
+ */
+router.get('/team', (req, res) => {
+    const sqlText = ``
+pool.query( sqlText )
+    .then ( result => {
+        res.send( result.rows );
+    }).catch ( error => {
+        res.sendStatus( 500 );
+    })
 });
 
 module.exports = router;
