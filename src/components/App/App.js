@@ -20,6 +20,7 @@ import HomeAdmin from '../Admin/HomeAdmin/HomeAdmin';
 import CreateRun from '../CoachTeam/NewRun/CreateRun/CreateRun';
 import HomeTeam from '../CoachTeam/HomeTeam/HomeTeam';
 import ViewProject from '../Admin/ViewProject/ViewProject';
+import ProjectOverview from '../CoachTeam/ProjectOverview/ProjectOverview';
 import HomeCoach from '../CoachTeam/HomeCoach/HomeCoach';
 
 import './App.css';
@@ -88,6 +89,10 @@ class App extends Component {
               path="/team/home"
               component={HomeTeam}
             />
+            <ProtectedCoachAndTeams 
+              exact
+              path="/missions"
+              component={ProjectOverview}
             <ProtectedCoach
               exact
               path="/coach/home"
