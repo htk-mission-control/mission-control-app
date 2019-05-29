@@ -3,52 +3,75 @@ let options = {
     optionList: []
 }
 
-const goalOptionReducer = (state = options, action) => {
+const goalOptionReducer = (state = {}, action) => {
     switch (action.type) {
         case 'SET_GOAL_OPTIONS':
-            options.optionList = action.payload;
-            if(options.optionCount === 0){
-                options.optionCount = options.optionList.length;
+            options = {
+                ...options,
+                optionList: action.payload,
             }
-            return options;
+
+            if(options.optionCount === 0){
+                options = {
+                    ...options,
+                    optionCount: action.payload.length,
+                }
+            } 
+
+            return state = options;
     
         case 'ADD_OPTION':
-            options.optionCount += 1;
-            options.optionList = [...options.optionList, {
-                id: action.payload.option_id || options.optionCount,
-                goal_id: action.payload.goal_id,
-                option_name: '',
-                option_points: '',
-            }];
+            options = {
+                ...options,
+                optionCount: options.optionCount + 1,
+                optionList: [
+                    ...options.optionList,
+                    {
+                        id: action.payload.option_id || options.optionCount,
+                        goal_id: action.payload.goal_id,
+                        option_name: '',
+                        option_points: '',
+                    }
+                ]
+            }
+
             return state = options;
 
         case 'ADD_STARTER_OPTIONS':
-            options.optionCount += 2;
-            options.optionList.push(
-                {
-                    id: options.optionCount -1,
-                    goal_id: action.payload,
-                    option_name: '',
-                    option_points: '',
-                },
-                {
-                    id: options.optionCount,
-                    goal_id: action.payload,
-                    option_name: '',
-                    option_points: '',
-                }
-            );
+            options = {
+                ...options,
+                optionCount: 2,
+                optionList: [
+                    {
+                        id: options.optionCount -1,
+                        goal_id: action.payload,
+                        option_name: '',
+                        option_points: '',
+                    },
+                    {
+                        id: options.optionCount,
+                        goal_id: action.payload,
+                        option_name: '',
+                        option_points: '',
+                    }
+                ]
+            }
+
             return state = options;
 
         case 'REMOVE_OPTION':
-            options.optionList = action.payload;
-            return options;
+            options = {
+                ...options,
+                optionList: action.payload,
+            }
+            return state = options;
 
         case 'REFRESH_OPTIONS':
-            return options = {
+            options = {
                 optionCount: 0,
                 optionList: []
-            };
+            }
+            return state = options;
 
         default:
             return state;

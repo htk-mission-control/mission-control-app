@@ -1,33 +1,38 @@
-
-const mission = {
-    name: '',
-    description: '',
-    goals: []
-}
-
-
 const missionDetails = (state = {}, action) => {
+    // console.log( `state:`, state );
+    
     switch (action.type) {
+        
         case 'SET_MISSION_DETAILS':
-            mission.name = action.payload[0].name;
-            mission.description = action.payload[0].description;
-            mission.goals = action.payload;
-            mission.goalCount = mission.goals.length;
+            let mission = {
+                name: action.payload[0].name,
+                description: action.payload[0].description,
+                goals: action.payload,
+                goalCount: action.payload.length,
+
+            };
 
             return state = mission;
 
         case 'UPDATE_GOALS':
-            mission.goals = action.payload;
+            mission = {
+                ...mission, 
+                goals: action.payload}
             return state = mission;
 
         case 'ADD_GOAL':
-            mission.goalCount += 1;
-            mission.goals.push({
-                    goal_id: mission.goalCount,
-                    goal_type_id: action.payload || '',
-                }
-            );
-            return mission;
+            mission = {
+                ...mission,
+                goalCount: mission.goalCount + 1,
+                goals: [
+                    ...mission.goals,
+                    {
+                        goal_id: mission.goalCount,
+                        goal_type_id: action.payload || '',
+                    }
+                ]
+            }
+            return state = mission;
     
         default:
             return state;

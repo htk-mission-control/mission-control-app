@@ -27,6 +27,9 @@ class EitherOr extends Component {
                 optionCount: this.props.reduxState.goalOptions.optionCount,
             })
         }
+        if( this.props.reduxState.missionDetails !== prevProps.reduxState.missionDetails ){
+            this.setState({ state: this.state });
+        }
     }
 
     addOption = () => {
@@ -109,17 +112,20 @@ class EitherOr extends Component {
                 }
 
                 if( option.goal_id === this.props.goal ){
-                return <div key={option.id} >
-                    <label>Option </label>
-                    <input type="text" name="option_name" placeholder="Option Name"
-                        value={option_name}
-                        onChange={this.handleOption(option.id, 'option_name')} />
-                    <label>Points</label>
-                    <input type="number" name="option_points" placeholder="0"
-                        value={option_points}
-                        onChange={this.handleOption(option.id, 'option_points')} />
-                    <i onClick={this.removeOption(option.id)} className="fas fa-trash"></i>
-                </div>}
+                    return <div key={option.id} >
+                        <label>Option </label>
+                        <input type="text" name="option_name" placeholder="Option Name"
+                            value={option_name}
+                            onChange={this.handleOption(option.id, 'option_name')} />
+                        <label>Points</label>
+                        <input type="number" name="option_points" placeholder="0"
+                            value={option_points}
+                            onChange={this.handleOption(option.id, 'option_points')} />
+                        <i onClick={this.removeOption(option.id)} className="fas fa-trash"></i>
+                        </div>
+                } else {
+                    return null;
+                }
             }
         )} else {
             optionMap = null;

@@ -14,8 +14,8 @@ function* getGoalTypes( action ) {
 
 function* addGoalToMission( action ){
     try{
-        const response = yield axios.post( `/api/projects/goal`, action.payload );
-        yield put( {type: 'ADD_GOAL', payload: response.data[0].id} );
+        yield axios.post( `/api/projects/goal`, action.payload );
+        // yield put( {type: 'ADD_GOAL', payload: response.data[0].id} );
         yield put( {type: `GET_MISSION_DETAILS`, payload: action.payload.mission_id} );
     }
     catch(error) {

@@ -62,7 +62,7 @@ class EditPenalty extends Component {
     }
 
     render() {
-        const penalty = this.props.reduxState.penalty;
+        // const penalty = this.props.reduxState.penalty;
 
         return(
             <div>
