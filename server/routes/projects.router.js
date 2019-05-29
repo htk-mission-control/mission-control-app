@@ -16,7 +16,7 @@ router.get('/', rejectUnauthenticated, (req, res) => {
         })
 });
 
-router.get('/:id', rejectUnauthenticated, (req, res) => {
+router.get('/details/:id', rejectUnauthenticated, (req, res) => {
     let sqlText = (`SELECT * FROM "projects" WHERE "id" = $1;`)
     pool.query(sqlText, [req.params.id])
         .then((results) => {
@@ -58,19 +58,17 @@ router.put('/publish/:id', (req, res) => {
         })
 });
 
-router.put('/name/:id', (req, res) => {
+router.put('/info/:id', (req, res) => {
     let id = req.params.id;
-    let name = req.body.projectName;
-    console.log('name', name);
-    console.log('id', id);
+    let info = req.body.projectInfo;
     
-    let sqlText = (`UPDATE "projects" SET "name" = $1 WHERE "id" = $2`)
-    pool.query(sqlText, [name, id])
+    let sqlText = (`UPDATE "projects" SET "name" = $1, "description" = $2, "year" = $3 WHERE "id" = $4`)
+    pool.query(sqlText, [info.projectName, info.projectDescription, info.year, id])
         .then((result) => {
             res.sendStatus(200);
         })
         .catch((error) => {
-            console.log('Error updating published status', error);
+            console.log('Error updating project information', error);
             res.sendStatus(500);
         })
 });

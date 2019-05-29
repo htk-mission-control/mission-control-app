@@ -7,7 +7,11 @@ class ViewProject extends Component {
     state = {
         projectId: 0,
         editProject: false,
-        projectName: '',
+        projectInfo: {
+            projectName: '',
+            projectDescription: '',
+            year: '',
+        },
         projectDetails: {},
         projectPenalties: [],
         projectMissions: [],
@@ -29,7 +33,11 @@ class ViewProject extends Component {
     componentDidUpdate(prevProps) {
         if (this.props.reduxState.projectDetails !== prevProps.reduxState.projectDetails) {
             this.setState({
-                projectName: this.props.reduxState.projectDetails.name,
+                projectInfo: {
+                    projectName: this.props.reduxState.projectDetails.name,
+                    projectDescription: this.props.reduxState.projectDetails.description,
+                    year: this.props.reduxState.projectDetails.year,
+                },
                 projectDetails: this.props.reduxState.projectDetails
             })
         };
@@ -149,7 +157,7 @@ class ViewProject extends Component {
     }
 
     editMission = (event) => {
-        this.props.history.push(`projects/edit-mission?penaltyId=${event.target.value}`)
+        this.props.history.push(`projects/edit-mission?missionId=${event.target.value}`)
     }
 
     addPenalty = () => {
@@ -173,37 +181,45 @@ class ViewProject extends Component {
         this.setState({
             editProject: !this.state.editProject,
         });
-        this.props.dispatch({ type: 'UPDATE_PROJECT_NAME', payload: { projectName: this.state.projectName, projectId: this.state.projectId } });
+        let data = {
+            projectId: this.state.projectId,
+            projectInfo: this.state.projectInfo
+        }
+        this.props.dispatch({ type: 'UPDATE_PROJECT_NAME', payload: data});
 
     }
 
-    handleChange = (event) => {
+    handleChange = (propertyName) => (event) => {
         this.setState({
-            projectName: event.target.value,
+            projectInfo: {
+                ...this.state.projectInfo,
+                [propertyName]: event.target.value,
+            }
         });
     }
 
     render() {
         return (
             <div>
-                {/* {JSON.stringify(this.props.location)} */}
-                {/* {JSON.stringify(this.state.projectPenalties)} */}
-                {/* {JSON.stringify(this.state.projectDetails)} */}
-                {/* {JSON.stringify(this.state.projectEitherOr)}
-                <h1></h1> */}
-                {/* {JSON.stringify(this.state.projectMissions)} */}
                 {this.state.editProject === false ?
-                    <h1>{this.state.projectDetails.name}</h1>
+                    <h1>{this.state.projectDetails.name}: {this.state.projectDetails.year}</h1>
                     :
-                    <input onChange={this.handleChange} value={this.state.projectName}></input>
+                    <div>
+                        <input onChange={this.handleChange('projectName')} value={this.state.projectInfo.projectName}></input>
+                        <input onChange={this.handleChange('year')} value={this.state.projectInfo.year}></input>
+                    </div>
                 }
                 <h2>The Project:</h2>
-                <p>{this.state.projectDetails.description}</p>
+                {this.state.editProject === false ?
+                    <p>{this.state.projectDetails.description}</p>
+                    :
+                    <input onChange={this.handleChange('projectDescription')} value={this.state.projectInfo.projectDescription}></input>
+                }
                 <button onClick={this.deleteProject}>Delete Project</button>
                 {this.state.editProject === false ?
-                    <button onClick={this.editProjectName}>Edit Project Name</button>
+                    <button onClick={this.editProjectName}>Edit Project Info</button>
                     :
-                    <button onClick={this.editProjectName}>Save Project Name</button>
+                    <button onClick={this.editProjectName}>Save Project Info</button>
                 }
                 {this.state.projectDetails.published === false ?
                     <button onClick={this.publishProject}>Publish Project</button>

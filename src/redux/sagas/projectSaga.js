@@ -16,7 +16,7 @@ function* getProjectDetails(action) {
     try {
         console.log('action.payload', action.payload);
     
-        const response = yield axios.get(`/api/projects/${action.payload.projectId}`);
+        const response = yield axios.get(`/api/projects/details/${action.payload.projectId}`);
         yield put({ type: 'SET_PROJECT_DETAILS', payload: response.data })
     }
     catch (error) {
@@ -113,16 +113,16 @@ function* addProject(action) {
     }
 }
 
-function* updateProjectName(action) {
+function* updateProjectInfo(action) {
     try {
         console.log('action.payload', action.payload);
         let id = action.payload.projectId
         
-        yield axios.put(`/api/projects/name/${id}`, action.payload);
+        yield axios.put(`/api/projects/info/${id}`, action.payload);
         yield put({ type: 'GET_PROJECT_DETAILS', payload: action.payload});
     }
     catch (error) {
-        console.log(`Couldn't update project name`);
+        console.log(`Couldn't update project info`);
     }
 }
 
@@ -130,7 +130,7 @@ function* projectSaga() {
     yield takeLatest('GET_ALL_PROJECTS', getAllProjects);
     yield takeLatest('GET_PROJECT_DETAILS', getProjectDetails);
     yield takeLatest('PUBLISH_PROJECT', publishProject);
-    yield takeLatest('UPDATE_PROJECT_NAME', updateProjectName);
+    yield takeLatest('UPDATE_PROJECT_NAME', updateProjectInfo);
     yield takeLatest('DELETE_PROJECT', deleteProject);
     yield takeLatest('GET_PENALTIES', getPenalties);
     yield takeLatest('DELETE_PENALTY', deletePenalty);
