@@ -68,7 +68,7 @@ router.post('/saveDetails', async (req, res) => {
                 }
             }
             await client.query('COMMIT')
-            res.sendStatus(201);
+            res.send(runId);
         }
         catch ( error ) {
             await client.query('ROLLBACK')
@@ -182,9 +182,9 @@ router.get('/selectedMissions/eitherOr', async (req, res) => {
     let teamId = req.user.id;
     try {
         let sqlText1 = `SELECT "runs"."id", "runs"."name" FROM "runs"
-                            JOIN "teams" ON "teams"."id" = "runs"."team_id"
-                            WHERE "team_user_id" = $1
-                            ORDER BY "id" DESC LIMIT 1;`
+                        JOIN "teams" ON "teams"."id" = "runs"."team_id"
+                        WHERE "team_user_id" = $1
+                        ORDER BY "id" DESC LIMIT 1;`
         let sqlText2 = `SELECT
                             "either_or"."goal_id" AS "either_or_goal_id",
                             "either_or"."id" AS "either_or_id",

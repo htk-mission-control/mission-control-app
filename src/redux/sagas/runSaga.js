@@ -6,7 +6,8 @@ function* saveRun( action ) {
     try {
         console.log('in save run saga', action.payload);        
         yield axios.post( `/api/runs/saveDetails`, action.payload );
-        
+        yield put({ type: 'GET_SELECTED_MISSIONS' });
+        yield put({ type: 'GET_SELECTED_EITHER_OR' });
     }
     catch(error) {
         console.log(`Couldn't post your run details`, error);

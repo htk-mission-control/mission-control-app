@@ -9,7 +9,7 @@ class SelectRunDetails extends Component {
         // stores selected mission details
         newRun: {
             runName: '',
-            selectedMissions: this.props.reduxState.missions,
+            selectedMissions: [],
             allSelected: false,
         },
         // stores details for team roles
