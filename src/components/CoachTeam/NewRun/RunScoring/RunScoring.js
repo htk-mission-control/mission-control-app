@@ -10,7 +10,6 @@ class RunScoring extends Component {
         goals: [],
         eitherOr: [],
         penaltyCount: 0,
-        penaltyMax: 0,
     }
 
     componentDidUpdate(prevProps) {
