@@ -25,7 +25,7 @@ function* addMission( action ){
 
 function* getMissionDetails( action ){
     try{
-        const response = yield axios.get( `api/projects/mission/${action.payload}` );
+        const response = yield axios.get( `api/projects/mission/${action.payload.missionId}` );
         yield put( {type: `SET_MISSION_DETAILS`, payload: response.data.missionGoals} );
         yield put( {type: 'SET_GOAL_OPTIONS', payload: response.data.eitherOrOptions} );
     }

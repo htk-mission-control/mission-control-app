@@ -64,7 +64,7 @@ class App extends Component {
               path="/admin/home"
               component={HomeAdmin}
             />
-            <ProtectedAdmin
+            <ProtectedTeamWithAccess
               exact 
               path="/practice-run"
               component={CreateRun}
@@ -93,6 +93,7 @@ class App extends Component {
               exact
               path="/missions"
               component={ProjectOverview}
+            />
             <ProtectedCoach
               exact
               path="/coach/home"
