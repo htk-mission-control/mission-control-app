@@ -130,9 +130,6 @@ class ProjectOverview extends Component {
     render() {
         return (
             <div>
-                {/* {JSON.stringify(this.state.projectId)}
-                <br/>
-                {JSON.stringify(this.props.reduxState.projectDetails)} */}
                 <h1>{this.state.projectDetails.name}: {this.state.projectDetails.year}</h1>
                 <h2>The Project:</h2>
                 <p>{this.state.projectDetails.description}</p>
