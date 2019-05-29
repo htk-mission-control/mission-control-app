@@ -11,6 +11,7 @@ import projectDetails from './projectDetailsReducer';
 import penalties from './penaltiesReducer';
 import penalty from './penaltyReducer';
 import eitherOr from './eitherOrReducer';
+import allRuns from './allRunsReducer';
 
 
 // rootReducer is the primary reducer for our entire project
@@ -31,7 +32,8 @@ const rootReducer = combineReducers({
   eitherOr,
   selectedMissions,
   allTeams, // holds teams with specific coach/user id
-  penalty, 
+  penalty,
+  allRuns,
 });
 
 export default rootReducer;
