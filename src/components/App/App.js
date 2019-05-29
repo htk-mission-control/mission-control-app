@@ -20,11 +20,14 @@ import HomeAdmin from '../Admin/HomeAdmin/HomeAdmin';
 import CreateRun from '../CoachTeam/NewRun/CreateRun/CreateRun';
 import HomeTeam from '../CoachTeam/HomeTeam/HomeTeam';
 import ViewProject from '../Admin/ViewProject/ViewProject';
+import HomeCoach from '../CoachTeam/HomeCoach/HomeCoach';
 
 import './App.css';
 import ProtectedCoachAndTeams from '../ProtectedRoutes/ProtectedCoachAndTeams/ProtectedCoachAndTeams';
 import AddPenalty from '../Admin/ViewProject/Penalty/AddPenalty';
 import EditPenalty from '../Admin/ViewProject/Penalty/EditPenalty';
+import AddMission from '../Admin/ViewProject/Mission/AddMission';
+import EditMission from '../Admin/ViewProject/Mission/EditMission';
 
 class App extends Component {
   componentDidMount() {
@@ -80,10 +83,25 @@ class App extends Component {
               path="/admin/projects/edit-penalty"
               component={EditPenalty}
             />
-            <ProtectedAdmin
+            <ProtectedTeams
               exact
               path="/team/home"
               component={HomeTeam}
+            />
+            <ProtectedCoach
+              exact
+              path="/coach/home"
+              component={HomeCoach}
+            />
+            <ProtectedAdmin
+              // exact
+              path="/admin/projects/add-mission"
+              component={AddMission}
+            />
+            <ProtectedAdmin
+              // exact
+              path="/admin/projects/edit-mission"
+              component={EditMission}
             />
             <Route render={() => <h1>404</h1>} />
           </Switch>
