@@ -9,7 +9,7 @@ import allTeams from './allTeamsReducer';
 import penalty from './penaltyReducer';
 import goalTypes from './goalTypesReducer';
 import goalOptions from './goalOptionReducer';
-import missionDetails from './missionReducer';
+import missionDetails from './missionDetailsReducer';
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
