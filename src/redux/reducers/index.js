@@ -7,19 +7,14 @@ import missions from './allMissionsReducer';
 import selectedMissions from './selectedMissionsReducer';
 import projectMission from './missionReducer';
 import allTeams from './allTeamsReducer';
-<<<<<<< HEAD
 import teamMembers from './teamMembersReducer';
 import penalties from './penaltiesReducer';
 import penalty from './penaltyReducer';
 import runDetails from './runDetailsReducer';
-=======
 import projectDetails from './projectDetailsReducer';
-import penalties from './penaltiesReducer';
-import penalty from './penaltyReducer';
 import goalTypes from './goalTypesReducer';
 import goalOptions from './goalOptionReducer';
 import missionDetails from './missionDetailsReducer';
->>>>>>> 9f35f2915cfe2ae16051771deb6570bb9f96c5d5
 import eitherOr from './eitherOrReducer';
 
 // rootReducer is the primary reducer for our entire project
