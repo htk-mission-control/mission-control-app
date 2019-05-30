@@ -10,8 +10,7 @@ class RunScoring extends Component {
         runId: 0,
         goals: [],
         eitherOr: [],
-        penalties: [],
-        penaltyCount: 0,
+        penalties: []
     }
 
     componentDidUpdate(prevProps) {
@@ -37,8 +36,7 @@ class RunScoring extends Component {
         }
     };
 
-    missionList = (runInfo) => {
-        // let missionArr = runInfo;
+    missionList = () => {
         let missionArr = this.state.goals;
         let eitherOrArr = this.state.eitherOr;
         let newMissionArr = [];
@@ -83,20 +81,19 @@ class RunScoring extends Component {
         )
     }
 
-    penaltyList = (penalties) => {
+    penaltyList = () => {
         return(
-            penalties.map((penalty, i) => {
-                console.log();
-                
+            this.state.penalties.map((penalty, i) => {
                 return (
                     <div key={penalty.id}>
-                        <button onClick={() => { this.penaltyOnClick(penalty, i) }} disabled={penalty.disabled}>{penalty.name}</button>
-                        <button onClick={() => { this.undoOnClick(penalty) }}><FaUndo /></button>
+                        {penalty.count} <button onClick={() => { this.penaltyOnClick(i) }} disabled={penalty.disabled}>{penalty.name}</button>
+                        <button onClick={() => { this.undoOnClick(i) }}><FaUndo /></button>
                     </div>
                 )  
             })
         )
     }
+
 
     renderGoals = (mission, eitherOr) => {
         if (mission.goal_type_id === 1) {
@@ -105,14 +102,14 @@ class RunScoring extends Component {
         else if (mission.goal_type_id === 2) {
             
             return (
-                eitherOr.map((eithers, i) => {
+                eitherOr.map((options, i) => {
                     return (
-                        eithers.map( (either, i) => {
-                            if (mission.goal_id == either.either_or_goal_id) {
+                        options.map( (option, i) => {
+                            if (mission.goal_id == option.either_or_goal_id) {
                                 return (
                                     <div>
-                                        <button onClick={ () => { this.eitherOrOnClick(either) }}><div>{either.either_or_name}</div> <div>{either.either_or_points} pts</div></button>
-                                        {this.renderOrText(eithers, i)}
+                                        <button onClick={ () => { this.eitherOrOnClick(option) }}><div>{option.either_or_name}</div> <div>{option.either_or_points} pts</div></button>
+                                        {this.renderOrText(options, i)}
                                     </div>
                                 )
                             }
@@ -129,49 +126,43 @@ class RunScoring extends Component {
                 </div>
             )
             }
-        }
+    }
 
-    renderOrText = (either, i) => {
-        console.log('either length', either.length);
-        if (i < (either.length - 1)) {
+    renderOrText = (options, i) => {
+        console.log('options length', options.length);
+        if (i < (options.length - 1)) {
             return <h5>OR</h5>
         }
-        return
+        return null;
     }
 
-    penaltyOnClick = (penalty, i) => {
+    penaltyOnClick = (i) => {
         let updatedPenalties = [...this.state.penalties];
-        if (penalty.count < penalty.max && this.state.score >= penalty.points && penalty.disabled === false){
-            penalty.count = penalty.count + 1
-            console.log(`penalty.count is`, penalty.count);
-
+        console.log(`penalty.count is`, updatedPenalties[i].count);
+        console.log(`penalty.max is`, updatedPenalties[i].max);
+        if ((updatedPenalties[i].count < updatedPenalties[i].max) && (updatedPenalties[i].disabled === false)){
+            updatedPenalties[i].count = updatedPenalties[i].count + 1
         }
-        else if (penalty.count === penalty.max ) {
+        if (updatedPenalties[i].count === updatedPenalties[i].max ) {
             updatedPenalties[i].disabled = true;
-            this.setState({
-                penalties: updatedPenalties
-            })
         }
-        if( penalty.disabled === false && this.state.score >= penalty.points){
-            this.setState({
-                score: (this.state.score - penalty.points),
-                penaltyCount: this.state.penaltyCount + 1,
-            })
-            // console.log(`this.state.penaltyCount`, this.state.penaltyCount);
-        }
+        this.setState({
+            penalties: updatedPenalties
+        })
+        console.log(`penalty.count end is`, updatedPenalties[i].count);
+        console.log(`penalty.disabled end is`, updatedPenalties[i].disabled);
     }
 
-    undoOnClick = ( penalty ) => {
-        penalty.disabled = false; 
-        if (penalty.count <= (penalty.max + 1) && penalty.count > 0) {
-            penalty.count = penalty.count - 1
-            console.log(`penalty.count is undooooo`, penalty.count);
-
-            this.setState({
-                score: (this.state.score + penalty.points),
-                penaltyCount: this.state.penaltyCount - 1
-            })
+    undoOnClick = ( i ) => {
+        let updatedPenalties = [...this.state.penalties];
+        updatedPenalties[i].disabled = false; 
+        if (updatedPenalties[i].count <= (updatedPenalties[i].max + 1) && updatedPenalties[i].count > 0) {
+            updatedPenalties[i].count = updatedPenalties[i].count - 1
+            console.log(`penalty.count is undooooo`, updatedPenalties[i].count);
         }
+        this.setState({
+            penalties: updatedPenalties
+        })
     }
 
     // function to add points for how many goal type on click and disable button when max is reached
@@ -224,25 +215,29 @@ class RunScoring extends Component {
         // console.log(`this.state.score`, this.state.score);
     }
 
+    calculateScore = () => {
+        let score = this.state.score;
+        for ( let penalty of this.state.penalties) {
+            score = score - (penalty.count * penalty.points)
+        }
+        return score;
+    }
+
     handleSubmit = () => {
         console.log(`final state`, this.state);
         this.props.dispatch({ type: 'UPDATE_RUN_DETAILS', payload: this.state });
     }
 
     render() {
-        // console.log(`reduxState details in RunScoring`, this.state.selectedMissions);
-        // console.log(`local state id in RunScoring`, this.state.runId);
-        // console.log(`either/or in RunScoring`, this.state.eitherOr);
-        // console.log(`penalties in RunScoring`, this.props.reduxState.penalties);
         
         return (
             
             <div>
                 <h2>{this.props.reduxState.runDetails.name}</h2>
-                <p>Score: {this.state.score}</p>
+                <p>Score: {this.calculateScore()}</p>
                 {/* {JSON.stringify(this.state.eitherOr)} */}
-                {this.penaltyList(this.state.penalties)}
-                {this.missionList(this.state.goals)}
+                {this.penaltyList()}
+                {this.missionList()}
                 <button onClick={this.handleSubmit}>End Run</button>
             </div>
         )
