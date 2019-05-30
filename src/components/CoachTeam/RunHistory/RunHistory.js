@@ -1,36 +1,47 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import {withRouter} from 'react-router-dom';
+import qs from 'query-string';
+
+
+
+// TODO: Need to get team_id as a coach for GET_RUNS_AS_COACH dispatch.
+//        currently hard coaded
 
 class RunHistory extends Component {
 
   componentDidMount() {
+
+    const searchObject = qs.parse(this.props.location.search);
+    console.log('searchObject: ', searchObject);
+    console.log('searchObject: ', this.props);
+
     // 1. if the user is a coach
-    // 2. if the user is a team
+    // 2. if the user is a team or a team with access
     if ( this.props.user.security_clearance === 2 ) {
-      let team_id = 3;
-      // coach will need team_id in payload | get from redux
-      this.props.dispatch({ type: 'GET_RUNS_AS_COACH', payload: team_id });
+      this.props.dispatch({ type: 'GET_RUNS_AS_COACH', payload: searchObject });
     } else if ( this.props.user.security_clearance === 3 || this.props.user.security_clearance === 4 ) {
       this.props.dispatch({ type: 'GET_RUNS_AS_TEAM' });
     }
   }
 
   renderRuns = () => {
-    console.log('all runs', this.props.allRuns)
+    // render all runs returned from database
+    // run id, run name, goals completed count, run score
     return (
       <div>
         { 
           this.props.allRuns.map( run =>
-            <div key={run.id} >
-              <p>{ run.name } | { run.count } | { run.score }</p>
-            </div>
+            <Link key={run.id} to={`/history/run?runId=${run.id}`}>
+              <div>
+                <div>{ run.name } | { run.count } | { run.score }</div>
+              </div>
+            </Link>
           )
         }
       </div>
-      
     )
-    
   }
 
   render () {
@@ -48,6 +59,6 @@ class RunHistory extends Component {
   }
 }
 
-const mapStateToProps = ({ allRuns, user }) => ({ allRuns, user });
+const mapStateToProps = ({ teamId, allRuns, user }) => ({ teamId, allRuns, user });
 
-export default connect(mapStateToProps)( RunHistory );
+export default connect(mapStateToProps)(withRouter(RunHistory));
