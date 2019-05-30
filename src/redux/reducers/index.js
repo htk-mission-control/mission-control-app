@@ -5,11 +5,21 @@ import user from './userReducer';
 import projects from './projectsReducer';
 import missions from './allMissionsReducer';
 import selectedMissions from './selectedMissionsReducer';
+import projectMission from './missionReducer';
 import allTeams from './allTeamsReducer';
+<<<<<<< HEAD
 import teamMembers from './teamMembersReducer';
 import penalties from './penaltiesReducer';
 import penalty from './penaltyReducer';
 import runDetails from './runDetailsReducer';
+=======
+import projectDetails from './projectDetailsReducer';
+import penalties from './penaltiesReducer';
+import penalty from './penaltyReducer';
+import goalTypes from './goalTypesReducer';
+import goalOptions from './goalOptionReducer';
+import missionDetails from './missionDetailsReducer';
+>>>>>>> 9f35f2915cfe2ae16051771deb6570bb9f96c5d5
 import eitherOr from './eitherOrReducer';
 
 // rootReducer is the primary reducer for our entire project
@@ -22,15 +32,20 @@ const rootReducer = combineReducers({
   errors, // contains registrationMessage and loginMessage
   loginMode, // will have a value of 'login' or 'registration' to control which screen is shown
   user, // will have an id and username if someone is logged in
-  projects, // holds all projects
-  missions, // holds all missions
-  selectedMissions, // holds missions selected for run creation
-  allTeams, // holds teams with specific coach/user id
   teamMembers, // holds team members for logged in user
-  penalties,
-  penalty,
   runDetails,
+  projects,
+  projectDetails,
+  penalties,
+  projectMission,
+  missions,
   eitherOr,
+  selectedMissions,
+  allTeams, // holds teams with specific coach/user id
+  penalty, 
+  goalTypes,
+  goalOptions, // options for Either/Or goals
+  missionDetails, // hold mission info by specific mission id
 });
 
 export default rootReducer;
