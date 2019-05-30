@@ -33,7 +33,7 @@ class RunDetails extends Component {
     }
 
     routeToHistory = () => {
-        this.props.history.goBack();
+        this.props.history.push( `/history` );
         this.props.dispatch( {type: `RESET_RUN_DETAILS`} );
     }
 
