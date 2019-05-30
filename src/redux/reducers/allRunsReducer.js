@@ -1,6 +1,6 @@
 const allRunsReducer = (state = [], action) => {
   switch (action.type) {
-
+    // sets the runs for a team based on logged in team or logged in coach
     case 'SET_RUNS':
       return action.payload;
     default:
@@ -8,6 +8,5 @@ const allRunsReducer = (state = [], action) => {
   }
 };
 
-// user will be on the redux state at:
-// state.user
+
 export default allRunsReducer;
