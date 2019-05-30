@@ -21,6 +21,8 @@ import CreateRun from '../CoachTeam/NewRun/CreateRun/CreateRun';
 import HomeTeam from '../CoachTeam/HomeTeam/HomeTeam';
 import ViewProject from '../Admin/ViewProject/ViewProject';
 import RunHistory from '../CoachTeam/RunHistory/RunHistory';
+import HomeCoach from '../CoachTeam/HomeCoach/HomeCoach';
+import ViewAllTeams from '../CoachTeam/ManageTeam/ViewAllTeams/ViewAllTeams';
 
 import './App.css';
 import ProtectedCoachAndTeams from '../ProtectedRoutes/ProtectedCoachAndTeams/ProtectedCoachAndTeams';
@@ -91,6 +93,16 @@ class App extends Component {
               path="/history"
               component={RunHistory}
             />
+            <ProtectedCoach
+             exact
+             path="/coach/home"
+             component={HomeCoach}
+           />
+            <ProtectedCoach
+             exact
+             path="/coach/teams"
+             component={ViewAllTeams}
+           />
             <Route render={() => <h1>404</h1>} />
           </Switch>
           <Footer />
