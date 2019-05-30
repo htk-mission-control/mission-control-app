@@ -8,6 +8,7 @@ class RunSummary extends Component {
     state = {
         count: 1,
         notes: '',
+        runId: this.props.reduxState.runHistoryDetails.id,
     }
 
     componentDidMount(){
@@ -18,7 +19,7 @@ class RunSummary extends Component {
 
     componentDidUpdate(prevProps){
         if( this.props.reduxState.runHistoryDetails !== prevProps.reduxState.runHistoryDetails ){
-            this.setState({ ...this.state, count: this.state.count + 1 });
+            this.setState({ ...this.state, runId: this.props.reduxState.runHistoryDetails.id });
             console.log( `Count:`, this.state.count );
             
         }
@@ -33,6 +34,10 @@ class RunSummary extends Component {
     }
 
     handleSave = () => {
+        console.log( `State:`, this.state );
+        console.log( `runId should be:`, this.props.reduxState.runHistoryDetails.id );
+        
+        
         this.props.dispatch( {type: `UPDATE_RUN_NOTES`, payload: this.state} );
         if(this.props.reduxState.user.security_clearance === 2 ){
             this.props.history.push( `/coach/home` );
@@ -44,6 +49,8 @@ class RunSummary extends Component {
 
     render(){
         const runDetails = this.props.reduxState.runHistoryDetails;
+        console.log( `RunDetails:`, runDetails );
+        
 
         return(
             <div>

@@ -12,8 +12,21 @@ function* getRunDetails(action) {
     }
 }
 
+function* updateRunNotes(action) {
+    try {
+        console.log( action.payload );
+        
+        yield axios.put( `/api/runs/summary/${action.payload.runId}`, action.payload );
+    }
+    catch(error) {
+        console.log( `Couldn't update run information.`, error );
+        alert( `Sorry, couldn't save information. Try again later.` );
+    }
+}
+
 function* runDetailsSaga(){
     yield takeLatest( 'GET_RUN_DETAILS', getRunDetails );
+    yield takeLatest( 'UPDATE_RUN_NOTES', updateRunNotes );
 }
 
 export default runDetailsSaga;

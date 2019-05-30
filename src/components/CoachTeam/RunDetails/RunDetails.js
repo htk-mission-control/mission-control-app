@@ -62,7 +62,8 @@ class RunDetails extends Component {
 
                 <div>
                     {/* TO DO: get notes from table in router's get request */}
-                    <p><b>Notes:</b>{runDetails.notes}</p>
+                    <p><b>Notes:</b></p>
+                    <p>{runDetails.notes}</p>
                 </div>
 
                 <div>
