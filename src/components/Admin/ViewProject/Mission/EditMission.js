@@ -1,25 +1,31 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
-// import EitherOr from './EitherOr';
+import qs from 'query-string';
 import EditMissionGoals from './EditMissionGoals';
 
 class EditMission extends Component {
 
     state = {
         // need to fix alternate form of getting mission_id
-        mission_id: 34,
+        mission_id: 0,
         name: '',
         description: '',
         goals: []
     }
 
     componentDidMount(){
+        const searchObject = qs.parse(this.props.location.search);
+        console.log('searchObject', searchObject);
+        this.setState({
+            mission_id: searchObject.missionId,
+        })
         this.props.dispatch( {type: 'GET_GOAL_TYPES'} );
-        this.props.dispatch( {type: `GET_MISSION_DETAILS`, payload: this.state.mission_id} );
+        this.props.dispatch( {type: `GET_MISSION_DETAILS`, payload: searchObject} );
     }
 
     componentDidUpdate(prevProps){
+      
         if( this.props.reduxState.missionDetails !== prevProps.reduxState.missionDetails ){
             this.setState({
                 ...this.state, 

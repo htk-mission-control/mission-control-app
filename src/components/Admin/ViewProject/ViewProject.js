@@ -7,7 +7,11 @@ class ViewProject extends Component {
     state = {
         projectId: 0,
         editProject: false,
-        projectName: '',
+        projectInfo: {
+            projectName: '',
+            projectDescription: '',
+            year: '',
+        },
         projectDetails: {},
         projectPenalties: [],
         projectMissions: [],
@@ -29,7 +33,11 @@ class ViewProject extends Component {
     componentDidUpdate(prevProps) {
         if (this.props.reduxState.projectDetails !== prevProps.reduxState.projectDetails) {
             this.setState({
-                projectName: this.props.reduxState.projectDetails.name,
+                projectInfo: {
+                    projectName: this.props.reduxState.projectDetails.name,
+                    projectDescription: this.props.reduxState.projectDetails.description,
+                    year: this.props.reduxState.projectDetails.year,
+                },
                 projectDetails: this.props.reduxState.projectDetails
             })
         };
@@ -52,23 +60,37 @@ class ViewProject extends Component {
 
     groundControl = () => {
         let missionArr = this.state.projectMissions;
-        let newArr = [];
+        let eitherOrArr = this.state.projectEitherOr;
+        let newMissionArr = [];
+        let newEitherOrArr = [];
         let test = [];
 
         //Find a way to stop loop other than #100
         for (let count = 0; count < 100; count++) {
-            test = missionArr.filter(x => x.mission_id == count)
+            test = missionArr.filter(x => x.mission_id === count)
 
             if (test.length !== 0) {
                 // console.log('test length', test.length);
 
-                newArr.push(test)
+                newMissionArr.push(test)
             }
 
         }
-        // console.log('newArr', newArr);
+        console.log('newMissionArr', newMissionArr);
+        for (let count = 0; count < 100; count++) {
+            test = eitherOrArr.filter(x => x.goal_id === count)
+
+            if (test.length !== 0) {
+                // console.log('test length', test.length);
+
+                newEitherOrArr.push(test)
+            }
+
+        }
+        console.log('newEitherOrArr', newEitherOrArr);
+        // console.log('eitherOrArr', eitherOrArr);
         return (
-            newArr.map((mission, i) => {
+            newMissionArr.map((mission, i) => {
                 return (
                     <div key={i}>
                         <h3>Mission {i + 1}: {mission[0].mission_name}</h3>
@@ -78,7 +100,7 @@ class ViewProject extends Component {
                         {mission.map((mission, i) => {
                             return (
                                 <div key={i}>
-                                    {this.renderGoals(mission)}
+                                    {this.renderGoals(mission, newEitherOrArr)}
                                 </div>
                             )
                         })}
@@ -88,24 +110,28 @@ class ViewProject extends Component {
         )
     }
 
-    renderGoals = (mission) => {
+    renderGoals = (mission, eitherOr) => {
         if (mission.goal_type_id === 1) {
             return <h5>Goal: {mission.name} = {mission.points} points</h5>
         }
         else if (mission.goal_type_id === 2) {
             return (
-                this.state.projectEitherOr.map((either, i) => {
-                    // console.log('mission.goal_id', mission.goal_id);
-                    // console.log('either.goal_id', either.goal_id);
+                eitherOr.map((eithers) => {
+                    console.log('either first loop', eithers);
+                    return (
+                        eithers.map( (either, i) => {
+                            if (mission.goal_id === either.goal_id) {
+                                console.log('either second loop', either);
 
-                    if (mission.goal_id == either.goal_id) {
-                        return (
-                            <div key={i}>
-                                <h5>Goal: {either.name} = {either.points} points</h5>
-                                {this.renderOrText(either)}
-                            </div>
-                        )
-                    }
+                                return (
+                                    <div key={i}>
+                                        <h5>Goal: {either.name} = {either.points} points</h5>
+                                        {this.renderOrText(eithers, i)}
+                                    </div>
+                                )
+                            }
+                        })
+                    )
                 })
             )
         }
@@ -119,11 +145,13 @@ class ViewProject extends Component {
             )
         }
     }
-    //-----TODO-----
-    //finish OR render to DOM
-    renderOrText = (either) => {
-        // console.log('either length', either);
-        return <h5>OR</h5>
+
+    renderOrText = (either, i) => {
+        console.log('either length', either.length);
+        if (i < (either.length - 1)) {
+            return <h5>OR</h5>
+        }
+        return
     }
 
     handleDeletePenalty = (event) => {
@@ -140,7 +168,6 @@ class ViewProject extends Component {
             projectId: this.state.projectId,
             missionId: event.target.value
         }
-        // console.log('event.target.value', info);
         this.props.dispatch({ type: 'DELETE_MISSION', payload: info });
     }
 
@@ -149,7 +176,7 @@ class ViewProject extends Component {
     }
 
     editMission = (event) => {
-        this.props.history.push(`projects/edit-mission?penaltyId=${event.target.value}`)
+        this.props.history.push(`projects/edit-mission?missionId=${event.target.value}`)
     }
 
     addPenalty = () => {
@@ -173,70 +200,84 @@ class ViewProject extends Component {
         this.setState({
             editProject: !this.state.editProject,
         });
-        this.props.dispatch({ type: 'UPDATE_PROJECT_NAME', payload: { projectName: this.state.projectName, projectId: this.state.projectId } });
+        let data = {
+            projectId: this.state.projectId,
+            projectInfo: this.state.projectInfo
+        }
+        this.props.dispatch({ type: 'UPDATE_PROJECT_NAME', payload: data});
 
     }
 
-    handleChange = (event) => {
+    handleChange = (propertyName) => (event) => {
         this.setState({
-            projectName: event.target.value,
+            projectInfo: {
+                ...this.state.projectInfo,
+                [propertyName]: event.target.value,
+            }
         });
     }
 
     render() {
-        return (
-            <div>
-                {/* {JSON.stringify(this.props.location)} */}
-                {/* {JSON.stringify(this.state.projectPenalties)} */}
-                {/* {JSON.stringify(this.state.projectDetails)} */}
-                {/* {JSON.stringify(this.state.projectEitherOr)}
-                <h1></h1> */}
-                {/* {JSON.stringify(this.state.projectMissions)} */}
-                {this.state.editProject === false ?
-                    <h1>{this.state.projectDetails.name}</h1>
-                    :
-                    <input onChange={this.handleChange} value={this.state.projectName}></input>
-                }
-                <h2>The Project:</h2>
-                <p>{this.state.projectDetails.description}</p>
-                <button onClick={this.deleteProject}>Delete Project</button>
-                {this.state.editProject === false ?
-                    <button onClick={this.editProjectName}>Edit Project Name</button>
-                    :
-                    <button onClick={this.editProjectName}>Save Project Name</button>
-                }
-                {this.state.projectDetails.published === false ?
-                    <button onClick={this.publishProject}>Publish Project</button>
-                    :
-                    <button onClick={this.publishProject}>Unpublish Project</button>
-                }
+        if(this.state.projectDetails.hidden === true) {
+           return <h1>404</h1>
+        }
+        else {
+            return (
                 <div>
-                    <h2>Penalties</h2>
-                    <button onClick={this.addPenalty}>Add Penalty</button>
-                    <hr />
-                    {this.state.projectPenalties.map(penalty => {
-                        return (
-                            <div key={penalty.id}>
-                                <h3>{penalty.name}</h3>
-                                <p>Description: {penalty.description}</p>
-                                <p>Max Penalties: {penalty.max}</p>
-                                <p>Points: {penalty.points}</p>
-                                <button value={penalty.id} onClick={this.editPenalty}>EDIT</button>
-                                <button value={penalty.id} onClick={this.handleDeletePenalty}>DELETE</button>
-                            </div>
-                        )
-                    })}
-                    <hr />
+                    {this.state.editProject === false ?
+                        <h1>{this.state.projectDetails.name}: {this.state.projectDetails.year}</h1>
+                        :
+                        <div>
+                            <input onChange={this.handleChange('projectName')} value={this.state.projectInfo.projectName}></input>
+                            <input onChange={this.handleChange('year')} value={this.state.projectInfo.year}></input>
+                        </div>
+                    }
+                    <h2>The Project:</h2>
+                    {this.state.editProject === false ?
+                        <p>{this.state.projectDetails.description}</p>
+                        :
+                        <input onChange={this.handleChange('projectDescription')} value={this.state.projectInfo.projectDescription}></input>
+                    }
+                    <button onClick={this.deleteProject}>Delete Project</button>
+                    {this.state.editProject === false ?
+                        <button onClick={this.editProjectName}>Edit Project Info</button>
+                        :
+                        <button onClick={this.editProjectName}>Save Project Info</button>
+                    }
+                    {this.state.projectDetails.published === false ?
+                        <button onClick={this.publishProject}>Publish Project</button>
+                        :
+                        <button onClick={this.publishProject}>Unpublish Project</button>
+                    }
+                    <div>
+                        <h2>Penalties</h2>
+                        <button onClick={this.addPenalty}>Add Penalty</button>
+                        <hr />
+                        {this.state.projectPenalties.map(penalty => {
+                            return (
+                                <div key={penalty.id}>
+                                    <h3>{penalty.name}</h3>
+                                    <p>Description: {penalty.description}</p>
+                                    <p>Max Penalties: {penalty.max}</p>
+                                    <p>Points: {penalty.points}</p>
+                                    <button value={penalty.id} onClick={this.editPenalty}>EDIT</button>
+                                    <button value={penalty.id} onClick={this.handleDeletePenalty}>DELETE</button>
+                                </div>
+                            )
+                        })}
+                        <hr />
+                    </div>
+                    <div>
+                        <h2>Missions</h2>
+                        <button onClick={this.addMission}>Add Mission</button>
+                        <hr />
+                        {this.groundControl()}
+                    </div>
+    
                 </div>
-                <div>
-                    <h2>Missions</h2>
-                    <button onClick={this.addMission}>Add Mission</button>
-                    <hr />
-                    {this.groundControl()}
-                </div>
-
-            </div>
-        )
+            )
+        }
+        
     }
 }
 

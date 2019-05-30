@@ -2,11 +2,13 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import EitherOr from './EitherOr';
+import qs from 'query-string';
+
 
 class AddMission extends Component {
 
     state = {
-        project_id: this.props.reduxState.projects.id || 1,
+        project_id: 0,
         name: '',
         description: '',
         goalCount: 1,
@@ -20,6 +22,11 @@ class AddMission extends Component {
     }
 
     componentDidMount(){
+        const searchObject = qs.parse(this.props.location.search);
+        console.log('searchObject', searchObject);
+        this.setState({
+            project_id: searchObject.projectId,
+        })
         this.props.dispatch( {type: 'GET_GOAL_TYPES'} );
         this.props.dispatch( {type: 'REFRESH_OPTIONS'} );
     }
