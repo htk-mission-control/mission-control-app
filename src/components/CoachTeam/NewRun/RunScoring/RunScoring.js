@@ -240,7 +240,7 @@ class RunScoring extends Component {
             <div>
                 <h2>{this.props.reduxState.runDetails.name}</h2>
                 <p>Score: {this.state.score}</p>
-                {JSON.stringify(this.state.eitherOr)}
+                {/* {JSON.stringify(this.state.eitherOr)} */}
                 {this.penaltyList(this.state.penalties)}
                 {this.missionList(this.state.goals)}
                 <button onClick={this.handleSubmit}>End Run</button>
