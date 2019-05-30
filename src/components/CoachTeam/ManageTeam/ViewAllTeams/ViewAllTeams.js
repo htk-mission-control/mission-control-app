@@ -29,7 +29,7 @@ class ViewAllTeams extends Component {
     }
     routeToRunHistory = (event) => {
         let team_id = event.target.value;
-        this.props.history.push(`/history/${team_id}`);
+        this.props.history.push(`/history?teamId=${team_id}`);
     }
 
     // dispatch for PUT request to update team_access
