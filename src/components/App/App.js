@@ -20,8 +20,12 @@ import HomeAdmin from '../Admin/HomeAdmin/HomeAdmin';
 import CreateRun from '../CoachTeam/NewRun/CreateRun/CreateRun';
 import HomeTeam from '../CoachTeam/HomeTeam/HomeTeam';
 import ViewProject from '../Admin/ViewProject/ViewProject';
-import ProjectOverview from '../CoachTeam/ProjectOverview/ProjectOverview';
+import RunHistory from '../CoachTeam/RunHistory/RunHistory';
 import HomeCoach from '../CoachTeam/HomeCoach/HomeCoach';
+import ViewAllTeams from '../CoachTeam/ManageTeam/ViewAllTeams/ViewAllTeams';
+import StartRun from '../CoachTeam/NewRun/StartRun/StartRun';
+import RunSummary from '../CoachTeam/NewRun/RunSummary/RunSummary';
+import ProjectOverview from '../CoachTeam/ProjectOverview/ProjectOverview';
 
 import './App.css';
 import ProtectedCoachAndTeams from '../ProtectedRoutes/ProtectedCoachAndTeams/ProtectedCoachAndTeams';
@@ -30,7 +34,7 @@ import EditPenalty from '../Admin/ViewProject/Penalty/EditPenalty';
 import AddMission from '../Admin/ViewProject/Mission/AddMission';
 import EditMission from '../Admin/ViewProject/Mission/EditMission';
 import RunDetails from '../CoachTeam/RunDetails/RunDetails';
-import RunSummary from '../CoachTeam/NewRun/RunSummary/RunSummary';
+
 
 class App extends Component {
   componentDidMount() {
@@ -107,10 +111,20 @@ class App extends Component {
             /> */}
 
 
-            <ProtectedAdmin
+            <ProtectedTeamWithAccess
               exact 
               path="/practice-run"
               component={CreateRun}
+            />
+            <ProtectedCoachAndTeams
+              exact
+              path="/practice-run/run-scoring"
+              component={StartRun}
+            />
+            <ProtectedCoachAndTeams
+              exact
+              path="/practice-run/run-summary"
+              component={RunSummary}
             />
             <ProtectedAdmin
               exact
@@ -126,6 +140,16 @@ class App extends Component {
               // exact
               path="/admin/projects/edit-penalty"
               component={EditPenalty}
+            />
+            <ProtectedCoachAndTeams
+              exact
+              path="/history"
+              component={RunHistory}
+            />
+            <ProtectedCoach
+              exact
+              path="/coach/teams"
+              component={ViewAllTeams}
             />
             <ProtectedCoachAndTeams 
               exact
@@ -146,11 +170,6 @@ class App extends Component {
               exact
               path="/history/run"
               component={RunDetails}
-            />
-            <ProtectedCoachAndTeams 
-              exact
-              path="/practice-run/summary"
-              component={RunSummary}
             />
             <Route render={() => <h1>404</h1>} />
           </Switch>

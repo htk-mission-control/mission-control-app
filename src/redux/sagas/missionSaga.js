@@ -3,12 +3,34 @@ import axios from 'axios';
 
 function* getMissions( action ) {    
     try {
-        const response = yield axios.get(`/api/runs/missions`);
-        console.log(`get response is`, response.data);
+        const response = yield axios.get( `/api/runs/missions` );
+        console.log( `get response is`, response.data );
         yield put({ type: 'SET_ALL_MISSIONS', payload: response.data })
     }
+    catch( error ) {
+        console.log( `Couldn't get missions from db` );
+    }
+}
+
+function* getSelectedMissions( action ) {
+    try {
+        const response = yield axios.get( `/api/runs/selectedMissions` )
+        console.log(`get response is`, response.data)
+        yield put({ type: 'SET_SELECTED_MISSIONS', payload: response.data.runDetails })
+        yield put({ type: 'SET_RUN_DETAILS', payload: {id: response.data.id, name: response.data.runName }})
+    }
+    catch( error ) {
+        console.log( `Couldn't get selected missions from db` );
+    }
+}
+
+function* getSelectedEitherOr(action) {
+    try {
+        const response = yield axios.get(`/api/runs/selectedMissions/eitherOr`);
+        yield put({ type: 'SET_SELECTED_EITHER_OR', payload: response.data })
+    }
     catch (error) {
-        console.log(`Couldn't get missions from DB`);
+        console.log(`Couldn't get either/or goals info`);
     }
 }
 
@@ -25,7 +47,7 @@ function* addMission( action ){
 
 function* getMissionDetails( action ){
     try{
-        const response = yield axios.get( `api/projects/mission/${action.payload}` );
+        const response = yield axios.get( `api/projects/mission/${action.payload.missionId}` );
         yield put( {type: `SET_MISSION_DETAILS`, payload: response.data.missionGoals} );
         yield put( {type: 'SET_GOAL_OPTIONS', payload: response.data.eitherOrOptions} );
     }
@@ -50,6 +72,8 @@ function* missionSaga() {
     yield takeLatest( 'ADD_MISSION', addMission );
     yield takeLatest( 'GET_MISSION_DETAILS', getMissionDetails );
     yield takeLatest( 'UPDATE_MISSION', updateMission );
+    yield takeLatest( 'GET_SELECTED_MISSIONS', getSelectedMissions );
+    yield takeLatest( 'GET_SELECTED_EITHER_OR', getSelectedEitherOr );
 }
 
 export default missionSaga;
