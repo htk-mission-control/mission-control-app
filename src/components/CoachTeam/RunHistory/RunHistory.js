@@ -6,6 +6,7 @@ import qs from 'query-string';
 
 
 
+
 // TODO: Need to get team_id as a coach for GET_RUNS_AS_COACH dispatch.
 //        currently hard coaded
 
@@ -35,7 +36,7 @@ class RunHistory extends Component {
           this.props.allRuns.map( run =>
             <Link key={run.id} to={`/history/run?runId=${run.id}`}>
               <div>
-                <div>{ run.name } | { run.count } | { run.score }</div>
+                <div>{ run.name } | { run.count } | { run.score + run.penalties }</div>
               </div>
             </Link>
           )

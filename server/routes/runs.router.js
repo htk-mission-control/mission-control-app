@@ -251,14 +251,14 @@ router.get('/penalties', async (req, res) => {
     finally {
         client.release();
     }
-
+});
 
 //GET runs for coach based on url query string
 router.get('/coach/:id', (req, res) => {
     let id = req.params.id;
 
     const sqlText = `
-        SELECT "runs"."id", "runs"."name", COUNT(CASE WHEN "goals_per_run"."is_completed" THEN 1 end), "runs"."score" FROM "runs"
+        SELECT "runs"."id", "runs"."name", COUNT(CASE WHEN "goals_per_run"."is_completed" THEN 1 end), "runs"."score", "runs"."penalties" FROM "runs"
         JOIN "selected_missions" ON "run_id" = "runs"."id"
         JOIN "goals_per_run" ON "selected_missions_id" = "selected_missions"."id"
         WHERE "team_id" = $1
@@ -281,9 +281,10 @@ router.get('/coach/:id', (req, res) => {
 router.get('/team', (req, res) => {
 
     let id = req.user.id;
-
+    console.log('user id', id);
+    
     const sqlText = `
-            SELECT "runs"."id", "runs"."name", COUNT(CASE WHEN "goals_per_run"."is_completed" THEN 1 end), "runs"."score" 
+            SELECT "runs"."id", "runs"."name", COUNT(CASE WHEN "goals_per_run"."is_completed" THEN 1 end), "runs"."score", "runs"."penalties"
             FROM "runs"
             JOIN "selected_missions" ON "run_id" = "runs"."id"
             JOIN "goals_per_run" ON "selected_missions_id" = "selected_missions"."id"
@@ -296,6 +297,8 @@ router.get('/team', (req, res) => {
         .then ( result => {
             // result should be an array of objects with run information
             // run id, run name, goals completed count, run score
+            console.log('result', result.rows);
+            
             res.send( result.rows );
         }).catch ( error => {
             res.sendStatus( 500 );
