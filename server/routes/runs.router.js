@@ -25,11 +25,14 @@ router.get( '/runHistoryDetails/:id', rejectUnauthenticated, (req, res) => {
     let sqlText = `SELECT r."id", r."name", r."date", r."score", r."penalties", r."notes",
                     (CASE WHEN r."driver" = t."id" THEN t."name" END) AS "driver", 
                     (CASE WHEN r."assistant" = t1."id" THEN t1."name" END) AS "assistant", 
-                    (CASE WHEN r."score_keeper" = t2."id" THEN t2."name" END) AS "score_keeper"
+                    (CASE WHEN r."score_keeper" = t2."id" THEN t2."name" END) AS "score_keeper",
+                    COUNT(CASE WHEN "goals_per_run"."is_completed" THEN 1 end)
                     FROM "runs" AS r
                     LEFT JOIN "team_members" AS t ON t."id" = r."driver"
                     JOIN "team_members" AS t1 ON t1."id" = r."assistant"
                     JOIN "team_members" AS t2 ON t2."id" = r."score_keeper"
+                    JOIN "selected_missions" ON "run_id" = r."id"
+                    JOIN "goals_per_run" ON "selected_missions_id" = "selected_missions"."id"
                     WHERE r."id" = $1
                     GROUP BY r."id", t."id", t1."id", t2."id"`;
 

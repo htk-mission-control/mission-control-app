@@ -54,7 +54,7 @@ class RunDetails extends Component {
                 </div>
 
                 <div>
-                    <h4>Completed Goals: Get from Chase!</h4>
+                    <h4>Completed Goals: {runDetails.count}</h4>
                     <p>Do we want to list which goals they completed?</p>
                     <br/>
                     <h4>Penalties: {runDetails.penalties}</h4>
