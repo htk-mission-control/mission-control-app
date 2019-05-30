@@ -4,15 +4,13 @@ import RunScoring from '../RunScoring/RunScoring';
 
 class StartRun extends Component {
 
-    state = {}
-
     componentDidMount = () => {
         // get selectedMission details
         this.props.dispatch({ type: 'GET_SELECTED_MISSIONS' });
         this.props.dispatch({ type: 'GET_SELECTED_EITHER_OR' });
         this.props.dispatch({ type: 'GET_SELECTED_PENALTIES' });
     }
-    
+
     render() {
         return (
             <div>

@@ -58,7 +58,8 @@ router.post('/saveDetails', async (req, res) => {
             let sqlText1 = `INSERT INTO "runs" (team_id, name, date, driver, assistant, score_keeper)
                             VALUES ($1, $2, $3, $4, $5, $6) RETURNING id;`
             let sqlText2 = `INSERT INTO "selected_missions" (run_id, mission_id)
-                            VALUES ($1, $2);`
+                            VALUES ($1, $2) RETURNING id`
+            let sqlText3 = `SELECT * FROM "goals"`
             await client.query('BEGIN')
             const runsInsertResponse = await client.query(sqlText1, [teamId, runDetails.runName, currentDate, runTeam.driverId, runTeam.assistantId, runTeam.scorekeeperId])
             const runId = runsInsertResponse.rows[0].id;
