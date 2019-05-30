@@ -26,6 +26,9 @@ import ViewAllTeams from '../CoachTeam/ManageTeam/ViewAllTeams/ViewAllTeams';
 import StartRun from '../CoachTeam/NewRun/StartRun/StartRun';
 import RunSummary from '../CoachTeam/NewRun/RunSummary/RunSummary';
 import ProjectOverview from '../CoachTeam/ProjectOverview/ProjectOverview';
+import AddTeam from '../CoachTeam/ManageTeam/AddTeam/AddTeam';
+import TeamMembers from '../CoachTeam/ManageTeam/TeamMembers/TeamMembers';
+
 
 import './App.css';
 import ProtectedCoachAndTeams from '../ProtectedRoutes/ProtectedCoachAndTeams/ProtectedCoachAndTeams';
@@ -130,6 +133,15 @@ class App extends Component {
               path="/admin/projects/add-mission"
               component={AddMission}
             />
+            <ProtectedCoach
+              // exact
+              path="/coach/create-team"
+              component={AddTeam}
+              />
+            <ProtectedCoach
+              path="/coach"
+              component={TeamMembers}
+              />
             <ProtectedAdmin
               // exact
               path="/admin/projects/edit-mission"
