@@ -105,13 +105,13 @@ class RunScoring extends Component {
         else if (goal.goal_type_id === 2) {
 
             return (
-                eitherOr.map((options, z) => {
+                eitherOr.map((options) => {
                     return (
                         options.map((option, i) => {
                             if (goal.goal_id == option.either_or_goal_id) {
                                 return (
-                                    <div>
-                                        <button onClick={() => { this.eitherOrOnClick(eitherOr, i, y) }}><div>{option.either_or_name}</div> <div>{option.either_or_points} pts</div></button>
+                                    <div key={i}>
+                                        <button onClick={() => { this.eitherOrOnClick(goal, eitherOr) }}><div>{option.either_or_name}</div> <div>{option.either_or_points} pts</div></button>
                                         {this.renderOrText(options, i)}
                                     </div>
                                 )
@@ -186,12 +186,14 @@ class RunScoring extends Component {
 
         updatedGoals[goalIndex].count = updatedGoals[goalIndex].count + 1;
         updatedGoals[goalIndex].isCompleted = true;
+
         if (updatedGoals[goalIndex].count <= updatedGoals[goalIndex].how_many_max) {
             currentScore = currentScore + updatedGoals[goalIndex].goal_points
         }
         if (updatedGoals[goalIndex].count == updatedGoals[goalIndex].how_many_max) {
             updatedGoals[goalIndex].disabled = true;
         }
+
         this.setState({
             score: currentScore,
             goals: updatedGoals
@@ -213,6 +215,7 @@ class RunScoring extends Component {
                 goalIndex = i;
             }
         }
+
         console.log(`goalIndex`, goalIndex);
         if (updatedGoals[goalIndex].disabled === false) {
             currentScore = currentScore + updatedGoals[goalIndex].goal_points
@@ -227,24 +230,32 @@ class RunScoring extends Component {
     }
 
     // function to add points for either/or goal type on click and disable all options after click
-    eitherOrOnClick = (eitherOr, i, y) => {
-        console.log('index i (either/or): ', i);
-        console.log('index y (mission): ', y);
+    eitherOrOnClick = (goal, eitherOr) => {
 
-        let updatedGoals = [...this.state.goals]
+        let updatedGoals = [...this.state.goals];
         let updatedEitherOr = [...this.state.eitherOr]
         console.log('either/or', updatedEitherOr);
 
+        let goalIndex = 0;
+        let currentScore = this.state.score;
 
-        if (updatedGoals[y].disabled === false) {
+        for (let i = 0; i < updatedGoals.length; i++) {
+            if (updatedGoals[i].goal_id === goal.goal_id) {
+                goalIndex = i;
+                updatedGoals[i].isCompleted = true;
+            }
+        }
+
+        if (updatedGoals[goalIndex].disabled === false) {
+            currentScore = currentScore + 
             this.setState({
-                score: (this.state.score + updatedEitherOr[i].either_or_points),
+                score: (this.state.score + updatedEitherOr[goalIndex].either_or_points),
             })
         }
         // for ( let item of this.state.eitherOr) {
         //     item.disabled = true;
         // }
-        updatedGoals[y].isCompleted = true;
+        // updatedGoals[y].isCompleted = true;
         // for( let mission of this.state.goals ) {
         //     if (mission.goal_id === goal.either_or_goal_id){
         //         mission.isCompleted = true;
@@ -255,11 +266,6 @@ class RunScoring extends Component {
             goals: updatedGoals,
             eitherOr: updatedEitherOr
         })
-        // console.log('mission', updatedGoals[y]);
-
-        // console.log('either/or', updatedEitherOr);
-
-        // console.log(`this.state.score`, this.state.score);
     }
 
     calculateScore = () => {
