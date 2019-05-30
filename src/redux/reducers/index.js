@@ -7,9 +7,11 @@ import missions from './allMissionsReducer';
 import selectedMissions from './selectedMissionsReducer';
 import projectMission from './missionReducer';
 import allTeams from './allTeamsReducer';
-import projectDetails from './projectDetailsReducer';
+import teamMembers from './teamMembersReducer';
 import penalties from './penaltiesReducer';
 import penalty from './penaltyReducer';
+import runDetails from './runDetailsReducer';
+import projectDetails from './projectDetailsReducer';
 import goalTypes from './goalTypesReducer';
 import goalOptions from './goalOptionReducer';
 import missionDetails from './missionDetailsReducer';
@@ -25,6 +27,8 @@ const rootReducer = combineReducers({
   errors, // contains registrationMessage and loginMessage
   loginMode, // will have a value of 'login' or 'registration' to control which screen is shown
   user, // will have an id and username if someone is logged in
+  teamMembers, // holds team members for logged in user
+  runDetails,
   projects,
   projectDetails,
   penalties,

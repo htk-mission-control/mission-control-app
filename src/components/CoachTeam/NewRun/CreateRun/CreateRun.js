@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import SelectMissions from '../SelectMissions/SelectMissions';
+import SelectRunDetails from '../SelectRunDetails/SelectRunDetails';
 
 class CreateRun extends Component {
 
@@ -9,9 +9,10 @@ class CreateRun extends Component {
     }
 
     render () {
+
         return (
             <div>
-                <SelectMissions />
+                <SelectRunDetails />
             </div>
         )
     }
