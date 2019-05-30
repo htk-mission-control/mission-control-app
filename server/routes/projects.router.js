@@ -43,7 +43,7 @@ router.put('/:id', rejectUnauthenticated, async (req, res) => {
         })
 })
 
-router.put('/publish/:id', (req, res) => {
+router.put('/publish/:id', rejectUnauthenticated, (req, res) => {
     let id = req.params.id;
     // console.log('id', id);
     
@@ -58,7 +58,7 @@ router.put('/publish/:id', (req, res) => {
         })
 });
 
-router.put('/name/:id', (req, res) => {
+router.put('/name/:id', rejectUnauthenticated, (req, res) => {
     let id = req.params.id;
     let name = req.body.projectName;
     console.log('name', name);
@@ -75,7 +75,7 @@ router.put('/name/:id', (req, res) => {
         })
 });
 
-router.get('/penalties/:id', (req, res) => {
+router.get('/penalties/:id', rejectUnauthenticated, (req, res) => {
     let sqlText = (`SELECT * FROM "penalties" WHERE "project_id" = $1;`)
     pool.query(sqlText, [req.params.id])
         .then((results) => {
@@ -87,7 +87,7 @@ router.get('/penalties/:id', (req, res) => {
         })
 });
 
-router.delete('/penalties/:id', (req, res) => {
+router.delete('/penalties/:id', rejectUnauthenticated, (req, res) => {
     let sqlText = (`DELETE FROM "penalties" WHERE "id" = $1;`)
     pool.query(sqlText, [req.params.id])
         .then((response) => {
@@ -99,7 +99,7 @@ router.delete('/penalties/:id', (req, res) => {
         })
 })
 
-router.get('/missions/:id', (req, res) => {
+router.get('/missions/:id', rejectUnauthenticated, (req, res) => {
     let sqlText = (`SELECT "missions"."id" AS "mission_id", 
                            "missions"."name" AS "mission_name", 
                            "missions"."description", 
@@ -154,7 +154,7 @@ router.delete('/missions/:id', rejectUnauthenticated, async (req, res) => {
       }
 })
 
-router.get('/missions/either-or/:id', (req, res) => {
+router.get('/missions/either-or/:id', rejectUnauthenticated, (req, res) => {
     let sqlText = (`SELECT 
                         "either_or"."id", 
                         "either_or"."goal_id", 
@@ -174,7 +174,7 @@ router.get('/missions/either-or/:id', (req, res) => {
         })
 });
 
-router.post('/', (req, res) => {
+router.post('/', rejectUnauthenticated, (req, res) => {
     let newProject = req.body;
     let currentDate = moment().format()
     console.log('req.body post', newProject);
