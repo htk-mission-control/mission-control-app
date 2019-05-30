@@ -21,15 +21,15 @@ class ViewAllTeams extends Component {
     // OR should we set these up as links and pass team_id as props?
     routeToCreateRun = (event) => {
         let team_id = event.target.value;
-        this.props.history.push(`/practice-run/${team_id}`);
+        this.props.history.push(`/practice-run?teamId=${team_id}`);
     }
     routeToTeamMembers = (event) => {
         let team_id = event.target.value;
-        this.props.history.push(`/coach/${team_id}`);
+        this.props.history.push(`/coach?teamId=${team_id}`);
     }
     routeToRunHistory = (event) => {
         let team_id = event.target.value;
-        this.props.history.push(`/history/${team_id}`);
+        this.props.history.push(`/history?teamId=${team_id}`);
     }
 
     // dispatch for PUT request to update team_access
