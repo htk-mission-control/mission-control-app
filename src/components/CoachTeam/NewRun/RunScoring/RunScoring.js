@@ -5,10 +5,12 @@ import { FaUndo } from 'react-icons/fa';
 class RunScoring extends Component {
 
     state = {
+        toggle: true,
         score: 0,
         runId: 0,
         goals: [],
         eitherOr: [],
+        penalties: [],
         penaltyCount: 0,
     }
 
@@ -16,6 +18,11 @@ class RunScoring extends Component {
         if (this.props.reduxState.runDetails !== prevProps.reduxState.runDetails) {
             this.setState({
                 runId: this.props.reduxState.runDetails.id,
+            })
+        }
+        if (this.props.reduxState.penalties !== prevProps.reduxState.penalties) {
+            this.setState({
+                penalties: this.props.reduxState.penalties,
             })
         }
         if (this.props.reduxState.selectedMissions !== prevProps.reduxState.selectedMissions) {
@@ -68,12 +75,14 @@ class RunScoring extends Component {
     }
 
     penaltyList = (penalties) => {
-        return (
+        return(
             penalties.map((penalty, i) => {
+                console.log();
+                
                 return (
                     <div key={penalty.id}>
-                        <button onClick={ () => {this.penaltyOnClick(penalty)}}>{penalty.name}</button>
-                        <button onClick={ () => {this.undoOnClick(penalty)}}><FaUndo /></button>
+                        <button onClick={() => { this.penaltyOnClick(penalty, i) }} disabled={penalty.disabled}>{penalty.name}</button>
+                        <button onClick={() => { this.undoOnClick(penalty) }}><FaUndo /></button>
                     </div>
                 )  
             })
@@ -110,8 +119,8 @@ class RunScoring extends Component {
                     <button onClick={() => { this.howManyOnClick(mission) }}><div>{mission.goal_name}</div><div>{mission.goal_points} pts each</div></button>
                 </div>
             )
+            }
         }
-    }
 
     renderOrText = (i) => {
         // console.log('either length', this.state.eitherOr.length);
@@ -123,19 +132,23 @@ class RunScoring extends Component {
         }
     }
 
-    penaltyOnClick = (penalty) => {
+    penaltyOnClick = (penalty, i) => {
+        let updatedPenalties = [...this.state.penalties];
         if (penalty.count < penalty.max && this.state.score >= penalty.points && penalty.disabled === false){
             penalty.count = penalty.count + 1
             console.log(`penalty.count is`, penalty.count);
 
         }
         else if (penalty.count === penalty.max ) {
-            penalty.disabled = true;
+            updatedPenalties[i].disabled = true;
+            this.setState({
+                penalties: updatedPenalties
+            })
         }
         if( penalty.disabled === false && this.state.score >= penalty.points){
             this.setState({
                 score: (this.state.score - penalty.points),
-                penaltyCount: this.state.penaltyCount + 1
+                penaltyCount: this.state.penaltyCount + 1,
             })
             // console.log(`this.state.penaltyCount`, this.state.penaltyCount);
         }
@@ -220,8 +233,8 @@ class RunScoring extends Component {
             <div>
                 <h2>{this.props.reduxState.runDetails.name}</h2>
                 <p>Score: {this.state.score}</p>
-                {/* {JSON.stringify(this.state.goals)} */}
-                {this.penaltyList(this.props.reduxState.penalties)}
+                {JSON.stringify(this.state.penalties)}
+                {this.penaltyList(this.state.penalties)}
                 {this.missionList(this.state.goals)}
                 <button onClick={this.handleSubmit}>End Run</button>
             </div>

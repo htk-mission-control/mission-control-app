@@ -8,19 +8,11 @@ class StartRun extends Component {
 
     componentDidMount = () => {
         // get selectedMission details
+        this.props.dispatch({ type: 'GET_SELECTED_MISSIONS' });
+        this.props.dispatch({ type: 'GET_SELECTED_EITHER_OR' });
         this.props.dispatch({ type: 'GET_SELECTED_PENALTIES' });
     }
-
-    // componentDidUpdate = ( prevProps ) => {
-    //     if (this.props.reduxState.runDetails !== prevProps.reduxState.runDetails) {
-    //         console.log(`StartRun reduxState.runDetails prevProps`, prevProps.reduxState.runDetails);
-    //         console.log(`StartRun reduxState.runDetails`, this.props.reduxState.runDetails);
-    //         this.setState({
-    //             state: this.state
-    //         })
-    //     }
-    // }
-
+    
     render() {
         return (
             <div>
