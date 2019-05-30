@@ -38,33 +38,42 @@ class RunScoring extends Component {
     };
 
     missionList = (runInfo) => {
-        let missionArr = runInfo;
-        // console.log(`mission array`, missionArr);
+        // let missionArr = runInfo;
+        let missionArr = this.state.goals;
+        let eitherOrArr = this.state.eitherOr;
+        let newMissionArr = [];
+        let newEitherOrArr = [];
+        let test = [];
         
         let newArr = [];
-        let test = [];
 
         //Find a way to stop loop other than #100
         for (let count = 0; count < 100; count++) {
             test = missionArr.filter(x => x.mission_id == count)
 
             if (test.length !== 0) {
-                // console.log('test length', test.length);
-
-                newArr.push(test)
+                newMissionArr.push(test)
             }
-
         }
-        // console.log('newArr', newArr);
+        console.log('newMissionsArr', newMissionArr);
+        
+        for (let count = 0; count < 100; count++) {
+            test = eitherOrArr.filter(x => x.either_or_goal_id === count)
+
+            if (test.length !== 0) {
+                newEitherOrArr.push(test)
+            }
+        }
+        console.log('newEitherOrArr', newEitherOrArr);
         return (
-            newArr.map((mission, i) => {
+            newMissionArr.map((mission, i) => {
                 return (
                     <div key={i}>
                         <h3>Mission {i + 1}: {mission[0].mission_name}</h3>
                         {mission.map(mission => {
                             return (
                                 <div>
-                                    {this.renderGoals(mission)}
+                                    {this.renderGoals(mission, newEitherOrArr)}
                                 </div>
                             )
                         })}
@@ -89,26 +98,26 @@ class RunScoring extends Component {
         )
     }
 
-    renderGoals = (mission) => {
+    renderGoals = (mission, eitherOr) => {
         if (mission.goal_type_id === 1) {
             return <button onClick={ () => { this.yesNoOnClick(mission) }}><div>{mission.goal_name}</div> <div>{mission.goal_points} pts</div></button>
         }
         else if (mission.goal_type_id === 2) {
-            // console.log(`this.state.eitherOr`, this.props.reduxState.eitherOr);
             
             return (
-                this.state.eitherOr.map((either, i) => {
-                    // console.log('mission.goal_id', mission.goal_id);
-                    // console.log('either.goal_id', either);
-
-                    if (mission.goal_id == either.either_or_goal_id) {
-                        return (
-                            <div>
-                                <button onClick={ () => { this.eitherOrOnClick(either) }}><div>{either.either_or_name}</div> <div>{either.either_or_points} pts</div></button>
-                                {this.renderOrText(i)}
-                            </div>
-                        )
-                    }
+                eitherOr.map((eithers, i) => {
+                    return (
+                        eithers.map( (either, i) => {
+                            if (mission.goal_id == either.either_or_goal_id) {
+                                return (
+                                    <div>
+                                        <button onClick={ () => { this.eitherOrOnClick(either) }}><div>{either.either_or_name}</div> <div>{either.either_or_points} pts</div></button>
+                                        {this.renderOrText(eithers, i)}
+                                    </div>
+                                )
+                            }
+                        })
+                    )
                 })
             )
         }
@@ -122,14 +131,12 @@ class RunScoring extends Component {
             }
         }
 
-    renderOrText = (i) => {
-        // console.log('either length', this.state.eitherOr.length);
-        if (i < this.state.eitherOr.length-1) {
+    renderOrText = (either, i) => {
+        console.log('either length', either.length);
+        if (i < (either.length - 1)) {
             return <h5>OR</h5>
         }
-        else {
-            return null
-        }
+        return
     }
 
     penaltyOnClick = (penalty, i) => {
@@ -233,7 +240,7 @@ class RunScoring extends Component {
             <div>
                 <h2>{this.props.reduxState.runDetails.name}</h2>
                 <p>Score: {this.state.score}</p>
-                {JSON.stringify(this.state.penalties)}
+                {JSON.stringify(this.state.eitherOr)}
                 {this.penaltyList(this.state.penalties)}
                 {this.missionList(this.state.goals)}
                 <button onClick={this.handleSubmit}>End Run</button>
