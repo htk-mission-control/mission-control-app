@@ -55,7 +55,7 @@ const Nav = (props) => (
       )}
 
       {/* TEAM W/access */}
-      {props.user.security_clearance === 3 && (
+      {props.user.security_clearance === 4 && (
         <>
           <Link className={props.location.pathname === '/missions' ? 'active nav-link' : 'nav-link'} to="/missions">
             View Missions
