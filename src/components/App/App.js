@@ -23,11 +23,16 @@ import ViewProject from '../Admin/ViewProject/ViewProject';
 import RunHistory from '../CoachTeam/RunHistory/RunHistory';
 import HomeCoach from '../CoachTeam/HomeCoach/HomeCoach';
 import ViewAllTeams from '../CoachTeam/ManageTeam/ViewAllTeams/ViewAllTeams';
+import StartRun from '../CoachTeam/NewRun/StartRun/StartRun';
+import RunSummary from '../CoachTeam/NewRun/RunSummary/RunSummary';
+import ProjectOverview from '../CoachTeam/ProjectOverview/ProjectOverview';
 
 import './App.css';
 import ProtectedCoachAndTeams from '../ProtectedRoutes/ProtectedCoachAndTeams/ProtectedCoachAndTeams';
 import AddPenalty from '../Admin/ViewProject/Penalty/AddPenalty';
 import EditPenalty from '../Admin/ViewProject/Penalty/EditPenalty';
+import AddMission from '../Admin/ViewProject/Mission/AddMission';
+import EditMission from '../Admin/ViewProject/Mission/EditMission';
 
 class App extends Component {
   componentDidMount() {
@@ -63,10 +68,20 @@ class App extends Component {
               path="/admin/home"
               component={HomeAdmin}
             />
-            <ProtectedAdmin
+            <ProtectedTeamWithAccess
               exact 
               path="/practice-run"
               component={CreateRun}
+            />
+            <ProtectedCoachAndTeams
+              exact
+              path="/practice-run/run-scoring"
+              component={StartRun}
+            />
+            <ProtectedCoachAndTeams
+              exact
+              path="/practice-run/run-summary"
+              component={RunSummary}
             />
             <ProtectedAdmin
               exact
@@ -94,15 +109,30 @@ class App extends Component {
               component={RunHistory}
             />
             <ProtectedCoach
-             exact
-             path="/coach/home"
-             component={HomeCoach}
-           />
+              exact
+              path="/coach/teams"
+              component={ViewAllTeams}
+            />
+            <ProtectedCoachAndTeams 
+              exact
+              path="/missions"
+              component={ProjectOverview}
+            />
             <ProtectedCoach
-             exact
-             path="/coach/teams"
-             component={ViewAllTeams}
-           />
+              exact
+              path="/coach/home"
+              component={HomeCoach}
+            />
+            <ProtectedAdmin
+              // exact
+              path="/admin/projects/add-mission"
+              component={AddMission}
+            />
+            <ProtectedAdmin
+              // exact
+              path="/admin/projects/edit-mission"
+              component={EditMission}
+            />
             <Route render={() => <h1>404</h1>} />
           </Switch>
           <Footer />
