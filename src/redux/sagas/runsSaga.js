@@ -20,6 +20,8 @@ function* getRunsAsTeam( action ) {
     // get runs data from db
     const response = yield axios.get( `/api/runs/team` );
     // set allRuns in redux state
+    console.log('response', response);
+    
     yield put({ type: 'SET_RUNS', payload: response.data });
   }
   catch (error) {
