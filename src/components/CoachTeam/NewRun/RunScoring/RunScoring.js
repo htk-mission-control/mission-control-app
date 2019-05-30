@@ -68,10 +68,10 @@ class RunScoring extends Component {
                 return (
                     <div key={i}>
                         <h3>Mission {i + 1}: {mission[0].mission_name}</h3>
-                        {mission.map(mission => {
+                        {mission.map((goal, y) => {
                             return (
                                 <div>
-                                    {this.renderGoals(mission, newEitherOrArr)}
+                                    {this.renderGoals(goal, y, newEitherOrArr)}
                                 </div>
                             )
                         })}
@@ -95,20 +95,22 @@ class RunScoring extends Component {
     }
 
 
-    renderGoals = (mission, eitherOr) => {
-        if (mission.goal_type_id === 1) {
-            return <button onClick={ () => { this.yesNoOnClick(mission) }}><div>{mission.goal_name}</div> <div>{mission.goal_points} pts</div></button>
+    renderGoals = (goal, y, eitherOr) => {
+        console.log(`y in renderGoals`, y, goal);
+        
+        if (goal.goal_type_id === 1) {
+            return <button onClick={ () => { this.yesNoOnClick(y) }}><div>{goal.goal_name}</div> <div>{goal.goal_points} pts</div></button>
         }
-        else if (mission.goal_type_id === 2) {
+        else if (goal.goal_type_id === 2) {
             
             return (
-                eitherOr.map((options, i) => {
+                eitherOr.map((options, z) => {
                     return (
                         options.map( (option, i) => {
-                            if (mission.goal_id == option.either_or_goal_id) {
+                            if (goal.goal_id == option.either_or_goal_id) {
                                 return (
                                     <div>
-                                        <button onClick={ () => { this.eitherOrOnClick(option) }}><div>{option.either_or_name}</div> <div>{option.either_or_points} pts</div></button>
+                                        <button onClick={ () => { this.eitherOrOnClick(i) }}><div>{option.either_or_name}</div> <div>{option.either_or_points} pts</div></button>
                                         {this.renderOrText(options, i)}
                                     </div>
                                 )
@@ -118,11 +120,11 @@ class RunScoring extends Component {
                 })
             )
         }
-        else if (mission.goal_type_id === 3) {
+        else if (goal.goal_type_id === 3) {
 
             return (
                 <div>
-                    <button onClick={() => { this.howManyOnClick(mission) }}><div>{mission.goal_name}</div><div>{mission.goal_points} pts each</div></button>
+                    <button onClick={() => { this.howManyOnClick(y) }}><div>{goal.goal_name}</div><div>{goal.goal_points} pts each</div></button>
                 </div>
             )
             }
@@ -166,16 +168,19 @@ class RunScoring extends Component {
     }
 
     // function to add points for how many goal type on click and disable button when max is reached
-    howManyOnClick = ( goal ) => {
-        goal.count = goal.count + 1;
-        goal.isCompleted = true;
-        if( goal.count <= goal.how_many_max ){
+    howManyOnClick = ( i ) => {
+        let updatedGoals = [...this.state.goals];
+        console.log(`updatedGoals`, updatedGoals);
+        console.log(`how many i is`, i);
+        updatedGoals[i].count = updatedGoals[i].count + 1;
+        updatedGoals[i].isCompleted = true;
+        if (updatedGoals[i].count <= updatedGoals[i].how_many_max ){
             this.setState({
-                score: (this.state.score + goal.goal_points),
+                score: (this.state.score + updatedGoals[i].goal_points),
             })
         }
         else {
-            goal.disabled = true;
+            updatedGoals[i].disabled = true;
         }
     // console.log(`how many goal`, goal);
     // console.log(`this.state.score`, this.state.score);
@@ -235,7 +240,6 @@ class RunScoring extends Component {
             <div>
                 <h2>{this.props.reduxState.runDetails.name}</h2>
                 <p>Score: {this.calculateScore()}</p>
-                {/* {JSON.stringify(this.state.eitherOr)} */}
                 {this.penaltyList()}
                 {this.missionList()}
                 <button onClick={this.handleSubmit}>End Run</button>
