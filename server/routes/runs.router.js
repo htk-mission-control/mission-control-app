@@ -1,4 +1,5 @@
 const express = require('express');
+const { rejectUnauthenticated } = require('../modules/authentication-middleware');
 const pool = require('../modules/pool');
 const router = express.Router();
 const moment = require('moment');
@@ -274,6 +275,56 @@ router.get('/coach/:id', (req, res) => {
             res.sendStatus( 500 );
         });
 });
+
+
+router.get( '/runHistoryDetails/:id', rejectUnauthenticated, (req, res) => {
+    const runId = req.params.id;
+    console.log( `runId:`, runId );
+    
+    let sqlText = `SELECT r."id", r."name", r."date", r."score", r."penalties", r."notes",
+                    (CASE WHEN r."driver" = t."id" THEN t."name" END) AS "driver", 
+                    (CASE WHEN r."assistant" = t1."id" THEN t1."name" END) AS "assistant", 
+                    (CASE WHEN r."score_keeper" = t2."id" THEN t2."name" END) AS "score_keeper",
+                    COUNT(CASE WHEN "goals_per_run"."is_completed" THEN 1 end)
+                    FROM "runs" AS r
+                    LEFT JOIN "team_members" AS t ON t."id" = r."driver"
+                    JOIN "team_members" AS t1 ON t1."id" = r."assistant"
+                    JOIN "team_members" AS t2 ON t2."id" = r."score_keeper"
+                    JOIN "selected_missions" ON "run_id" = r."id"
+                    JOIN "goals_per_run" ON "selected_missions_id" = "selected_missions"."id"
+                    WHERE r."id" = $1
+                    GROUP BY r."id", t."id", t1."id", t2."id"`;
+
+    pool.query( sqlText, [runId] )
+        .then( (result) => {
+            res.send(result.rows);
+        })
+        .catch( (error) => {
+            console.log( `Couldn't get run details by id.`, error );
+            res.sendStatus(500);
+        })
+} )
+
+router.put( `/summary/:id`, rejectUnauthenticated, (req, res) => {
+    console.log( `HERE!` );
+    
+    const runId = req.params.id;
+    const runNotes = req.body.notes;
+    console.log( `Notes:`, runNotes );
+
+    let sqlText = `UPDATE "runs" 
+                    SET "notes" = $1
+                    WHERE "id" = $2;`;
+
+    pool.query( sqlText, [runNotes, runId] )
+        .then( (response) => {
+            res.sendStatus(200);
+        })
+        .catch( (error) => {
+            console.log( `Couldn't update run summary notes.`, error );
+            res.sendStatus(500);
+        })
+})
 
 /**
  * GET runs for team based on user id
