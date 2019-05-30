@@ -20,11 +20,12 @@ import HomeAdmin from '../Admin/HomeAdmin/HomeAdmin';
 import CreateRun from '../CoachTeam/NewRun/CreateRun/CreateRun';
 import HomeTeam from '../CoachTeam/HomeTeam/HomeTeam';
 import ViewProject from '../Admin/ViewProject/ViewProject';
+import RunHistory from '../CoachTeam/RunHistory/RunHistory';
+import HomeCoach from '../CoachTeam/HomeCoach/HomeCoach';
 import ViewAllTeams from '../CoachTeam/ManageTeam/ViewAllTeams/ViewAllTeams';
 import StartRun from '../CoachTeam/NewRun/StartRun/StartRun';
 import RunSummary from '../CoachTeam/NewRun/RunSummary/RunSummary';
 import ProjectOverview from '../CoachTeam/ProjectOverview/ProjectOverview';
-import HomeCoach from '../CoachTeam/HomeCoach/HomeCoach';
 
 import './App.css';
 import ProtectedCoachAndTeams from '../ProtectedRoutes/ProtectedCoachAndTeams/ProtectedCoachAndTeams';
@@ -101,6 +102,11 @@ class App extends Component {
               exact
               path="/team/home"
               component={HomeTeam}
+            />
+            <ProtectedCoachAndTeams
+              exact
+              path="/history"
+              component={RunHistory}
             />
             <ProtectedCoach
               exact

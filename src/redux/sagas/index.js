@@ -6,6 +6,7 @@ import projectSaga from './projectSaga';
 import missionSaga from './missionSaga';
 import teamSaga from './teamSaga';
 import penaltySaga from './penaltySaga';
+import runsSaga from './runsSaga';
 import runSaga from './runSaga';
 import goalSaga from './goalSaga';
 
@@ -25,6 +26,7 @@ export default function* rootSaga() {
     missionSaga(),
     teamSaga(),
     penaltySaga(),
+    runsSaga(),
     runSaga(),
     goalSaga(), 
   ]);
