@@ -18,6 +18,8 @@ import missionDetails from './missionDetailsReducer';
 import eitherOr from './eitherOrReducer';
 import runHistoryDetails from './runHistoryDetails';
 import allRuns from './allRunsReducer';
+import teamInfoReducer from './teamInfoReducer';
+
 
 // rootReducer is the primary reducer for our entire project
 // It bundles up all of the other reducers so our project can use them.
@@ -45,6 +47,8 @@ const rootReducer = combineReducers({
   goalOptions, // options for Either/Or goals
   missionDetails, // hold mission info by specific mission id
   runHistoryDetails, // holds details from past run
+  teamInfoReducer
+
 });
 
 export default rootReducer;
