@@ -5,7 +5,6 @@ import { FaUndo } from 'react-icons/fa';
 class RunScoring extends Component {
 
     state = {
-        toggle: true,
         score: 0,
         runId: 0,
         goals: [],
