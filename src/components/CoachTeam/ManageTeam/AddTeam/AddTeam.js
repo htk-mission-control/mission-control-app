@@ -45,7 +45,7 @@ import TeamMember from './TeamMember'
         this.setState({
             newTeam: {
                 ...this.state.newTeam,
-                teamId: this.props.reduxState.teamMembers.teamIdReducer
+                teamId: this.props.reduxState.teamIdReducer
             }
         })
     }
@@ -100,7 +100,7 @@ import TeamMember from './TeamMember'
                         </tr>
                     </thead>
                     <tbody>
-                    {this.props.reduxState.teamMembers.teamMembersReducer.map(item => 
+                    {this.props.reduxState.teamMembers.map(item => 
                         (<TeamMember item={item} key={item.id}/>)
                         )}
                     </tbody>
