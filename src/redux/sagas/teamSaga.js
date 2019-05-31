@@ -123,8 +123,10 @@ function* editTeamMember(action){
 
 function* hideTeamMember(action){
     try{
+        console.log('hide payload is', action.payload);
+        
         yield axios.put(`/api/teams/hide-team-member`, action.payload);
-        yield put ({type: "GET_TEAM_MEMBERS_WITH_ID", payload: action.payload.teamId})
+        yield put ({type: "GET_TEAM_MEMBERS_WITH_ID", payload: action.payload.team_id})
     }
     catch(error) {
         console.log(`Couldn't hide team member`, error);
