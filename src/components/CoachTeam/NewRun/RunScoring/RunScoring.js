@@ -111,7 +111,7 @@ class RunScoring extends Component {
                             if (goal.goal_id == option.either_or_goal_id) {
                                 return (
                                     <div key={i}>
-                                        <button onClick={() => { this.eitherOrOnClick(goal, eitherOr) }}><div>{option.either_or_name}</div> <div>{option.either_or_points} pts</div></button>
+                                        <button disabled={option.disabled} onClick={() => { this.eitherOrOnClick(goal, eitherOr) }}><div>{option.either_or_name}</div> <div>{option.either_or_points} pts</div></button>
                                         {this.renderOrText(options, i)}
                                     </div>
                                 )
@@ -245,16 +245,14 @@ class RunScoring extends Component {
                 updatedGoals[i].isCompleted = true;
             }
         }
+        for (let option of updatedEitherOr) {
+            option.disabled = true;
+        }
 
         if (updatedGoals[goalIndex].disabled === false) {
-            currentScore = currentScore + 
-            this.setState({
-                score: (this.state.score + updatedEitherOr[goalIndex].either_or_points),
-            })
+            currentScore = currentScore + updatedEitherOr[goalIndex].either_or_points
         }
-        // for ( let item of this.state.eitherOr) {
-        //     item.disabled = true;
-        // }
+
         // updatedGoals[y].isCompleted = true;
         // for( let mission of this.state.goals ) {
         //     if (mission.goal_id === goal.either_or_goal_id){
@@ -263,6 +261,7 @@ class RunScoring extends Component {
         //     }
         // }
         this.setState({
+            score: currentScore,
             goals: updatedGoals,
             eitherOr: updatedEitherOr
         })
