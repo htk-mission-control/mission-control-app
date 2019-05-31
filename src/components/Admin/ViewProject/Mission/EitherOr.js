@@ -1,10 +1,12 @@
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
+import qs from 'query-string';
+import {withRouter} from 'react-router-dom';
 
 class EitherOr extends Component {
 
     state = {
-        mission_id: this.props.mission_id,
+        missionId: 0,
         goal_id: this.props.goal,
         optionArray: [],
         optionCount: 0,
@@ -12,6 +14,12 @@ class EitherOr extends Component {
     }
 
     componentDidMount() {
+        const searchObject = qs.parse(this.props.location.search);
+        console.log('searchObject', searchObject);
+        this.setState({
+            missionId: searchObject.missionId,
+        })
+
         this.props.dispatch( {type: 'GET_GOAL_TYPES'} );
 
         if( this.props.editState === false ){
@@ -80,7 +88,7 @@ class EitherOr extends Component {
         } else {
             let removeOptionPayload = {
                 option_id: i,
-                mission_id: this.state.mission_id,
+                missionId: this.state.missionId,
             }
             console.log( `in delete option:`, removeOptionPayload );
 
@@ -147,4 +155,4 @@ const mapReduxStateToProps = (reduxState) => ({
     reduxState,
 });
 
-export default connect(mapReduxStateToProps)(EitherOr);
+export default connect(mapReduxStateToProps)(withRouter(EitherOr));

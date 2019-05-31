@@ -6,7 +6,7 @@ class EditMissionGoals extends Component {
 
     state = {
         // Need to update this:
-        mission_id: this.props.mission_id,
+        missionId: 0,
         goals: [],
     }
 
@@ -15,6 +15,7 @@ class EditMissionGoals extends Component {
         if( this.props.reduxState.missionDetails.goals !== prevProps.reduxState.missionDetails.goals ){
             this.setState({
                 ...this.state, 
+                missionId: this.props.mission_id,
                 goals: this.props.reduxState.missionDetails.goals,
             })
         }
@@ -43,13 +44,13 @@ class EditMissionGoals extends Component {
     addGoal = () => {
         this.props.dispatch( {type: 'ADD_GOAL_TO_MISSION', payload: this.state} );
         this.setState({ state: this.state });
-        console.log(  );
+        console.log( `in ADD GOAL/missions:`, this.state );
         
     }
 
     removeGoal = (id) => () => {
         console.log( `in removeGoal`, id );
-        let removePayload = { goal_id: id, mission_id: this.state.mission_id };
+        let removePayload = { goal_id: id, missionId: this.state.missionId };
         this.props.dispatch( {type: 'DELETE_GOAL', payload: removePayload} );
         this.setState({ state: this.state });
     }

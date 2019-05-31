@@ -28,7 +28,7 @@ router.get('/details/:id', rejectUnauthenticated, (req, res) => {
         })
 });
 
-router.put('/:id', rejectUnauthenticated, async (req, res) => {
+router.put('/project/:id', rejectUnauthenticated, async (req, res) => {
     let id = req.params.id;
     // console.log('id', id);
     
@@ -97,6 +97,7 @@ router.delete('/penalties/:id', rejectUnauthenticated, (req, res) => {
         })
 })
 
+// getting mission details
 router.get('/missions/:id', rejectUnauthenticated, (req, res) => {
     let sqlText = (`SELECT "missions"."id" AS "mission_id", 
                            "missions"."name" AS "mission_name", 
@@ -332,6 +333,8 @@ router.post( '/mission', rejectUnauthenticated, async(req, res) => {
 router.get( `/mission/:id`, rejectUnauthenticated, async(req, res) => {
     const client = await pool.connect();
     let mission_id = req.params.id;
+    console.log( `REQ.PARAMS:`, req.params );
+    
 
     try {
         await client.query('BEGIN');
@@ -453,7 +456,7 @@ router.put( `/mission`, rejectUnauthenticated, async(req, res) => {
         res.sendStatus(201);
     } catch(error) {   
         await client.query('ROLLBACK');
-        console.log( `Couldn't POST mission, goal data.`, error );
+        console.log( `Couldn't update mission, goal data.`, error );
         res.sendStatus(500);
     } finally {
         client.release()
@@ -465,7 +468,7 @@ router.post( `/goal`, rejectUnauthenticated, async(req, res) => {
     const client = await pool.connect();
     console.log( `in addGoal`, req.body );
     
-    const mission_id = req.body.mission_id;
+    const missionId = req.body.missionId;
 
     try {
         await client.query('BEGIN');
@@ -474,7 +477,7 @@ router.post( `/goal`, rejectUnauthenticated, async(req, res) => {
                         VALUES ($1, 1)
                         RETURNING "id";`;
 
-        const result = await client.query( sqlText, [mission_id] );
+        const result = await client.query( sqlText, [missionId] );
         console.log( `Result:`, result.rows );
 
         await client.query('COMMIT');
