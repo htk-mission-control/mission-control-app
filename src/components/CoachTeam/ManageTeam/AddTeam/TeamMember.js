@@ -7,7 +7,7 @@ state = {
   edit: false,
   teamMemberName: this.props.item.name,
   id: this.props.item.member_id,
-  teamId: this.props.reduxState.teamMembers.teamIdReducer
+  teamId: this.props.reduxState.teamIdReducer
 }
 
 
