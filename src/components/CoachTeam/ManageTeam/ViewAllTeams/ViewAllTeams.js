@@ -36,15 +36,22 @@ class ViewAllTeams extends Component {
     changePermission = (event) => {
         console.log( `team_id:`, event.target.name );
         console.log( `access:`, event.target.value );
-        
+
         let team_id = event.target.name;
-        let access = event.target.value;
+        let access;
         let coachId = this.props.reduxState.user.id;
+        
+        if( event.target.value === '3'){
+            access = 4;
+        } else {
+            access = 3;
+        }
+
         let permissionObject = {team_id, permission: access, coachId};
         console.log( `permissionObject:`, permissionObject );
-        
         this.props.dispatch( {type: 'UPDATE_TEAM_ACCESS', payload: permissionObject} );
     }
+
 
     render(){
         return(
@@ -80,8 +87,8 @@ class ViewAllTeams extends Component {
                             <label className="switch">
                                 <input type="checkbox" 
                                     onClick={this.changePermission}
-                                    name={team.id} value={team.team_access}
-                                    checked={team.team_access === true} />
+                                    name={team.team_user_id} value={team.team_access}
+                                    checked={team.team_access === 4} />
                                 <span className="slider round"></span>
                             </label>
                         </div>
