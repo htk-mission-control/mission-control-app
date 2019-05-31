@@ -69,7 +69,7 @@ router.post('/saveDetails', async (req, res) => {
                 }
             }
             await client.query('COMMIT')
-            res.send(runId);
+            res.sendStatus(201);
         }
         catch ( error ) {
             await client.query('ROLLBACK')
@@ -91,14 +91,22 @@ router.post('/saveDetails', async (req, res) => {
                             VALUES ($1, $2, $3, $4, $5, $6)
                             RETURNING id;`
             let sqlText2 = `INSERT INTO "selected_missions" (run_id, mission_id)
-                            VALUES ($1, $2);`
+                            VALUES ($1, $2)
+                            RETURNING id;`
+            let sqlText3 = `SELECT "goals"."id" FROM "goals"
+                            JOIN "missions" ON "missions"."id" = "goals"."mission_id"
+                            JOIN "selected_missions" ON "selected_missions"."mission_id" = "missions"."id"
+                            WHERE "selected_missions"."mission_id" = $1 AND "selected_missions"."run_id" = $2;`
+            let sqlText4 = `INSERT INTO "goals_per_run"("goal_id", "selected_missions_id")VALUES($1, $2);`
             await client.query('BEGIN')
             const idResponse = await client.query(sqlText0, [teamId])
             const runsInsertResponse = await client.query(sqlText1, [idResponse.rows[0].id, runDetails.runName, currentDate, runTeam.driverId, runTeam.assistantId, runTeam.scorekeeperId])
             const runId = runsInsertResponse.rows[0].id;
             for (mission of selectedMissions) {
                 if (mission.selected === true) {
-                    const selectedMissionsInsertResponse = await client.query(sqlText2, [runId, mission.id])
+                    const selectedMissionId = await client.query(sqlText2, [runId, mission.id]);
+                    const selectedGoalId = await client.query( sqlText3, [mission.id, runId]);
+                    const goalsPerRunInsert = await client.query( sqlText4, [selectedGoalId.rows[0].id, selectedMissionId.rows[0].id]);
                 }
             }
             await client.query('COMMIT')
