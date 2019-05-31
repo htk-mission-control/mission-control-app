@@ -30,10 +30,10 @@ class EditPenalty extends Component {
         if( this.props.reduxState.penalty !== prevProps.reduxState.penalty ){
             this.setState({
                 ...this.state, 
-                name: this.props.reduxState.penalty.name,
-                description: this.props.reduxState.penalty.description,
-                max: this.props.reduxState.penalty.max,
-                points: this.props.reduxState.penalty.points
+                name: this.props.reduxState.penalty.name || '',
+                description: this.props.reduxState.penalty.description || '',
+                max: this.props.reduxState.penalty.max || '',
+                points: this.props.reduxState.penalty.points || ''
             })
         }
     }
@@ -43,7 +43,7 @@ class EditPenalty extends Component {
             ...this.state,
             [event.target.name]: event.target.value,
         })
-        console.log( `new state:`, this.state );
+        // console.log( `new state:`, this.state );
     }
 
     routeBack = () => {

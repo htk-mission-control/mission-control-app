@@ -55,9 +55,12 @@ class EditMission extends Component {
             goals: missionDetails.goals,
             eitherOrOptions: this.props.reduxState.goalOptions.optionList,
         }
+        console.log( `MissionUpdate:`, missionUpdate );
+        console.log( `STATE:`, this.state );
+        console.log( `STATE:`, missionDetails );
 
         this.props.dispatch( {type: 'UPDATE_MISSION', payload: missionUpdate} );
-        // this.props.history.goBack();
+        this.props.history.goBack();
     }
 
     render() {
