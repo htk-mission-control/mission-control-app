@@ -44,6 +44,33 @@ class App extends Component {
     this.props.dispatch({type: 'FETCH_USER'})
   }
 
+  userHome = () => {
+    if(this.props.reduxState.user.security_clearance === 1){
+      return <ProtectedAdmin
+          exact
+          path="/home"
+          component={HomeAdmin}
+        />;
+    } else if(this.props.reduxState.user.security_clearance === 2){
+      return <ProtectedCoach
+          exact
+          path="/home"
+          component={HomeCoach}
+        />;
+    } else if(this.props.reduxState.user.security_clearance === 3 || this.props.reduxState.user.security_clearance === 4){
+      return <ProtectedTeams
+          exact
+          path="/home"
+          component={HomeTeam}
+        />;
+    } else {
+      return <ProtectedAdmin 
+        exact path="/home"
+        component={HomeAdmin}
+      />;
+    }
+  }
+
   render() {
     return (
       <Router>
@@ -63,7 +90,9 @@ class App extends Component {
             Visiting localhost:3000/home will show the UserPage if the user is logged in.
             If the user is not logged in, the ProtectedRoute will show the 'Login' or 'Register' page.
             Even though it seems like they are different pages, the user is always on localhost:3000/home */}
-            <ProtectedAdmin
+            
+            {this.userHome()}
+            {/* <ProtectedAdmin
               exact
               path="/home"
               component={UserPage}
@@ -73,6 +102,18 @@ class App extends Component {
               path="/admin/home"
               component={HomeAdmin}
             />
+            <ProtectedCoach
+              exact
+              path="/coach/home"
+              component={HomeCoach}
+            />
+            <ProtectedTeams
+              exact
+              path="/team/home"
+              component={HomeTeam}
+            /> */}
+
+
             <ProtectedTeamWithAccess
               exact 
               path="/practice-run"
@@ -103,11 +144,6 @@ class App extends Component {
               path="/admin/projects/edit-penalty"
               component={EditPenalty}
             />
-            <ProtectedTeams
-              exact
-              path="/team/home"
-              component={HomeTeam}
-            />
             <ProtectedCoachAndTeams
               exact
               path="/history"
@@ -122,11 +158,6 @@ class App extends Component {
               exact
               path="/missions"
               component={ProjectOverview}
-            />
-            <ProtectedCoach
-              exact
-              path="/coach/home"
-              component={HomeCoach}
             />
             <ProtectedAdmin
               // exact
@@ -160,4 +191,8 @@ class App extends Component {
   )}
 }
 
-export default connect()(App);
+const mapReduxStateToProps = (reduxState) => ({
+  reduxState
+});
+
+export default connect(mapReduxStateToProps)(App);
