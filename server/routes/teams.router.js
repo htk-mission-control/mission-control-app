@@ -154,7 +154,8 @@ router.post(`/team-name`, rejectUnauthenticated, async (req, res) => {
 
 //PUT to hide the team member
 router.put(`/hide-team-member`, rejectUnauthenticated, (req, res) => {
-    let id = req.body.id
+    console.log('req body', req.body)
+    let id = req.body.member_id
     let hidden = true
     console.log('id is', id);
     

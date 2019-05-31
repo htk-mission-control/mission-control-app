@@ -5,8 +5,8 @@ class TeamMember extends Component {
 
 state = {
   edit: false,
-  teamMemberName: this.props.item.name,
-  id: this.props.item.member_id,
+  teamMemberName: '',
+  id: '',
   teamId: ''
 }
 
@@ -15,9 +15,11 @@ componentDidMount(){
 }
 
 hide = () => {
+  
     this.props.dispatch({
       type: "HIDE_TEAM_MEMBER",
-      payload: this.state
+      payload: this.props.item
+      
     })
   }
 
@@ -41,6 +43,8 @@ handleChange = propertyName => event => {
   editTeamMember = () => {
     this.setState({
       ...this.state,
+      teamMemberName: this.props.item.name,
+      id: this.props.item.member_id,
       edit: true,
     })
   }
