@@ -32,6 +32,7 @@ class SelectRunDetails extends Component {
             this.props.dispatch({ type: 'GET_TEAM_MEMBERS' });
         }
         else if (this.props.reduxState.user.security_clearance === 2) {
+            console.log(`get team members with id searchObject`, searchObject);            
             this.props.dispatch({ type: 'GET_TEAM_MEMBERS_WITH_ID', payload: searchObject }); 
         }
     }
@@ -141,8 +142,10 @@ class SelectRunDetails extends Component {
             this.props.history.push(`/practice-run/run-scoring`);
         }
         else if (this.props.reduxState.user.security_clearance === 2) {
-            this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: { runDetails: this.state, id: searchObject } });
-            this.props.history.push(`/practice-run/run-scoring?teamId=${searchObject}`);
+            console.log(`searchObject in handleSubmit`, searchObject);
+            
+            // this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: { runDetails: this.state, id: searchObject } });
+            // this.props.history.push(`/practice-run/run-scoring?teamId=${searchObject}`);
         }
         console.log(`current runTeam state`, this.state.runTeam);
         console.log(`current run state`, this.state.newRun);
@@ -152,7 +155,7 @@ class SelectRunDetails extends Component {
         let missionList;
         if (this.props.reduxState.missions) {
             missionList = this.props.reduxState.missions.map((mission, i) =>
-                <div>
+                <div key={i}>
                     <label>{i + 1}. {mission.name}</label>
                     <input type='checkbox' checked={mission.selected === true} value={mission.selected} onChange={() => { this.updateMission(i) }} />
                 </div>

@@ -44,7 +44,7 @@ class RunScoring extends Component {
 
         //Find a way to stop loop other than #100
         for (let count = 0; count < 100; count++) {
-            test = missionArr.filter(x => x.mission_id == count)
+            test = missionArr.filter(x => x.mission_id === count)
 
             if (test.length !== 0) {
                 newMissionArr.push(test)
@@ -103,7 +103,7 @@ class RunScoring extends Component {
                 eitherOr.map((options) => {
                     return (
                         options.map((option, i) => {
-                            if (goal.goal_id == option.either_or_goal_id) {
+                            if (goal.goal_id === option.either_or_goal_id) {
                                 return (
                                     <div key={i}>
                                         <button disabled={option.disabled} onClick={() => { this.eitherOrOnClick(option, goal) }}><div>{option.either_or_name}</div> <div>{option.either_or_points} pts</div></button>
@@ -185,7 +185,7 @@ class RunScoring extends Component {
         if (updatedGoals[goalIndex].count <= updatedGoals[goalIndex].how_many_max) {
             currentScore = currentScore + updatedGoals[goalIndex].goal_points
         }
-        if (updatedGoals[goalIndex].count == updatedGoals[goalIndex].how_many_max) {
+        if (updatedGoals[goalIndex].count === updatedGoals[goalIndex].how_many_max) {
             updatedGoals[goalIndex].disabled = true;
         }
 
