@@ -132,8 +132,8 @@ class TeamMembers extends Component {
                 <TableHead>
                   <TableRow>
                     <TableCell>Name</TableCell>
-                    <TableCell>'</TableCell>
-                    <TableCell>'</TableCell>
+                    <TableCell>{' '}</TableCell>
+                    <TableCell>{' '}</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -148,14 +148,14 @@ class TeamMembers extends Component {
           </Grid>
           <Grid item>
             <Paper className={classes.paper}>
+              <Typography variant="h5">Add Member</Typography>
               <TextField
                 type="text"
                 onClick={this.setId}
                 onChange={this.handleChange("newTeamMember")}
                 value={this.state.newTeam.newTeamMember}
-                label="New Team Member"
+                label="Team Member Name"
                 margin="normal"
-
               ></TextField>
               <Button 
                 variant="contained" 
@@ -167,14 +167,6 @@ class TeamMembers extends Component {
               </Button>
               
             </Paper>
-            {/* <Button
-                variant="contained"
-                color="primary"
-                className={classes.button}
-                onClick={this.changePage}
-              >
-                Save
-              </Button> */}
           </Grid>
         </Grid>
       );

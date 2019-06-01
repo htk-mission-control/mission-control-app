@@ -3,6 +3,46 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import qs from 'query-string';
 
+//----Material UI----
+import PropTypes from 'prop-types';
+import { withStyles, TextField } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import MenuItem from '@material-ui/core/MenuItem';
+
+const styles = theme => ({
+    root: {
+        flexGrow: 1,
+        textAlign: "center",
+        padding: theme.spacing.unit,
+        margin: theme.spacing.unit,
+        width: '100%',
+        overflowX: 'auto',
+    },
+    paper: {
+        margin: theme.spacing.unit * 2,
+        maxWidth: 700,
+        padding: theme.spacing.unit * 2,
+        textAlign: "center",
+    },
+    button: {
+        marginTop: 20,
+        marginBottom: 15,
+        paddingLeft: "5%",
+        paddingRight: "5%",
+    },
+    textField: {
+        width: 250,
+        margin: theme.spacing.unit,
+        padding: theme.spacing.unit,
+    },
+    menu: {
+        width: 250,
+    },
+})
+
 class SelectRunDetails extends Component {
 
     state = {
@@ -21,18 +61,18 @@ class SelectRunDetails extends Component {
         // used for view toggle
         stepOne: true,
     }
-    
+
     componentDidMount() {
         const searchObject = qs.parse(this.props.location.search);
         console.log('searchObject', searchObject.teamId);
         console.log(`user security clearance`, this.props.reduxState.user.security_clearance);
-        
+
         // gets all the team members for logged in team
-        if ( this.props.reduxState.user.security_clearance === 4) {
+        if (this.props.reduxState.user.security_clearance === 4) {
             this.props.dispatch({ type: 'GET_TEAM_MEMBERS' });
         }
         else if (this.props.reduxState.user.security_clearance === 2) {
-            this.props.dispatch({ type: 'GET_TEAM_MEMBERS_WITH_ID', payload: searchObject }); 
+            this.props.dispatch({ type: 'GET_TEAM_MEMBERS_WITH_ID', payload: searchObject });
         }
     }
 
@@ -56,26 +96,26 @@ class SelectRunDetails extends Component {
             }
         })
     }
-    
+
     // function to run on button click to select all of the missions for the current project, takes in allMissionsReducer state
-    selectAllMissions ( missions ) {
+    selectAllMissions(missions) {
         console.log(`this is selectAllMissions`);
         console.log(`missions props`, missions);
         let newSelection = [...missions];
 
         // changes selected state of all individual missions within reducer to true
-        if( this.state.newRun.allSelected === false ){
+        if (this.state.newRun.allSelected === false) {
             console.log(`selectAllMissions false turning true`);
-            
-            for( let mission of newSelection ){
+
+            for (let mission of newSelection) {
                 mission.selected = true;
             }
         }
 
         // changes selected state of all individual missions within reducer to false
-        if( this.state.newRun.allSelected === true ){
+        if (this.state.newRun.allSelected === true) {
             console.log(`selectAllMissions true turning false`);
-            for( let mission of newSelection ) {
+            for (let mission of newSelection) {
                 mission.selected = false;
             }
         }
@@ -87,7 +127,7 @@ class SelectRunDetails extends Component {
                 selectedMissions: newSelection,
                 allSelected: !this.state.newRun.allSelected
             }
-          
+
         })
 
     }
@@ -99,10 +139,10 @@ class SelectRunDetails extends Component {
     }
 
     // function to select mission at index i to selected, updates newSelection array with new selected value
-    updateMission (i) {
+    updateMission(i) {
         console.log('i is', i)
         console.log('current state', this.state.newRun.selectedMissions)
-        
+
         let newSelection = [...this.props.reduxState.missions];
         console.log('newSelection[i]', newSelection[i])
         newSelection[i].selected = !newSelection[i].selected;
@@ -118,10 +158,10 @@ class SelectRunDetails extends Component {
 
     changeView() {
 
-        if ( this.state.newRun.runName === '' ) { 
+        if (this.state.newRun.runName === '') {
             alert('You need to include a run name!');
         }
-        else { 
+        else {
             this.setState({
                 stepOne: !this.state.stepOne,
             })
@@ -137,7 +177,7 @@ class SelectRunDetails extends Component {
         console.log(`user security clearance`, this.props.reduxState.user.security_clearance);
 
         if (this.props.reduxState.user.security_clearance === 4) {
-            this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: {runDetails: this.state } })
+            this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: { runDetails: this.state } })
             this.props.history.push(`/practice-run/run-scoring`);
         }
         else if (this.props.reduxState.user.security_clearance === 2) {
@@ -149,6 +189,7 @@ class SelectRunDetails extends Component {
     }
 
     selectedMissionsView = () => {
+        const { classes } = this.props;
         let missionList;
         if (this.props.reduxState.missions) {
             missionList = this.props.reduxState.missions.map((mission, i) =>
@@ -160,62 +201,144 @@ class SelectRunDetails extends Component {
         } else {
             missionList = null;
         }
-        return(
-            <div>
+        return (
+            <Grid item>
                 <form>
-                    <input type='text' placeholder='Run Name' value={this.state.newRun.runName} required onChange={this.missionHandleChangeFor} />
-                    <h2>Select Missions</h2>
-                    <div className='mission-selection'>
-                        {missionList}
-                    </div>
-
+                    <Paper className={classes.paper}>
+                        <Typography variant="h4">Create Run Name</Typography>
+                        <TextField
+                            type='text'
+                            label='Run Name'
+                            className={classes.textField}
+                            value={this.state.newRun.runName}
+                            required
+                            onChange={this.missionHandleChangeFor}
+                        />
+                    </Paper>
+                    <Paper className={classes.paper}>
+                        <Typography variant="h4">Select Missions</Typography>
+                        <div className='mission-selection'>
+                            {missionList}
+                        </div>
+                        <Button
+                            className={classes.button}
+                            variant="contained"
+                            color="primary"
+                            onClick={() => { this.selectAllMissions(this.props.reduxState.missions) }}>{this.state.newRun.allSelected === false ? 'Select All Missions' : 'Deselect All Missions'}
+                        </Button>
+                    </Paper>
                 </form>
-                <button onClick={() => { this.selectAllMissions(this.props.reduxState.missions) }}>{ this.state.newRun.allSelected === false ? 'Select All Missions' : 'Deselect All Missions'}</button>
-            </div>
+            </Grid>
         )
     }
 
     selectedRunTeam = () => {
+        const { classes } = this.props;
+
         return (
-            <div>
-                {/* {JSON.stringify(this.state)} */}
-                <h2>{this.props.reduxState.selectedMissions.runName}</h2>
-                <form>
-                    <label>Driver:</label>
-                    <select value={this.state.runTeam.driverId} onChange={this.runTeamHandleChangeFor('driverId')} required>
-                        <option value="" disabled selected>Select your driver</option>
-                        {this.props.reduxState.teamMembers.map((teamMember, i) =>
-                            <option value={teamMember.member_id} key={i}>{teamMember.name}</option>
-                        )}
-                    </select>
-                    <label>Assistant:</label>
-                    <select value={this.state.runTeam.assistantId} onChange={this.runTeamHandleChangeFor('assistantId')}>
-                        <option value="" disabled selected>Select your assistant</option>
-                        {this.props.reduxState.teamMembers.map((teamMember, i) =>
-                            <option value={teamMember.member_id} key={i}>{teamMember.name}</option>
-                        )}
-                    </select>
-                    <label>Scorekeeper:</label>
-                    <select value={this.state.runTeam.scorekeeperId} onChange={this.runTeamHandleChangeFor('scorekeeperId')} required>
-                        <option value="" disabled selected>Select your scorekeeper</option>
-                        {this.props.reduxState.teamMembers.map((teamMember, i) =>
-                            <option value={teamMember.member_id} key={i}>{teamMember.name}</option>
-                        )}
-                    </select>
-                    <button onClick={this.handleSubmit}>Start</button>
-                </form>
-            </div>
+            <Grid item>
+                <Paper className={classes.paper}>
+                    <Typography variant>{this.props.reduxState.selectedMissions.runName}</Typography>
+                    <form>
+                        <Typography variant="h5">Driver:</Typography>
+                        <TextField
+                            select
+                            label="Select Driver"
+                            className={classes.textField}
+                            value={this.state.runTeam.driverId}
+                            onChange={this.runTeamHandleChangeFor('driverId')}
+                            SelectProps={{
+                                MenuProps: {
+                                    className: classes.menu,
+                                },
+                            }}
+                            helperText="Please select team member"
+                            margin="normal"
+                        >
+                            {this.props.reduxState.teamMembers.map(option => (
+                                <MenuItem key={option.member_id} value={option.member_id}>
+                                    {option.name}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+
+                        <Typography variant="h5">Assistant:</Typography>
+                        <TextField
+                            select
+                            label="Select Assistant"
+                            className={classes.textField}
+                            value={this.state.runTeam.assistantId}
+                            onChange={this.runTeamHandleChangeFor('assistantId')}
+                            SelectProps={{
+                                MenuProps: {
+                                    className: classes.menu,
+                                },
+                            }}
+                            helperText="Please select team member"
+                            margin="normal"
+                        >
+                            {this.props.reduxState.teamMembers.map(option => (
+                                <MenuItem key={option.member_id} value={option.member_id}>
+                                    {option.name}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+
+                        <Typography variant="h5">Scorekeeper:</Typography>
+                        <TextField
+                            select
+                            label="Select Score Keeper"
+                            className={classes.textField}
+                            value={this.state.runTeam.scorekeeperId}
+                            onChange={this.runTeamHandleChangeFor('scorekeeperId')}
+                            SelectProps={{
+                                MenuProps: {
+                                    className: classes.menu,
+                                },
+                            }}
+                            helperText="Please select team member"
+                            margin="normal"
+                        >
+                            {this.props.reduxState.teamMembers.map(option => (
+                                <MenuItem key={option.member_id} value={option.member_id}>
+                                    {option.name}
+                                </MenuItem>
+                            ))}
+                        </TextField>
+                        <Button
+                            onClick={this.handleSubmit}
+                            className={classes.button}
+                            variant="contained"
+                            color="primary"
+                        >Start
+                    </Button>
+                    </form>
+                </Paper>
+            </Grid>
         )
     }
 
     render() {
 
+        const { classes } = this.props;
+
         return (
-            <div>
-                { this.state.stepOne === true ? ( this.selectedMissionsView() ) : ( this.selectedRunTeam() ) }
-                {/* {JSON.stringify(this.props.location.search)} */}
-                <button onClick={() => { this.changeView() }}>{ this.state.stepOne === true? 'Select Run Team' : 'Back to Missions' }</button>
-            </div>
+            <Grid
+                container
+                className={classes.root}
+                direction="column"
+                justify="center"
+                alignItems="center"
+                spacing={16}
+            >
+                {this.state.stepOne === true ? (this.selectedMissionsView()) : (this.selectedRunTeam())}
+                <Button
+                    className={classes.button}
+                    variant="contained"
+                    color="primary"
+                    onClick={() => { this.changeView() }}>{this.state.stepOne === true ? 'Select Run Team' : 'Back to Missions'}
+                </Button>
+            </Grid>
         )
     }
 }
@@ -224,4 +347,9 @@ const mapReduxStateToProps = reduxState => ({
     reduxState,
 })
 
-export default withRouter( connect( mapReduxStateToProps )(SelectRunDetails ) );
+
+SelectRunDetails.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
+
+export default withRouter(connect(mapReduxStateToProps)(withStyles(styles)(SelectRunDetails)));

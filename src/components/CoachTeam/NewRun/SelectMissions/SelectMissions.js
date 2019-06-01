@@ -1,6 +1,14 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+//----Material UI----
+import PropTypes from 'prop-types';
+import { withStyles, TextField } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+
 class SelectMissions extends Component {
 
     state = {
@@ -67,9 +75,9 @@ class SelectMissions extends Component {
             missionList =  null;
         }
         return (
-            <div>
+            <Grid container>
                 <form>
-                    <input type='text' placeholder='Run Name' value={this.state.runName} required onChange={this.handleChangeFor} />
+                    <TextField type='text' placeholder='Run Name' value={this.state.runName} required onChange={this.handleChangeFor} />
                     {/* {JSON.stringify(this.state)} */}
                     <h2>Select Missions</h2>
                     <div className='mission-selection'>
@@ -78,7 +86,7 @@ class SelectMissions extends Component {
                     <button onClick={this.setSelectedMissions}>Select Run Team</button>
                 </form>
                 <button onClick={() => { this.selectAllMissions(this.props.reduxState.missions) }}>{this.state.allSelected === false ? 'Select All Missions' : 'Deselect All Missions'}</button>
-            </div>
+            </Grid>
 
         )
     }
