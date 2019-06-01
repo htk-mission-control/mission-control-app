@@ -1,10 +1,12 @@
-const missionDetails = (state = {}, action) => {
-    // console.log( `state:`, state );
+let mission = {}
+
+const missionDetails = (state = mission, action) => {
+    // console.log( `STATE!:`, state );
     
     switch (action.type) {
         
         case 'SET_MISSION_DETAILS':
-            let mission = {
+            mission = {
                 name: action.payload[0].name,
                 description: action.payload[0].description,
                 goals: action.payload,

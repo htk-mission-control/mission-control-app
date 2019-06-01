@@ -31,6 +31,10 @@
   color: #f89829;
 }
 
+.active {
+  color: #f89829;
+}
+
 .nav-right {
   float: right;
 }
