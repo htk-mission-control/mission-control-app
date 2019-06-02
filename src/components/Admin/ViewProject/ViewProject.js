@@ -228,7 +228,7 @@ class ViewProject extends Component {
     handleDeletePenalty = (event) => {
         let info = {
             projectId: this.state.projectId,
-            penaltyId: event.target.value,
+            penaltyId: event.currentTarget.value,
         }
         // console.log('event.target.value', info);
         this.props.dispatch({ type: 'DELETE_PENALTY', payload: info })
@@ -237,7 +237,7 @@ class ViewProject extends Component {
     handleDeleteMission = (event) => {
         let info = {
             projectId: this.state.projectId,
-            missionId: event.target.value
+            missionId: event.currentTarget.value
         }
         this.props.dispatch({ type: 'DELETE_MISSION', payload: info });
     }
@@ -247,7 +247,7 @@ class ViewProject extends Component {
     }
 
     editMission = (event) => {
-        this.props.history.push(`projects/edit-mission?missionId=${event.target.value}`)
+        this.props.history.push(`projects/edit-mission?missionId=${event.currentTarget.value}`)
     }
 
     addPenalty = () => {
@@ -255,7 +255,7 @@ class ViewProject extends Component {
     }
 
     editPenalty = (event) => {
-        this.props.history.push(`projects/edit-penalty?penaltyId=${event.target.value}`)
+        this.props.history.push(`projects/edit-penalty?penaltyId=${event.currentTarget.value}`)
     }
 
     deleteProject = () => {
@@ -283,7 +283,7 @@ class ViewProject extends Component {
         this.setState({
             projectInfo: {
                 ...this.state.projectInfo,
-                [propertyName]: event.target.value,
+                [propertyName]: event.currentTarget.value,
             }
         });
     }
@@ -302,7 +302,7 @@ class ViewProject extends Component {
                     direction="column"
                     justify="center"
                     alignItems="center"
-                    spacing={8}
+                    spacing={4}
                 >
                     <Paper className={classes.paper}>
                     <Grid item>

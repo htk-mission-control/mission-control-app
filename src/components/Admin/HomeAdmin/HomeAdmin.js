@@ -1,7 +1,42 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+//----Material UI----
+import PropTypes from 'prop-types';
+import { withStyles, TextField } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+
 import './HomeAdmin.css'
+
+const styles = theme => ({
+    root: {
+        flexGrow: 1,
+        textAlign: "center",
+        padding: theme.spacing.unit,
+        overflowX: 'auto',
+    },
+    paper: {
+        // margin: theme.spacing.unit * 2,
+        maxWidth: 375,
+        padding: theme.spacing.unit * 2,
+        textAlign: "center",
+    },
+    button: {
+        maxWidth: 300,
+        margin: theme.spacing.unit * 2,
+        paddingLeft: theme.spacing.unit * 2,
+        paddingRight: theme.spacing.unit * 2,
+    },
+    textField: {
+        width: 350,
+        // margin: theme.spacing.unit,
+        // padding: theme.spacing.unit,
+    },
+})
+
 
 class HomeAdmin extends Component {
 
@@ -64,18 +99,27 @@ class HomeAdmin extends Component {
     }
 
     handleClickMission = (event) => {
-        this.props.history.push(`/admin/projects?projectId=${event.target.value}`)
+        this.props.history.push(`/admin/projects?projectId=${event.currentTarget.value}`)
     }
 
     render() {
+        const { classes } = this.props;
+
         return (
-            <div>
-                <h1>Welcome, {this.props.reduxState.user.username}!</h1>
-                {/* {JSON.stringify(this.props.reduxState)} */}
-                {/* {JSON.stringify(this.state.newProject)} */}
-                <p>Click on a project to view details or create a new project below.</p>
+            <div >
+                <Grid
+                    container
+                    className={classes.root}
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                    spacing={16}
+                >
+                    <Typography variant="h2">Welcome, {this.props.reduxState.user.username}!</Typography>
+                    <Typography variant="h6">Click on a project to view details or create a new project below.</Typography>
+                </Grid>
                 <div>
-                    <h2>Projects:</h2>
+                    <Typography variant="h4">Projects:</Typography>
                     <div className="tab">
                         <button className="tablinks" value="newProject" onClick={this.showProject}>New Project +</button>
                         {this.props.reduxState.projects.map(project => (
@@ -91,46 +135,62 @@ class HomeAdmin extends Component {
                     {this.props.reduxState.projects.map(project => {
                         return (
                             <div key={project.id} id={project.id} className="tabcontent">
-                                <h3>{project.name}, {project.year}</h3>
-                                <h4>The Project</h4>
-                                <p>{project.description}</p>
-                                <button value={project.id} onClick={this.handleClickMission}>View Mission</button>
+                                <Typography variant="h4">{project.name}, {project.year}</Typography>
+                                <Typography variant="h6">The Project:</Typography>
+                                <Typography variant="body2">{project.description}</Typography>
+                                <Button 
+                                    className={classes.button}
+                                    variant="contained"
+                                    color="primary"
+                                    value={project.id} 
+                                    onClick={this.handleClickMission}
+                                >View Mission
+                                </Button>
                             </div>
                         )
                     })}
                     <div id="newProject" className="tabcontent">
                         <form>
-                            <h3>New Project</h3>
-                            <label>Project Name</label>
-                            <input
+                            <Typography variant="h4">Create New Project</Typography>
+                            {/* <Typography variant="h">Project Name</Typography> */}
+                            <TextField
                                 type="text"
-                                placeholder="Project Name"
+                                label="Project Name"
+                                className={classes.textField}
                                 value={this.state.newProject.name}
                                 onChange={this.handleChange('name')}
                             >
-                            </input>
+                            </TextField>
                             <br />
-                            <label>Project Season</label>
-                            <input
+                            <TextField
                                 type="text"
-                                placeholder="Project Season"
+                                label="Project Season (e.g 2019-2020)"
+                                maxLength={9}
+                                className={classes.textField}
                                 value={this.state.newProject.year}
                                 onChange={this.handleChange('year')}
                             >
-                            </input>
+                            </TextField>
                             <br />
-                            <label>Project Description</label>
-                            <textarea
+                            <TextField
+                                multiline
                                 type="text"
-                                placeholder="Project Description"
-                                rows="5"
+                                label="Project Description"
+                                className={classes.textField}
+                                rows="4"
                                 cols="40"
                                 value={this.state.newProject.description}
                                 onChange={this.handleChange('description')}
                             >
-                            </textarea>
+                            </TextField>
                             <br />
-                            <button onClick={this.handleSubmit}>Submit</button>
+                            <Button 
+                                className={classes.button}
+                                variant="contained"
+                                color="primary"
+                                onClick={this.handleSubmit}
+                            >Submit
+                            </Button>
                         </form>
                     </div>
                 </div>
@@ -143,4 +203,8 @@ const mapStateToProps = reduxState => ({
     reduxState
 });
 
-export default connect(mapStateToProps)(HomeAdmin);
+HomeAdmin.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
+
+export default connect(mapStateToProps)(withStyles(styles)(HomeAdmin));
