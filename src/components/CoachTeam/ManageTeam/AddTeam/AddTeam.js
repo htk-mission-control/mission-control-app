@@ -28,6 +28,9 @@ import teams from '../../../../modules/autoFillers/coach/addTeam';
                     teamName: teams.team1.teamName,
                     teamNumber: teams.team1.teamNumber,
                     password: teams.team1.password,
+                    coach_user_id: this.props.reduxState.user.id,
+                    newTeamMember: '',
+                    teamId: ''
                 }
             });
         } else if ( number === 2 ) {
@@ -36,6 +39,9 @@ import teams from '../../../../modules/autoFillers/coach/addTeam';
                     teamName: teams.team2.teamName,
                     teamNumber: teams.team2.teamNumber,
                     password: teams.team2.password,
+                    coach_user_id: this.props.reduxState.user.id,
+                    newTeamMember: '',
+                    teamId: ''
                 }
             });
         }

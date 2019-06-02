@@ -2,7 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import qs from 'query-string';
-import savedForm from '../../../../modules/autoFillers/admin/addPenalty';
+import penalty from '../../../../modules/autoFillers/admin/addPenalty';
 
 class AddPenalty extends Component {
 
@@ -17,7 +17,7 @@ class AddPenalty extends Component {
     // quickly init form
     autoFillForm = () => {
         this.setState({
-            ...this.state, ...savedForm
+            ...this.state, ...penalty
         });
     }
 
