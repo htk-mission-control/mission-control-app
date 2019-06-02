@@ -3,6 +3,8 @@ import axios from 'axios';
 
 
 function* saveRun( action ) {
+    console.log(`userClearance is`, action.payload.userClearance);
+    
     try {
         console.log('in save run saga', action.payload);        
         yield axios.post( `/api/runs/saveDetails`, action.payload );

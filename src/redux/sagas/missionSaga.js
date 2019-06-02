@@ -39,8 +39,9 @@ function* getSelectedMissionsWithId(action) {
 }
 
 function* getSelectedEitherOr(action) {
+    
     try {
-        const response = yield axios.get(`/api/runs/selectedMissions/eitherOr`)
+        const response = yield axios.get(`/api/runs/selectedEitherOr`)
         yield put({ type: 'SET_SELECTED_EITHER_OR', payload: response.data })
     }
     catch (error) {
@@ -49,8 +50,9 @@ function* getSelectedEitherOr(action) {
 }
 
 function* getSelectedEitherOrWithId(action) {
+    console.log(`action.payload in selectedEitherOrbyId`, action.payload);
     try {
-        const response = yield axios.get(`/api/runs/selectedMissions/eitherOr/${action.payload}`);
+        const response = yield axios.get(`/api/runs/selectedEitherOr/${action.payload}`);
         yield put({ type: 'SET_SELECTED_EITHER_OR', payload: response.data })
     }
     catch (error) {

@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FaUndo } from 'react-icons/fa';
-
+import { withRouter } from 'react-router-dom';
 class RunScoring extends Component {
 
     state = {
@@ -279,6 +279,7 @@ class RunScoring extends Component {
     handleSubmit = () => {
         console.log(`final state`, this.state);
         this.props.dispatch({ type: 'UPDATE_RUN_DETAILS', payload: this.state });
+        this.props.history.push(`/practice-run/run-summary?runId=${this.state.runId}`)
     }
 
     render() {
@@ -288,7 +289,6 @@ class RunScoring extends Component {
             <div>
                 <h2>{this.props.reduxState.runDetails.name}</h2>
                 <p>Score: {this.calculateScore()}</p>
-                {/* {JSON.stringify(this.state.goals)} */}
                 {this.penaltyList()}
                 {this.missionList()}
                 <button onClick={this.handleSubmit}>End Run</button>
@@ -301,4 +301,4 @@ const mapReduxStateToProps = (reduxState) => ({
     reduxState,
 });
 
-export default connect(mapReduxStateToProps)(RunScoring);
+export default withRouter( connect(mapReduxStateToProps)(RunScoring) );

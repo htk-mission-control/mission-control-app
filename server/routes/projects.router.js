@@ -135,7 +135,7 @@ router.delete('/missions/:id', rejectUnauthenticated, async (req, res) => {
         await client.query('BEGIN')
 
         let maybe = await client.query(goalId, [id])
-        console.log('maybe', maybe.rows.length);
+        // console.log('maybe', maybe.rows.length);
         if (maybe.rows.length != 0) {
             await client.query(eitherOr, [maybe.rows[0].id])           
         } 
@@ -176,7 +176,7 @@ router.get('/missions/either-or/:id', rejectUnauthenticated, (req, res) => {
 router.post('/', rejectUnauthenticated, (req, res) => {
     let newProject = req.body;
     let currentDate = moment().format()
-    console.log('req.body post', newProject);
+    // console.log('req.body post', newProject);
 
     let sqlText = (`INSERT INTO "projects" ("name", "description", "year", "published", "date_created")
                     VALUES ($1, $2, $3, $4, $5) RETURNING id;`);
@@ -192,7 +192,7 @@ router.post('/', rejectUnauthenticated, (req, res) => {
 
 // add penalty
 router.post( '/penalty', rejectUnauthenticated, (req, res) => {
-    console.log( `req.body:`, req.body );
+    // console.log( `req.body:`, req.body );
     let penalty = req.body;
 
     let sqlText = `INSERT INTO "penalties" ("project_id", "name", "description", "points", "max")
@@ -257,7 +257,7 @@ router.get( '/goalTypes', rejectUnauthenticated, (req, res) => {
 
 // add mission data
 router.post( '/mission', rejectUnauthenticated, async(req, res) => {
-    console.log( 'in mission POST...', req.body );
+    // console.log( 'in mission POST...', req.body );
     
     const client = await pool.connect();
     let mission = req.body.mission;
@@ -333,7 +333,7 @@ router.post( '/mission', rejectUnauthenticated, async(req, res) => {
 router.get( `/mission/:id`, rejectUnauthenticated, async(req, res) => {
     const client = await pool.connect();
     let mission_id = req.params.id;
-    console.log( `REQ.PARAMS:`, req.params );
+    // console.log( `REQ.PARAMS:`, req.params );
     
 
     try {
@@ -361,16 +361,16 @@ router.get( `/mission/:id`, rejectUnauthenticated, async(req, res) => {
                                 ORDER BY "id";`;
                 
                 let result2 = await client.query( sqlText2, [row.goal_id] );
-                console.log( `Result 2 is:`, result2 );
+                // console.log( `Result 2 is:`, result2 );
                 
                 for( let option of result2.rows ){
-                    console.log( `option loop:`, option );
+                    // console.log( `option loop:`, option );
                     optionArray.push(option);
                 }
             }
         }
         // console.log( `Result2:`, result2.rows );
-        console.log( `optionArray:`, optionArray );
+        // console.log( `optionArray:`, optionArray );
 
         const allResults = {
             missionGoals: result.rows,
@@ -394,10 +394,10 @@ router.put( `/mission`, rejectUnauthenticated, async(req, res) => {
     let mission = req.body;
     let goalList = mission.goals;
     let eitherOrOptions = mission.eitherOrOptions;
-    console.log( goalList );
+    // console.log( goalList );
 
     try {
-        console.log( 'in mission PUT try...' );
+        // console.log( 'in mission PUT try...' );
         
         await client.query('BEGIN');
 
@@ -408,10 +408,10 @@ router.put( `/mission`, rejectUnauthenticated, async(req, res) => {
         await client.query( sqlText, [ mission.name, mission.description, mission.mission_id ]);
         
         for( let goal of goalList ){
-            console.log( `in PUT loop`);
+            // console.log( `in PUT loop`);
             
             if(goal.goal_type_id === 1){
-                console.log( `in PUT if`, goal.goal_id  );
+                // console.log( `in PUT if`, goal.goal_id  );
                 let sqlText2 = `UPDATE "goals"
                                 SET "goal_type_id" = $1,
                                 "name" = $2,
@@ -428,7 +428,7 @@ router.put( `/mission`, rejectUnauthenticated, async(req, res) => {
                 await client.query( sqlText2, [goal.goal_type_id, goal.goal_id] );
 
                 for( let option of eitherOrOptions ){
-                    console.log( `In option loop...`, option );
+                    // console.log( `In option loop...`, option );
                     
                     if( goal.goal_id === option.goal_id ){
                         let sqlText3 = `UPDATE "either_or" 
@@ -466,7 +466,7 @@ router.put( `/mission`, rejectUnauthenticated, async(req, res) => {
 
 router.post( `/goal`, rejectUnauthenticated, async(req, res) => {
     const client = await pool.connect();
-    console.log( `in addGoal`, req.body );
+    // console.log( `in addGoal`, req.body );
     
     const missionId = req.body.missionId;
 
@@ -478,13 +478,13 @@ router.post( `/goal`, rejectUnauthenticated, async(req, res) => {
                         RETURNING "id";`;
 
         const result = await client.query( sqlText, [missionId] );
-        console.log( `Result:`, result.rows );
+        // console.log( `Result:`, result.rows );
 
         await client.query('COMMIT');
         res.send( result.rows );
     } catch(error) {   
         await client.query('ROLLBACK');
-        console.log( `Couldn't add goal.`, error );
+        // console.log( `Couldn't add goal.`, error );
         res.sendStatus(500);
     } finally {
         client.release()
@@ -493,7 +493,7 @@ router.post( `/goal`, rejectUnauthenticated, async(req, res) => {
 
 router.post( `/option`, rejectUnauthenticated, (req, res) => {
     const goal_id = req.body.goal_id;
-    console.log( `in option POST:`, goal_id );
+    // console.log( `in option POST:`, goal_id );
 
     let sqlText = `INSERT INTO "either_or" ("goal_id")
                     VALUES ($1)
@@ -509,7 +509,7 @@ router.post( `/option`, rejectUnauthenticated, (req, res) => {
 })
 
 router.delete( '/goal/:id', rejectUnauthenticated, (req, res) => {
-    console.log( `in delete goal`, req.params.id );
+    // console.log( `in delete goal`, req.params.id );
     
     const goal_id = req.params.id;
 
@@ -527,7 +527,7 @@ router.delete( '/goal/:id', rejectUnauthenticated, (req, res) => {
 })
 
 router.delete( '/option/:id', rejectUnauthenticated, (req, res) => {
-    console.log( `in delete option`, req.params.id );
+    // console.log( `in delete option`, req.params.id );
     
     const option_id = req.params.id;
 

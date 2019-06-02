@@ -45,7 +45,7 @@ router.get('/missions', async (req, res) => {
 //POST to post all rundetails for logged in team or coach
 router.post('/saveDetails', async (req, res) => {
     const client = await pool.connect();
-    console.log(`req.body in saveDetails`, req.body);
+    // console.log(`req.body in saveDetails`, req.body);
     let teamId;
     let runDetails = req.body.runDetails.newRun;
     let runTeam = req.body.runDetails.runTeam;
@@ -90,7 +90,7 @@ router.post('/saveDetails', async (req, res) => {
 
     }
     else if (req.user.security_clearance === 4) {
-        console.log(`in save run details`, req.user.id);
+        // console.log(`in save run details`, req.user.id);
         try {
             teamId = req.user.id;
             let sqlText0 = `SELECT "id" FROM "teams"
@@ -195,7 +195,7 @@ router.get('/selectedMissions', async (req, res) => {
 
 router.get('/selectedMissions/:id', async (req, res) => {
     const client = await pool.connect();
-    console.log(`in getSelectedMissionsbyId`, req.params.id);
+    // console.log(`in getSelectedMissionsbyId`, req.params.id);
     let teamId = req.params.id;
     try {
         let sqlText1 = `SELECT "runs"."id", "runs"."name" FROM "runs"
@@ -247,7 +247,7 @@ router.get('/selectedMissions/:id', async (req, res) => {
 //  * GET to get details for either/or goals for latest run for logged in team
 //  */
 
-router.get('/selectedMissions/eitherOr', async (req, res) => {
+router.get('/selectedEitherOr', async (req, res) => {
     const client = await pool.connect();
     // console.log(`in getSelectedMissions`, req.user);
     let teamId = req.user.id;
@@ -291,9 +291,9 @@ router.get('/selectedMissions/eitherOr', async (req, res) => {
 //  * GET to get details for either/or goals for latest run for team for logged in coach
 //  */
 
-router.get('/selectedMissions/eitherOr/:id', async (req, res) => {
+router.get('/selectedEitherOr/:id', async (req, res) => {
     const client = await pool.connect();
-    console.log(`in getSelectedMissionsEitherOr by id`, req.params.id);
+    // console.log(`in getSelectedMissionsEitherOr by id`, req.params.id);
     let teamId = req.params.id;
     try {
         let sqlText1 = `SELECT "runs"."id", "runs"."name" FROM "runs"
@@ -376,7 +376,7 @@ router.put('/updateDetails', async (req, res) => {
     for (penalty of req.body.penalties) {
         penaltyCount = penaltyCount + penalty.count;
     }
-    console.log(`penalty count in updateDetails`, penaltyCount)
+    // console.log(`penalty count in updateDetails`, penaltyCount)
 
     try {
 
@@ -392,10 +392,10 @@ router.put('/updateDetails', async (req, res) => {
                         AND "goal_id" = $3;`;
         await client.query('BEGIN')
         const runUpdate = await client.query(sqlText1, [score, penaltyCount, runId])
-        console.log(`runupdate`);
+        // console.log(`runupdate`);
         
         const selectedMissionsResponse = await client.query(sqlText2, [runId])
-        console.log(`selectedmissionsresponse`, selectedMissionsResponse.rows);
+        // console.log(`selectedmissionsresponse`, selectedMissionsResponse.rows);
         
         // loop through goals and if they match selected at selected mission id.mission_id and goal.mission_id, updated completed status
         for (goal of goals) {
@@ -454,7 +454,7 @@ router.get('/coach/:id', (req, res) => {
 
 router.get( '/runHistoryDetails/:id', rejectUnauthenticated, (req, res) => {
     const runId = req.params.id;
-    console.log( `runId:`, runId );
+    // console.log( `runId:`, runId );
     
     let sqlText = `SELECT r."id", r."name", r."date", r."score", r."penalties", r."notes",
                     (CASE WHEN r."driver" = t."id" THEN t."name" END) AS "driver", 
@@ -481,11 +481,11 @@ router.get( '/runHistoryDetails/:id', rejectUnauthenticated, (req, res) => {
 } )
 
 router.put( `/summary/:id`, rejectUnauthenticated, (req, res) => {
-    console.log( `HERE!` );
+    // console.log( `HERE!` );
     
     const runId = req.params.id;
     const runNotes = req.body.notes;
-    console.log( `Notes:`, runNotes );
+    // console.log( `Notes:`, runNotes );
 
     let sqlText = `UPDATE "runs" 
                     SET "notes" = $1
@@ -507,7 +507,7 @@ router.put( `/summary/:id`, rejectUnauthenticated, (req, res) => {
 router.get('/team', (req, res) => {
 
     let id = req.user.id;
-    console.log('user id', id);
+    // console.log('user id', id);
     
     const sqlText = `
             SELECT "runs"."id", "runs"."name", COUNT(CASE WHEN "goals_per_run"."is_completed" THEN 1 end), "runs"."score", "runs"."penalties"

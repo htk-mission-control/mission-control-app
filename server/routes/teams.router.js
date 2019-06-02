@@ -209,11 +209,11 @@ router.put( `/`, rejectUnauthenticated, (req, res) => {
 
     } else if(access === 'true') {
         newAccess = false;
-        console.log( `newAccess:`, newAccess );
+        // console.log( `newAccess:`, newAccess );
 
         pool.query( sqlText, [newAccess, team_id] )
             .then((response) => {
-                console.log( `it works!` );
+                // console.log( `it works!` );
                 res.sendStatus(200);
             })
             .catch((error) => {
