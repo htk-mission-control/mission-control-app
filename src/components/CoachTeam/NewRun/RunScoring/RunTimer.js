@@ -56,7 +56,7 @@ class RunTimer extends Component {
     return (
         <Timer
           className = '.red-backround'
-          initialTime = { 15000  }
+          initialTime = { 150000  }
           startImmediately = { false }
           direction = "backward"
           checkpoints={[
