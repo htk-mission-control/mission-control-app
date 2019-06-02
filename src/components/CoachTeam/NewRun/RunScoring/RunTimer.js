@@ -56,7 +56,7 @@ class RunTimer extends Component {
     return (
         <Timer
           className = '.red-backround'
-          initialTime = { 150000  }
+          initialTime = { 15000  }
           startImmediately = { false }
           direction = "backward"
           checkpoints={[
@@ -81,8 +81,8 @@ class RunTimer extends Component {
           {({ start, resume, pause, stop, reset, timerState }) => (
             <React.Fragment>
               <div>
-                <Timer.Minutes />:
-                <Timer.Seconds />
+                <Timer.Minutes formatValue={(value) => `${(value < 10 ? `0${value}` : value)}`}/>:
+                <Timer.Seconds formatValue={(value) => `${(value < 10 ? `0${value}` : value)}`} />
               </div>
               {/* <div>{ timerState }</div> */}
               <br />
