@@ -2,6 +2,7 @@ import React, {Component} from 'react';
 import { connect } from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import qs from 'query-string';
+import savedForm from '../../../../modules/autoFillers/admin/addPenalty';
 
 class AddPenalty extends Component {
 
@@ -11,6 +12,13 @@ class AddPenalty extends Component {
         description: '',
         max: 1,
         points: -1
+    }
+
+    // quickly init form
+    autoFillForm = () => {
+        this.setState({
+            ...this.state, ...savedForm
+        });
     }
 
     componentDidMount() {
@@ -50,7 +58,8 @@ class AddPenalty extends Component {
                     <input type="text" placeholder="Penalty Name"
                         name="name"
                         value={this.state.name}
-                        onChange={this.handleChange} />
+                        onChange={this.handleChange}
+                        onClick={ this.autoFillForm } />
                     <br/>
                     <label>Description</label>
                     <input type="text" placeholder="Penalty Description"
