@@ -3,6 +3,7 @@ import {connect} from 'react-redux';
 import {withRouter} from 'react-router-dom';
 import EitherOr from './EitherOr';
 import qs from 'query-string';
+import savedMissions from '../../../../modules/autoFillers/admin/addMission';
 
 
 class AddMission extends Component {
@@ -19,6 +20,31 @@ class AddMission extends Component {
             }
         ],
         editState: false,
+    }
+
+    // quickly init form
+    autoFillMission = ( missionNumber ) => {
+        if ( missionNumber === 1 ) {
+            this.setState({
+                ...this.state, ...savedMissions.mission1
+            });
+        } else if ( missionNumber === 2 ) {
+            this.setState({
+                ...this.state, ...savedMissions.mission2
+            });
+        } else if ( missionNumber === 3 ) {
+            this.setState({
+                ...this.state, ...savedMissions.mission3
+            });
+        } else if ( missionNumber === 4 ) {
+            this.setState({
+                ...this.state, ...savedMissions.mission4
+            });
+        } else if ( missionNumber === 5 ) {
+            this.setState({
+                ...this.state, ...savedMissions.mission5
+            });
+        }
     }
 
     componentDidMount(){
@@ -103,6 +129,8 @@ class AddMission extends Component {
     }
 
     render() {
+        console.log('state:', this.state);
+
         let goalCount = 0;
         let goalList = 
             this.state.goals.map( (goal, index) => {
@@ -161,23 +189,24 @@ class AddMission extends Component {
                     {goalTypeForm}
                 </div>
             })
-    
         return(
             <div>
-                <h2>Add Mission</h2>
+                <h2 onClick={ () => this.autoFillMission(1) }>Add Mission</h2>
 
                 <div>
-                    <label>Name</label>
+                    <label onClick={ () => this.autoFillMission(2) } >Name</label>
                     <input type="text" placeholder="Mission Name"
                         name="name"
                         value={this.state.name}
-                        onChange={this.handleChange} />
+                        onChange={this.handleChange}
+                        onClick={ () => this.autoFillMission(4) } />
                     <br/>
-                    <label>Description</label>
+                    <label onClick={ () => this.autoFillMission(3) } >Description</label>
                     <input type="text" placeholder="Mission Description"
                         name="description"
                         value={this.state.description}
-                        onChange={this.handleChange} />
+                        onChange={this.handleChange}
+                        onClick={ () => this.autoFillMission(5) } />
                 </div>
                 <br/><br/>
 
