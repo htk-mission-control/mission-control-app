@@ -5,6 +5,7 @@ import Timer from 'react-compound-timer';
 // will start/resume, and the Stop Timer button will stop/pause the timer.
 // Checkpoints can be set to run callback functions.
 // COMMENTED CODE are functions based on checkpoints.
+// In the future, we could give admin the ability to set how long runs should be.
 class RunTimer extends Component {
 
   // state = {
@@ -55,7 +56,7 @@ class RunTimer extends Component {
     return (
         <Timer
           className = '.red-backround'
-          initialTime = { 1000  }
+          initialTime = { 150000  }
           startImmediately = { false }
           direction = "backward"
           checkpoints={[
