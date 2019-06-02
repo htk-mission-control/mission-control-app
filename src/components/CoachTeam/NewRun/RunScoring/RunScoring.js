@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FaUndo } from 'react-icons/fa';
+import { withRouter } from 'react-router-dom';
 import RunTimer from './RunTimer';
+
 
 class RunScoring extends Component {
 
@@ -45,7 +47,7 @@ class RunScoring extends Component {
 
         //Find a way to stop loop other than #100
         for (let count = 0; count < 100; count++) {
-            test = missionArr.filter(x => x.mission_id == count)
+            test = missionArr.filter(x => x.mission_id === count)
 
             if (test.length !== 0) {
                 newMissionArr.push(test)
@@ -69,7 +71,7 @@ class RunScoring extends Component {
                         <h3>Mission {i + 1}: {mission[0].mission_name}</h3>
                         {mission.map((goal, y) => {
                             return (
-                                <div>
+                                <div key={y}>
                                     {this.renderGoals(goal, newEitherOrArr)}
                                 </div>
                             )
@@ -104,7 +106,7 @@ class RunScoring extends Component {
                 eitherOr.map((options) => {
                     return (
                         options.map((option, i) => {
-                            if (goal.goal_id == option.either_or_goal_id) {
+                            if (goal.goal_id === option.either_or_goal_id) {
                                 return (
                                     <div key={i}>
                                         <button disabled={option.disabled} onClick={() => { this.eitherOrOnClick(option, goal) }}><div>{option.either_or_name}</div> <div>{option.either_or_points} pts</div></button>
@@ -186,7 +188,7 @@ class RunScoring extends Component {
         if (updatedGoals[goalIndex].count <= updatedGoals[goalIndex].how_many_max) {
             currentScore = currentScore + updatedGoals[goalIndex].goal_points
         }
-        if (updatedGoals[goalIndex].count == updatedGoals[goalIndex].how_many_max) {
+        if (updatedGoals[goalIndex].count === updatedGoals[goalIndex].how_many_max) {
             updatedGoals[goalIndex].disabled = true;
         }
 
@@ -280,6 +282,7 @@ class RunScoring extends Component {
     handleSubmit = () => {
         console.log(`final state`, this.state);
         this.props.dispatch({ type: 'UPDATE_RUN_DETAILS', payload: this.state });
+        this.props.history.push(`/practice-run/run-summary?runId=${this.state.runId}`)
     }
 
     render() {
@@ -289,7 +292,6 @@ class RunScoring extends Component {
             <div>
                 <h2>{this.props.reduxState.runDetails.name}</h2>
                 <p>Score: {this.calculateScore()}</p>
-                {/* {JSON.stringify(this.state.goals)} */}
                 {this.penaltyList()}
                 {this.missionList()}
                 <button onClick={this.handleSubmit}>End Run</button>
@@ -303,4 +305,4 @@ const mapReduxStateToProps = (reduxState) => ({
     reduxState,
 });
 
-export default connect(mapReduxStateToProps)(RunScoring);
+export default withRouter( connect(mapReduxStateToProps)(RunScoring) );

@@ -4,7 +4,7 @@ import axios from 'axios';
 // Getting coach's teams by the user id
 function* getAllTeams(action) {
     try {
-        console.log( action.payload );
+        // console.log( action.payload );
         const response = yield axios.get( `/api/teams/${action.payload}` );
         yield put( {type: 'SET_ALL_TEAMS', payload: response.data} );
     }
@@ -29,9 +29,9 @@ function* getTeamMembers(action) {
 // Getting team members of logged in user
 function* getTeamMembersWithId(action) {
     try {
-        console.log('payload is', action.payload);
+        console.log('in getTeamMembersWithId payload is', action.payload.teamId);
         
-        const response = yield axios.get(`/api/teams/members/${action.payload}`);
+        const response = yield axios.get(`/api/teams/members/${action.payload.teamId}`);
         yield put({ type: 'SET_TEAM_MEMBERS', payload: response.data });
         yield put({ type: 'GET_TEAM_INFO', payload: action.payload})
     }
@@ -43,7 +43,7 @@ function* getTeamMembersWithId(action) {
 
 function* getTeamInfo(action) {
     try {
-        const response = yield axios.get(`/api/teams/team-info/${action.payload}`);
+        const response = yield axios.get(`/api/teams/team-info/${action.payload.teamId}`);
         yield put({ type: 'SET_TEAM_INFO', payload: response.data})
     }
     catch (error) {

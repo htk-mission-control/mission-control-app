@@ -211,14 +211,14 @@ router.put( `/teamAccess`, rejectUnauthenticated, (req, res) => {
                 console.log( `Couldn't update team access.`, error );
                 res.sendStatus(500);
             })
-
+      
     } else if(access === 3) {
         newAccess = 3;
         console.log( `newAccess:`, newAccess );
-
+      
         pool.query( sqlText, [newAccess, team_id] )
             .then((response) => {
-                console.log( `it works!` );
+                // console.log( `it works!` );
                 res.sendStatus(200);
             })
             .catch((error) => {
