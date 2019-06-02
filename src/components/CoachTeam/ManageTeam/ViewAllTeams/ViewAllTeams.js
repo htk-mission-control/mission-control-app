@@ -97,7 +97,6 @@ class ViewAllTeams extends Component {
                     <Typography variant="h3">Teams</Typography>
 
                     <Button 
-                        className="route-link" 
                         variant="contained"
                         color="secondary" 
                         className={classes.button}
@@ -111,7 +110,6 @@ class ViewAllTeams extends Component {
                     <Paper className={classes.paper} key={team.id} >
                         <Typography variant="h4">{team.name}</Typography>
                         <Button 
-                            className="route-link" 
                             variant="contained"
                             color="primary"
                             className={classes.button}

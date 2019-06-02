@@ -20,8 +20,6 @@ const styles = theme => ({
         flexGrow: 1,
         textAlign: "center",
         padding: theme.spacing.unit,
-        // margin: theme.spacing.unit,
-        // width: '100%',
         overflowX: 'auto',
     },
     pointSpace: {
@@ -408,10 +406,10 @@ class RunScoring extends Component {
                 alignItems="center"
                 spacing={16}
             >
-                <div>
-                    <Typography variant="h3">{this.props.reduxState.runDetails.name}</Typography>
-                    <Typography variant="h5">Score: {this.calculateScore()}</Typography>
-                </div>
+                <Grid item>
+                    <Typography variant="h3">Score: {this.calculateScore()}</Typography>
+                    <Typography variant="h4">{this.props.reduxState.runDetails.name}</Typography>
+                </Grid>
                 <Grid item>
                     {this.penaltyList()}
                 </Grid>
@@ -437,6 +435,5 @@ const mapReduxStateToProps = (reduxState) => ({
 RunScoring.propTypes = {
     classes: PropTypes.object.isRequired,
 };
-
 
 export default connect(mapReduxStateToProps)(withStyles(styles)(RunScoring));
