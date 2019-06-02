@@ -24,8 +24,6 @@ class SelectRunDetails extends Component {
     
     componentDidMount() {
         const searchObject = qs.parse(this.props.location.search);
-        console.log(`searchObject`, searchObject );
-        
         console.log('teamId', searchObject.teamId);
         console.log(`user security clearance`, this.props.reduxState.user.security_clearance);
         

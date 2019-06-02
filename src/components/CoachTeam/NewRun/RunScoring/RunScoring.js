@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FaUndo } from 'react-icons/fa';
 import { withRouter } from 'react-router-dom';
+import RunTimer from './RunTimer';
+
+
 class RunScoring extends Component {
 
     state = {
@@ -292,6 +295,7 @@ class RunScoring extends Component {
                 {this.penaltyList()}
                 {this.missionList()}
                 <button onClick={this.handleSubmit}>End Run</button>
+                <RunTimer />
             </div>
         )
     }
