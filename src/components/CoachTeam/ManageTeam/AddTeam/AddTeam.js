@@ -3,7 +3,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import TeamMember from './TeamMember'
-
+import teams from '../../../../modules/autoFillers/coach/addTeam';
 
 
   class AddTeam extends Component {
@@ -18,6 +18,27 @@ import TeamMember from './TeamMember'
             teamId: ''
         },
         teamSaved: false
+    }
+
+    // quickly init form
+    autoFillTeam = ( number ) => {
+        if ( number === 1 ) {
+            this.setState({
+                newTeam: {
+                    teamName: teams.team1.teamName,
+                    teamNumber: teams.team1.teamNumber,
+                    password: teams.team1.password,
+                }
+            });
+        } else if ( number === 2 ) {
+            this.setState({
+                newTeam: {
+                    teamName: teams.team2.teamName,
+                    teamNumber: teams.team2.teamNumber,
+                    password: teams.team2.password,
+                }
+            });
+        }
     }
 
     handleChange = propertyName => event => {
@@ -71,13 +92,11 @@ import TeamMember from './TeamMember'
     }
 
     render(){
-        console.log(this.props);
-        
         if (this.state.teamSaved === false){
         return(
             <div>
-                <h2>Add a Team</h2>
-                <label>Team Name</label>
+                <h2 onClick={ () => this.autoFillTeam(1) } >Add a Team</h2>
+                <label onClick={ () => this.autoFillTeam(2) } >Team Name</label>
                 <input type="text" onChange={this.handleChange("teamName")} value={this.state.newTeam.teamName} placeholder="Team Name"></input>
                 <br />
                 <label>Team Number</label>
