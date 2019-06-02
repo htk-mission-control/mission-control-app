@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { FaUndo } from 'react-icons/fa';
+import RunTimer from './RunTimer';
 
 class RunScoring extends Component {
 
@@ -292,6 +293,7 @@ class RunScoring extends Component {
                 {this.penaltyList()}
                 {this.missionList()}
                 <button onClick={this.handleSubmit}>End Run</button>
+                <RunTimer />
             </div>
         )
     }
