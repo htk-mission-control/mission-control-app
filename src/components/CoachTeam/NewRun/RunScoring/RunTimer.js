@@ -1,68 +1,67 @@
 import React, { Component } from "react";
 import Timer from 'react-compound-timer';
 
-// This is one of our simplest components
-// It doesn't have local state, so it can be a function component.
-// It doesn't dispatch any redux actions or display any part of redux state
-// or even care what the redux state is, so it doesn't need 'connect()'
-
+// This timer will count down from 2:30 and stop at 0:00. The Start Timer button
+// will start/resume, and the Stop Timer button will stop/pause the timer.
+// Checkpoints can be set to run callback functions.
+// COMMENTED CODE are functions based on checkpoints.
 class RunTimer extends Component {
 
-  state = {
-    buttonIsDisabled: false,
-    checkpoint1: false,
-    checkpoint2: false,
-    checkpoint3: false,
-  }
+  // state = {
+  //   buttonIsDisabled: false,
+  //   checkpoint1: false,
+  //   checkpoint2: false,
+  //   checkpoint3: false,
+  // }
 
-  setBackroundColor = () => {
-    if ( this.state.checkpoint1 ) {
-      console.log('setting background color to orange');
-      return('orange-backround');
-    } else if ( this.state.checkpoint2 ) {
-      console.log(('setting background color to darker orange'));
-      return('dark-orange-backround');
-    } else if ( this.state.checkpoint3 ) {
-      console.log(('setting background color to red'));
-      return('red-backround');
-    }
-  }
+  // setBackroundColor = () => {
+  //   if ( this.state.checkpoint1 ) {
+  //     console.log('setting background color to orange');
+  //     return('orange-backround');
+  //   } else if ( this.state.checkpoint2 ) {
+  //     console.log(('setting background color to darker orange'));
+  //     return('dark-orange-backround');
+  //   } else if ( this.state.checkpoint3 ) {
+  //     console.log(('setting background color to red'));
+  //     return('red-backround');
+  //   }
+  // }  
 
-  disableButtons = () => {
-    this.setState({buttonIsDisabled: true})
-  }
+  // disableButtons = () => {
+  //   this.setState({buttonIsDisabled: true})
+  // }
 
-  resetRun = () => {
-    console.log('resetting run:', this.state);
-    this.setState({
-      score: 0,
-      runId: 0,
-      goals: [],
-      eitherOr: [],
-      penalties: []
-    })
-  }
+  // resetRun = () => {
+  //   console.log('resetting run:', this.state);
+  //   this.setState({
+  //     score: 0,
+  //     runId: 0,
+  //     goals: [],
+  //     eitherOr: [],
+  //     penalties: []
+  //   })
+  // }
 
-  resetState = () => {
-    this.setState({
-      checkpoint1: false,
-      checkpoint2: false,
-      checkpoint3: false,
-    });
-  }
+  // resetState = () => {
+  //   this.setState({
+  //     checkpoint1: false,
+  //     checkpoint2: false,
+  //     checkpoint3: false,
+  //   });
+  // }
 
 
   render() {
     return (
         <Timer
           className = '.red-backround'
-          initialTime = { 12000  }
+          initialTime = { 1000  }
           startImmediately = { false }
           direction = "backward"
           checkpoints={[
             {
               time: 0,
-              callback: () => this.disableButtons(),
+              callback: () => this.props.setCheckpoint('disable-buttons'),
             },
             {
               time: 10000,
@@ -79,20 +78,20 @@ class RunTimer extends Component {
           ]}
         > 
           {({ start, resume, pause, stop, reset, timerState }) => (
-            <React.Fragment> 
+            <React.Fragment>
               <div>
-                <Timer.Minutes /> minutes
-                <Timer.Seconds /> seconds
+                <Timer.Minutes />:
+                <Timer.Seconds />
               </div>
-              <div>{ timerState }</div>
+              {/* <div>{ timerState }</div> */}
               <br />
               <div>
-                <button onClick={ start }>Start</button>
-                <button onClick={ stop } disabled={ this.state.buttonIsDisabled } >Stop</button>
-                <button onClick={ reset } onclick={ this.resetState }>Reset</button>
+                <button onClick={ start }>Start Timer</button>
+                <button onClick={ stop } >Stop Timer</button>
+                {/* <button onClick={ reset } onclick={ this.resetState }>Reset Timer</button> */}
               </div>
             </React.Fragment>
-          )}  
+          )}
         </Timer>
     );
   }
