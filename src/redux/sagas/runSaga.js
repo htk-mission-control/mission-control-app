@@ -6,8 +6,14 @@ function* saveRun( action ) {
     try {
         console.log('in save run saga', action.payload);        
         yield axios.post( `/api/runs/saveDetails`, action.payload );
-        yield put({ type: 'GET_SELECTED_MISSIONS' });
-        yield put({ type: 'GET_SELECTED_EITHER_OR' });
+        if (action.payload.userClearance === 4) {
+            yield put({ type: 'GET_SELECTED_MISSIONS' });
+            yield put({ type: 'GET_SELECTED_EITHER_OR' });
+        }
+        else if (action.payload.userClearance === 2) {
+            yield put({ type: 'GET_SELECTED_MISSIONS_WITH_ID', payload: action.payload.id });
+            yield put({ type: 'GET_SELECTED_EITHER_OR_WITH_ID', payload: action.payload.id });  
+        }
     }
     catch(error) {
         console.log(`Couldn't post your run details`, error);
@@ -28,7 +34,8 @@ function* getSelectedPenalties( action ) {
 
 function* updateRunDetails( action ){
     try{
-        yield axios.post(`api/runs/updateDetails`, action.payload)
+        console.log(`updateRunDetails payload`, action.payload);
+        yield axios.put(`api/runs/updateDetails`, action.payload)
     } catch (error) {
         console.log(`Couldn't update your run details`);
     }
@@ -39,5 +46,6 @@ function* runSaga() {
     yield takeLatest( 'GET_SELECTED_PENALTIES', getSelectedPenalties);
     yield takeLatest( 'UPDATE_RUN_DETAILS', updateRunDetails );
 }
+
 
 export default runSaga;

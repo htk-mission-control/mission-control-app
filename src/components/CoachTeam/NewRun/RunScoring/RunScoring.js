@@ -68,7 +68,7 @@ class RunScoring extends Component {
                         <h3>Mission {i + 1}: {mission[0].mission_name}</h3>
                         {mission.map((goal, y) => {
                             return (
-                                <div>
+                                <div key={y}>
                                     {this.renderGoals(goal, newEitherOrArr)}
                                 </div>
                             )

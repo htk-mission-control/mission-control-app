@@ -140,12 +140,12 @@ class SelectRunDetails extends Component {
         console.log(`user security clearance`, this.props.reduxState.user.security_clearance);
 
         if (this.props.reduxState.user.security_clearance === 4) {
-            this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: {runDetails: this.state } })
+            this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: { runDetails: this.state, userClearance: 4 }})
             this.props.history.push(`/practice-run/run-scoring`);
         }
         else if (this.props.reduxState.user.security_clearance === 2) {
             console.log(`searchObject in handleSubmit`, searchObject); 
-            this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: { runDetails: this.state, id: searchObject } });
+            this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: { runDetails: this.state, id: searchObject.teamId, userClearance: 2 }});
             this.props.history.push(`/practice-run/run-scoring?teamId=${searchObject.teamId}`);
         }
         console.log(`current runTeam state`, this.state.runTeam);

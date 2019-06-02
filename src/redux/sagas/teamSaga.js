@@ -43,7 +43,7 @@ function* getTeamMembersWithId(action) {
 
 function* getTeamInfo(action) {
     try {
-        const response = yield axios.get(`/api/teams/team-info/${action.payload}`);
+        const response = yield axios.get(`/api/teams/team-info/${action.payload.teamId}`);
         yield put({ type: 'SET_TEAM_INFO', payload: response.data})
     }
     catch (error) {
