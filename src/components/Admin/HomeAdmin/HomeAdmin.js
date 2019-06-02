@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
 import './HomeAdmin.css'
-import savedForm from '../../../modules/autoFillers/adminNewProject';
+import savedForm from '../../../modules/autoFillers/admin/newProject';
 
 class HomeAdmin extends Component {
 
@@ -17,8 +17,6 @@ class HomeAdmin extends Component {
 
     // quickly init form
     autoFillForm = () => {
-        console.log('autofilling');
-        console.log('savedForm', savedForm);
         this.setState({
             newProject: {
                 ...this.state.newProject, ...savedForm
