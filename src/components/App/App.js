@@ -26,6 +26,9 @@ import ViewAllTeams from '../CoachTeam/ManageTeam/ViewAllTeams/ViewAllTeams';
 import StartRun from '../CoachTeam/NewRun/StartRun/StartRun';
 import RunSummary from '../CoachTeam/NewRun/RunSummary/RunSummary';
 import ProjectOverview from '../CoachTeam/ProjectOverview/ProjectOverview';
+import AddTeam from '../CoachTeam/ManageTeam/AddTeam/AddTeam';
+import TeamMembers from '../CoachTeam/ManageTeam/TeamMembers/TeamMembers';
+
 
 import './App.css';
 import ProtectedCoachAndTeams from '../ProtectedRoutes/ProtectedCoachAndTeams/ProtectedCoachAndTeams';
@@ -41,6 +44,33 @@ class App extends Component {
     this.props.dispatch({type: 'FETCH_USER'})
   }
 
+  userHome = () => {
+    if(this.props.reduxState.user.security_clearance === 1){
+      return <ProtectedAdmin
+          exact
+          path="/home"
+          component={HomeAdmin}
+        />;
+    } else if(this.props.reduxState.user.security_clearance === 2){
+      return <ProtectedCoach
+          exact
+          path="/home"
+          component={HomeCoach}
+        />;
+    } else if(this.props.reduxState.user.security_clearance === 3 || this.props.reduxState.user.security_clearance === 4){
+      return <ProtectedTeams
+          exact
+          path="/home"
+          component={HomeTeam}
+        />;
+    } else {
+      return <ProtectedAdmin 
+        exact path="/home"
+        component={HomeAdmin}
+      />;
+    }
+  }
+
   render() {
     return (
       <Router>
@@ -51,16 +81,18 @@ class App extends Component {
             <Redirect exact from="/" to="/home" />
             {/* Visiting localhost:3000/about will show the about page.
             This is a route anyone can see, no login necessary */}
-            <ProtectedAdmin
+            {/* <ProtectedAdmin
               exact
               path="/about"
               component={AboutPage}
-            />
+            /> */}
             {/* For protected routes, the view could show one of several things on the same route.
             Visiting localhost:3000/home will show the UserPage if the user is logged in.
             If the user is not logged in, the ProtectedRoute will show the 'Login' or 'Register' page.
             Even though it seems like they are different pages, the user is always on localhost:3000/home */}
-            <ProtectedAdmin
+            
+            {this.userHome()}
+            {/* <ProtectedAdmin
               exact
               path="/home"
               component={UserPage}
@@ -70,6 +102,18 @@ class App extends Component {
               path="/admin/home"
               component={HomeAdmin}
             />
+            <ProtectedCoach
+              exact
+              path="/coach/home"
+              component={HomeCoach}
+            />
+            <ProtectedTeams
+              exact
+              path="/team/home"
+              component={HomeTeam}
+            /> */}
+
+
             <ProtectedTeamWithAccess
               exact 
               path="/practice-run"
@@ -100,11 +144,6 @@ class App extends Component {
               path="/admin/projects/edit-penalty"
               component={EditPenalty}
             />
-            <ProtectedTeams
-              exact
-              path="/team/home"
-              component={HomeTeam}
-            />
             <ProtectedCoachAndTeams
               exact
               path="/history"
@@ -120,16 +159,20 @@ class App extends Component {
               path="/missions"
               component={ProjectOverview}
             />
-            <ProtectedCoach
-              exact
-              path="/coach/home"
-              component={HomeCoach}
-            />
             <ProtectedAdmin
               // exact
               path="/admin/projects/add-mission"
               component={AddMission}
             />
+            <ProtectedCoach
+              // exact
+              path="/coach/create-team"
+              component={AddTeam}
+              />
+            <ProtectedCoach
+              path="/coach"
+              component={TeamMembers}
+              />
             <ProtectedAdmin
               // exact
               path="/admin/projects/edit-mission"
@@ -148,4 +191,8 @@ class App extends Component {
   )}
 }
 
-export default connect()(App);
+const mapReduxStateToProps = (reduxState) => ({
+  reduxState
+});
+
+export default connect(mapReduxStateToProps)(App);

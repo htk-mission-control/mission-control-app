@@ -21,6 +21,8 @@ class ViewAllTeams extends Component {
     // OR should we set these up as links and pass team_id as props?
     routeToCreateRun = (event) => {
         let team_id = event.target.value;
+        console.log('team_id', team_id);
+        
         this.props.history.push(`/practice-run?teamId=${team_id}`);
     }
     routeToTeamMembers = (event) => {
@@ -36,7 +38,6 @@ class ViewAllTeams extends Component {
     changePermission = (event) => {
         console.log( `team_id:`, event.target.name );
         console.log( `access:`, event.target.value );
-
         let team_id = event.target.name;
         let access;
         let coachId = this.props.reduxState.user.id;
@@ -56,6 +57,7 @@ class ViewAllTeams extends Component {
     render(){
         return(
             <div>
+                {JSON.stringify(this.props.reduxState.allTeams)};
                 <h2>Teams</h2>
 
                 <button className="route-link" onClick={this.routeToAddTeam} >New Team</button>

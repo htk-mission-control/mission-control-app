@@ -70,7 +70,6 @@ router.get('/team-info/:id', rejectUnauthenticated, (req, res) => {
     })
 })
 
-
 /**
  * GET teams by coach id
  */

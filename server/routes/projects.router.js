@@ -28,7 +28,7 @@ router.get('/details/:id', rejectUnauthenticated, (req, res) => {
         })
 });
 
-router.put('/:id', rejectUnauthenticated, async (req, res) => {
+router.put('/project/:id', rejectUnauthenticated, async (req, res) => {
     let id = req.params.id;
     // console.log('id', id);
     
@@ -43,7 +43,7 @@ router.put('/:id', rejectUnauthenticated, async (req, res) => {
         })
 })
 
-router.put('/publish/:id', (req, res) => {
+router.put('/publish/:id', rejectUnauthenticated, (req, res) => {
     let id = req.params.id;
     // console.log('id', id);
     
@@ -58,7 +58,7 @@ router.put('/publish/:id', (req, res) => {
         })
 });
 
-router.put('/info/:id', (req, res) => {
+router.put('/info/:id', rejectUnauthenticated, (req, res) => {
     let id = req.params.id;
     let info = req.body.projectInfo;
     
@@ -73,7 +73,7 @@ router.put('/info/:id', (req, res) => {
         })
 });
 
-router.get('/penalties/:id', (req, res) => {
+router.get('/penalties/:id', rejectUnauthenticated, (req, res) => {
     let sqlText = (`SELECT * FROM "penalties" WHERE "project_id" = $1;`)
     pool.query(sqlText, [req.params.id])
         .then((results) => {
@@ -85,7 +85,7 @@ router.get('/penalties/:id', (req, res) => {
         })
 });
 
-router.delete('/penalties/:id', (req, res) => {
+router.delete('/penalties/:id', rejectUnauthenticated, (req, res) => {
     let sqlText = (`DELETE FROM "penalties" WHERE "id" = $1;`)
     pool.query(sqlText, [req.params.id])
         .then((response) => {
@@ -97,7 +97,8 @@ router.delete('/penalties/:id', (req, res) => {
         })
 })
 
-router.get('/missions/:id', (req, res) => {
+// getting mission details
+router.get('/missions/:id', rejectUnauthenticated, (req, res) => {
     let sqlText = (`SELECT "missions"."id" AS "mission_id", 
                            "missions"."name" AS "mission_name", 
                            "missions"."description", 
@@ -152,7 +153,7 @@ router.delete('/missions/:id', rejectUnauthenticated, async (req, res) => {
       }
 })
 
-router.get('/missions/either-or/:id', (req, res) => {
+router.get('/missions/either-or/:id', rejectUnauthenticated, (req, res) => {
     let sqlText = (`SELECT 
                         "either_or"."id", 
                         "either_or"."goal_id", 
@@ -172,7 +173,7 @@ router.get('/missions/either-or/:id', (req, res) => {
         })
 });
 
-router.post('/', (req, res) => {
+router.post('/', rejectUnauthenticated, (req, res) => {
     let newProject = req.body;
     let currentDate = moment().format()
     console.log('req.body post', newProject);
@@ -332,6 +333,8 @@ router.post( '/mission', rejectUnauthenticated, async(req, res) => {
 router.get( `/mission/:id`, rejectUnauthenticated, async(req, res) => {
     const client = await pool.connect();
     let mission_id = req.params.id;
+    console.log( `REQ.PARAMS:`, req.params );
+    
 
     try {
         await client.query('BEGIN');
@@ -453,7 +456,7 @@ router.put( `/mission`, rejectUnauthenticated, async(req, res) => {
         res.sendStatus(201);
     } catch(error) {   
         await client.query('ROLLBACK');
-        console.log( `Couldn't POST mission, goal data.`, error );
+        console.log( `Couldn't update mission, goal data.`, error );
         res.sendStatus(500);
     } finally {
         client.release()
@@ -465,7 +468,7 @@ router.post( `/goal`, rejectUnauthenticated, async(req, res) => {
     const client = await pool.connect();
     console.log( `in addGoal`, req.body );
     
-    const mission_id = req.body.mission_id;
+    const missionId = req.body.missionId;
 
     try {
         await client.query('BEGIN');
@@ -474,7 +477,7 @@ router.post( `/goal`, rejectUnauthenticated, async(req, res) => {
                         VALUES ($1, 1)
                         RETURNING "id";`;
 
-        const result = await client.query( sqlText, [mission_id] );
+        const result = await client.query( sqlText, [missionId] );
         console.log( `Result:`, result.rows );
 
         await client.query('COMMIT');

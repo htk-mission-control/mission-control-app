@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
 import LogOutButton from '../LogOutButton/LogOutButton';
 import './Nav.css';
@@ -10,25 +10,78 @@ const Nav = (props) => (
       <h2 className="nav-title">High Tech Kids: Mission Control</h2>
     </Link>
     <div className="nav-right">
-      <Link className="nav-link" to="/home">
+
+      <Link className={props.location.pathname === '/home' ? 'active nav-link' : 'nav-link'} to={"/home"}>
         {/* Show this link if they are logged in or not,
         but call this link 'Home' if they are logged in,
         and call this link 'Login / Register' if they are not */}
         {props.user.id ? 'Home' : 'Login / Register'}
       </Link>
+
+      {/* COACH */}
+      {props.user.security_clearance === 2 && (
+        <>
+
+          <Link className={props.location.pathname === '/missions' ? 'active nav-link' : 'nav-link'} to="/missions">
+            View Missions
+          </Link>
+
+          <Link className={props.location.pathname === '/home' ? 'active nav-link' : 'nav-link'} to="/home">
+            View Teams
+          </Link>
+
+          {/* Can't show the following links for coach without getting the team id */}
+          {/* <Link className={props.location.pathname === '/history' ? 'active nav-link' : 'nav-link'} to="/history">
+            View Runs
+          </Link>
+
+          <Link className={props.location.pathname === '/practice-run' ? 'active nav-link' : 'nav-link'} to="/practice-run">
+            Create Run
+          </Link> */}
+        </>
+      )}
+
+      {/* TEAM w/o access */}
+      {props.user.security_clearance === 3 && (
+        <>
+          <Link className={props.location.pathname === '/missions' ? 'active nav-link' : 'nav-link'} to="/missions">
+            View Missions
+          </Link>
+
+          <Link className={props.location.pathname === '/history' ? 'active nav-link' : 'nav-link'} to="/history">
+            View Runs
+          </Link>
+        </>
+      )}
+
+      {/* TEAM W/access */}
+      {props.user.security_clearance === 4 && (
+        <>
+          <Link className={props.location.pathname === '/missions' ? 'active nav-link' : 'nav-link'} to="/missions">
+            View Missions
+          </Link>
+
+          <Link className={props.location.pathname === '/history' ? 'active nav-link' : 'nav-link'} to="/history">
+            View Runs
+          </Link>
+
+          <Link className={props.location.pathname === '/practice-run' ? 'active nav-link' : 'nav-link'} to="/practice-run">
+            Create Run
+          </Link>
+        </>
+      )}
+
       {/* Show the link to the info page and the logout button if the user is logged in */}
       {props.user.id && (
         <>
-          <Link className="nav-link" to="/info">
-            Info Page
-          </Link>
           <LogOutButton className="nav-link"/>
         </>
       )}
+      
       {/* Always show this link since the about page is not protected */}
-      <Link className="nav-link" to="/about">
+      {/* <Link className="nav-link" to="/about">
         About
-      </Link>
+      </Link> */}
     </div>
   </div>
 );
@@ -42,4 +95,4 @@ const mapStateToProps = state => ({
   user: state.user,
 });
 
-export default connect(mapStateToProps)(Nav);
+export default connect(mapStateToProps)(withRouter(Nav));
