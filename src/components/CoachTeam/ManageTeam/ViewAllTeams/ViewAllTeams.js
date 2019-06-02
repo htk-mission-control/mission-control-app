@@ -120,7 +120,6 @@ class ViewAllTeams extends Component {
                         </Button>
                         <br/>
                         <Button 
-                            className="route-link"
                             variant="contained"
                             color="primary" 
                             className={classes.button}
@@ -131,7 +130,6 @@ class ViewAllTeams extends Component {
                         </Button>
                         <br/>
                         <Button 
-                            className="route-link" 
                             variant="contained"
                             color="primary" 
                             className={classes.button}

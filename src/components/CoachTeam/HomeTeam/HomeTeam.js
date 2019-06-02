@@ -1,11 +1,9 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
 
 //----Material UI----
 import PropTypes from 'prop-types';
-import { withStyles, TextField } from '@material-ui/core';
-import Paper from '@material-ui/core/Paper';
+import { withStyles } from '@material-ui/core';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';

@@ -15,8 +15,6 @@ const styles = theme => ({
         flexGrow: 1,
         textAlign: "center",
         padding: theme.spacing.unit,
-        // margin: theme.spacing.unit,
-        // width: '100%',
         overflowX: 'auto',
     },
     paper: {
@@ -177,7 +175,6 @@ class ViewProject extends Component {
     }
 
     renderGoals = (mission, eitherOr) => {
-        const { classes } = this.props;
 
         if (mission.goal_type_id === 1) {
             return (
@@ -194,7 +191,6 @@ class ViewProject extends Component {
                         eithers.map( (either, i) => {
                             if (mission.goal_id === either.goal_id) {
                                 console.log('either second loop', either);
-
                                 return (
                                     <Grid item key={i}>
                                         <Typography variant="body2">Goal: {either.name} = {either.points} points</Typography>
@@ -202,6 +198,7 @@ class ViewProject extends Component {
                                     </Grid>
                                 )
                             }
+                            return <div></div>
                         })
                     )
                 })

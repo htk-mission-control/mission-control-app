@@ -13,9 +13,9 @@ import ProtectedTeams from '../ProtectedRoutes/ProtectedTeams/ProtectedTeams';
 import ProtectedTeamWithAccess from '../ProtectedRoutes/ProtectedTeamWithAccess/ProtectedTeamWithAccess';
 
 import Nav from '../Nav/Nav';
-import Footer from '../Footer/Footer';
-import AboutPage from '../AboutPage/AboutPage';
-import UserPage from '../UserPage/UserPage';
+// import Footer from '../Footer/Footer';
+// import AboutPage from '../AboutPage/AboutPage';
+// import UserPage from '../UserPage/UserPage';
 import HomeAdmin from '../Admin/HomeAdmin/HomeAdmin';
 import CreateRun from '../CoachTeam/NewRun/CreateRun/CreateRun';
 import HomeTeam from '../CoachTeam/HomeTeam/HomeTeam';

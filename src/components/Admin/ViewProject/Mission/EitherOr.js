@@ -6,11 +6,7 @@ import { withRouter } from 'react-router-dom';
 //----Material UI----
 import PropTypes from 'prop-types';
 import { withStyles, TextField } from '@material-ui/core';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import DeleteIcon from '@material-ui/icons/Delete';
-import Grid from '@material-ui/core/Grid';
 
 const styles = theme => ({
     root: {
