@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import EitherOr from './EitherOr';
 import qs from 'query-string';
+import savedMissions from '../../../../modules/autoFillers/admin/addMission';
 
 //----Material UI----
 import PropTypes from 'prop-types';
@@ -62,7 +63,32 @@ class AddMission extends Component {
         editState: false,
     }
 
-    componentDidMount() {
+    // quickly init form
+    autoFillMission = ( missionNumber ) => {
+        if ( missionNumber === 1 ) {
+            this.setState({
+                ...this.state, ...savedMissions.mission1
+            });
+        } else if ( missionNumber === 2 ) {
+            this.setState({
+                ...this.state, ...savedMissions.mission2
+            });
+        } else if ( missionNumber === 3 ) {
+            this.setState({
+                ...this.state, ...savedMissions.mission3
+            });
+        } else if ( missionNumber === 4 ) {
+            this.setState({
+                ...this.state, ...savedMissions.mission4
+            });
+        } else if ( missionNumber === 5 ) {
+            this.setState({
+                ...this.state, ...savedMissions.mission5
+            });
+        }
+    }
+
+    componentDidMount(){
         const searchObject = qs.parse(this.props.location.search);
         console.log('searchObject', searchObject);
         this.setState({
@@ -250,7 +276,7 @@ class AddMission extends Component {
                     {goalTypeForm}
                 </div>
             })
-
+        
         return (
             <Grid
                 container
@@ -261,7 +287,7 @@ class AddMission extends Component {
                 spacing={16}
             >
                 <Paper className={classes.paper}>
-                    <Typography variant="h3">Add Mission</Typography>
+                    <Typography variant="h3" onClick={ () => this.autoFillMission(1) }>Add Mission</Typography>
 
                     <div>
                         <TextField
@@ -271,6 +297,7 @@ class AddMission extends Component {
                             className={classes.textField}
                             value={this.state.name}
                             onChange={this.handleChange}
+                            onClick={ () => this.autoFillMission(2) }
                         />
                         <TextField
                             type="text"
@@ -279,6 +306,7 @@ class AddMission extends Component {
                             className={classes.textField}
                             value={this.state.description}
                             onChange={this.handleChange}
+                            onClick={ () => this.autoFillMission(3) }
                         />
                     </div>
 

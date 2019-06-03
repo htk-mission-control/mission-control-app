@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import qs from 'query-string';
+import penalty from '../../../../modules/autoFillers/admin/addPenalty';
 
 //----Material UI----
 import PropTypes from 'prop-types';
@@ -45,6 +46,13 @@ class AddPenalty extends Component {
         points: -1
     }
 
+    // quickly init form
+    autoFillForm = () => {
+        this.setState({
+            ...this.state, ...penalty
+        });
+    }
+
     componentDidMount() {
         const searchObject = qs.parse(this.props.location.search);
         console.log('searchObject', searchObject);
@@ -72,7 +80,7 @@ class AddPenalty extends Component {
 
     render() {
         const { classes } = this.props;
-
+      
         return (
             <Grid
                 container
@@ -83,7 +91,7 @@ class AddPenalty extends Component {
                 spacing={16}
             >
                 <Paper className={classes.paper}>
-                    <Typography variant="h3">Add Penalty</Typography>
+                    <Typography variant="h3"  onClick={ this.autoFillForm }>Add Penalty</Typography>
 
                     <div>
                         <TextField 

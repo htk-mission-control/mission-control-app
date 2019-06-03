@@ -3,6 +3,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import TeamMember from './TeamMember'
+import teams from '../../../../modules/autoFillers/coach/addTeam';
 
 //----Material UI----
 import PropTypes from 'prop-types';
@@ -55,6 +56,33 @@ class AddTeam extends Component {
             teamId: ''
         },
         teamSaved: false
+    }
+
+    // quickly init form
+    autoFillTeam = ( number ) => {
+        if ( number === 1 ) {
+            this.setState({
+                newTeam: {
+                    teamName: teams.team1.teamName,
+                    teamNumber: teams.team1.teamNumber,
+                    password: teams.team1.password,
+                    coach_user_id: this.props.reduxState.user.id,
+                    newTeamMember: '',
+                    teamId: ''
+                }
+            });
+        } else if ( number === 2 ) {
+            this.setState({
+                newTeam: {
+                    teamName: teams.team2.teamName,
+                    teamNumber: teams.team2.teamNumber,
+                    password: teams.team2.password,
+                    coach_user_id: this.props.reduxState.user.id,
+                    newTeamMember: '',
+                    teamId: ''
+                }
+            });
+        }
     }
 
     handleChange = propertyName => event => {
