@@ -22,6 +22,8 @@ const styles = theme => ({
         maxWidth: 375,
         padding: theme.spacing.unit * 2,
         textAlign: "center",
+        minWidth: 360,
+
     },
     button: {
         marginTop: 20,
@@ -29,6 +31,9 @@ const styles = theme => ({
         paddingLeft: "5%",
         paddingRight: "5%",
     },
+    panel: {
+        minWidth: 360,
+    }
 })
 
 class ProjectOverview extends Component {
@@ -89,6 +94,8 @@ class ProjectOverview extends Component {
     }
 
     groundControl = () => {
+        const { classes } = this.props;
+
         let missionArr = this.state.projectMissions;
         let newArr = [];
         let test = [];
@@ -106,7 +113,7 @@ class ProjectOverview extends Component {
             newArr.map((mission, i) => {
                 return (
                     <div key={i}>
-                        <ExpansionPanel>
+                        <ExpansionPanel className={classes.panel}>
                             <ExpansionPanelSummary
                                 expandIcon={<ExpandMoreIcon />}
                                 aria-controls="panel1a-content"

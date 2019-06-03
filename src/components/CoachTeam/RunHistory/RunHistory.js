@@ -34,8 +34,9 @@ const styles = theme => ({
     paddingRight: theme.spacing.unit * 2,
   },
   table: {
-    maxWidth: 375,
-    width: '100%'
+    // maxWidth: 360,
+    padding: 200
+    // // width: '100%'
   }
 })
 
@@ -54,23 +55,6 @@ class RunHistory extends Component {
     } else if (this.props.user.security_clearance === 3 || this.props.user.security_clearance === 4) {
       this.props.dispatch({ type: 'GET_RUNS_AS_TEAM' });
     }
-  }
-
-  renderRuns = () => {
-    // render all runs returned from database
-    // run id, run name, goals completed count, run score
-    return (
-      <div>
-        {this.props.allRuns.map(run =>
-          <TableRow>
-            <TableCell>{run.name}</TableCell>
-            <TableCell>{run.count}</TableCell>
-            <TableCell>{run.score + run.penalties}</TableCell>
-            <TableCell><Button onClick={() => this.routeToRunSummary(run.id)}>View</Button></TableCell>
-          </TableRow>
-        )}
-      </div>
-    )
   }
 
   routeToPracticeRun = () => {
@@ -99,7 +83,7 @@ class RunHistory extends Component {
         <Grid item>
           <Paper className={classes.paper}>
           <Typography variant="h4">Practice Runs</Typography>
-            <Table className={classes.table}>
+            <Table padding='checkbox' className={classes.table}>
               <TableHead>
                 <TableRow>
                   <TableCell>Name</TableCell>
@@ -109,7 +93,14 @@ class RunHistory extends Component {
                 </TableRow>
               </TableHead>
               <TableBody>
-                {this.renderRuns()}
+              {this.props.allRuns.map(run =>
+                <TableRow>
+                  <TableCell>{run.name}</TableCell>
+                  <TableCell>{run.count}</TableCell>
+                  <TableCell>{run.score + run.penalties}</TableCell>
+                  <TableCell><Button onClick={() => this.routeToRunSummary(run.id)}>View</Button></TableCell>
+                </TableRow>
+              )}
               </TableBody>
             </Table>
           </Paper>

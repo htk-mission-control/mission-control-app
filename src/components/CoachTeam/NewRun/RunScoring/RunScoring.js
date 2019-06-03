@@ -31,13 +31,13 @@ const styles = theme => ({
         minWidth: 350,
     },
     paper: {
-        // margin: theme.spacing.unit * 2,
         maxWidth: 375,
         padding: theme.spacing.unit * 2,
         textAlign: "center",
     },
     button: {
         maxWidth: 300,
+        minWidth: 200,
         margin: theme.spacing.unit * 2,
         paddingLeft: theme.spacing.unit * 2,
         paddingRight: theme.spacing.unit * 2,
@@ -425,7 +425,7 @@ class RunScoring extends Component {
                 <Button
                     className={classes.button}
                     variant="contained"
-                    color="primary"
+                    color="secondary"
                     onClick={this.handleSubmit}
                 >End Run
                 </Button>

@@ -31,6 +31,9 @@ import TeamMembers from '../CoachTeam/ManageTeam/TeamMembers/TeamMembers';
 
 
 import './App.css';
+import theme from './theme';
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+
 import ProtectedCoachAndTeams from '../ProtectedRoutes/ProtectedCoachAndTeams/ProtectedCoachAndTeams';
 import AddPenalty from '../Admin/ViewProject/Penalty/AddPenalty';
 import EditPenalty from '../Admin/ViewProject/Penalty/EditPenalty';
@@ -73,6 +76,7 @@ class App extends Component {
 
   render() {
     return (
+      <MuiThemeProvider theme={theme}>
       <Router>
         <div>
           <Nav />
@@ -188,6 +192,7 @@ class App extends Component {
           {/* <Footer /> */}
         </div>
       </Router>
+      </MuiThemeProvider>
   )}
 }
 

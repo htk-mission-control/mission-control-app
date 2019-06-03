@@ -22,6 +22,9 @@ const styles = theme => ({
   title: {
     flexGrow: 1,
   },
+  button: {
+    float: "right",
+  }
 })
 
 
@@ -38,7 +41,7 @@ const Nav = (props) => (
           </Typography>
         </Link>
         {props.user.id && (
-              <LogOutButton />
+              <LogOutButton className={styles.button}/>
         )}
       </Toolbar>
     </AppBar>
