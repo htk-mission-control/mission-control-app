@@ -19,7 +19,7 @@ class HomeAdmin extends Component {
     autoFillForm = () => {
         this.setState({
             newProject: {
-                ...this.state.newProject, ...savedForm
+                ...this.state.newProject, ...savedForm.animalAllies
             }
         });
     }
