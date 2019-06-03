@@ -105,7 +105,6 @@ class TeamMembers extends Component {
   }
 
   render() {
-
     const { classes } = this.props;
 
     if (this.props.reduxState.teamInfoReducer[0] === "State") {
