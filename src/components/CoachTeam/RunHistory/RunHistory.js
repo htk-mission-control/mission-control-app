@@ -33,6 +33,9 @@ const styles = theme => ({
     paddingLeft: theme.spacing.unit * 2,
     paddingRight: theme.spacing.unit * 2,
   },
+  table: {
+    maxWidth: 375,
+  }
 })
 
 class RunHistory extends Component {
@@ -58,10 +61,11 @@ class RunHistory extends Component {
     return (
       <div>
         {this.props.allRuns.map(run =>
-          <TableRow onClick={this.routeToRunSummary(run.id)}>
+          <TableRow>
             <TableCell>{run.name}</TableCell>
             <TableCell>{run.count}</TableCell>
             <TableCell>{run.score + run.penalties}</TableCell>
+            <TableCell><Button onClick={() => this.routeToRunSummary(run.id)}></Button></TableCell>
           </TableRow>
         )}
       </div>
@@ -94,12 +98,13 @@ class RunHistory extends Component {
         <Grid item>
           <Paper className={classes.paper}>
           <Typography variant="h4">Practice Runs</Typography>
-            <Table>
+            <Table className={classes.table}>
               <TableHead>
                 <TableRow>
                   <TableCell>Name</TableCell>
                   <TableCell>Goals Completed</TableCell>
                   <TableCell>Score</TableCell>
+                  <TableCell>View</TableCell>
                 </TableRow>
               </TableHead>
               <TableBody>

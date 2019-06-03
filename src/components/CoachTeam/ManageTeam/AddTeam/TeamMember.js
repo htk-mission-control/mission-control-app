@@ -7,7 +7,7 @@ import TableCell from '@material-ui/core/TableCell';
 import TableRow from '@material-ui/core/TableRow';
 import DeleteIcon from '@material-ui/icons/Delete';
 import EditIcon from '@material-ui/icons/Create';
-import SaveIcon from '@material-ui/icons/Save'
+import SaveIcon from '@material-ui/icons/Save';
 
 class TeamMember extends Component {
 

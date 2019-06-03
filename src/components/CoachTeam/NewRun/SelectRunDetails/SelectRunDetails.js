@@ -64,7 +64,7 @@ class SelectRunDetails extends Component {
 
     componentDidMount() {
         const searchObject = qs.parse(this.props.location.search);
-        console.log('searchObject', searchObject.teamId);
+        console.log('teamId', searchObject.teamId);
         console.log(`user security clearance`, this.props.reduxState.user.security_clearance);
 
         // gets all the team members for logged in team
@@ -173,16 +173,18 @@ class SelectRunDetails extends Component {
         event.preventDefault();
 
         const searchObject = qs.parse(this.props.location.search);
-        console.log('searchObject', this.props.location.search.teamId);
+        console.log('searchObject', searchObject);
         console.log(`user security clearance`, this.props.reduxState.user.security_clearance);
 
         if (this.props.reduxState.user.security_clearance === 4) {
-            this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: { runDetails: this.state } })
+            // this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: { runDetails: this.state } })
+            this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: { runDetails: this.state, userClearance: 4 }})
             this.props.history.push(`/practice-run/run-scoring`);
         }
         else if (this.props.reduxState.user.security_clearance === 2) {
-            this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: { runDetails: this.state, id: searchObject } });
-            this.props.history.push(`/practice-run/run-scoring?teamId=${searchObject}`);
+            console.log(`searchObject in handleSubmit`, searchObject); 
+            this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: { runDetails: this.state, id: searchObject.teamId, userClearance: 2 }});
+            this.props.history.push(`/practice-run/run-scoring?teamId=${searchObject.teamId}`);
         }
         console.log(`current runTeam state`, this.state.runTeam);
         console.log(`current run state`, this.state.newRun);
@@ -193,7 +195,7 @@ class SelectRunDetails extends Component {
         let missionList;
         if (this.props.reduxState.missions) {
             missionList = this.props.reduxState.missions.map((mission, i) =>
-                <div>
+                <div key={i}>
                     <label>{i + 1}. {mission.name}</label>
                     <input type='checkbox' checked={mission.selected === true} value={mission.selected} onChange={() => { this.updateMission(i) }} />
                 </div>
@@ -238,7 +240,7 @@ class SelectRunDetails extends Component {
         return (
             <Grid item>
                 <Paper className={classes.paper}>
-                    <Typography variant>{this.props.reduxState.selectedMissions.runName}</Typography>
+                    <Typography variant="h4">{this.props.reduxState.selectedMissions.runName}</Typography>
                     <form>
                         <Typography variant="h5">Driver:</Typography>
                         <TextField

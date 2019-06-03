@@ -91,7 +91,7 @@ class TeamMembers extends Component {
     });
     this.props.dispatch({
       type: "GET_TEAM_MEMBERS_WITH_ID",
-      payload: id
+      payload: {teamId: id}
     });
   };
 
