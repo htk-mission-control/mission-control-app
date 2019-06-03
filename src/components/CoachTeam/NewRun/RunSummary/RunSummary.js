@@ -40,9 +40,9 @@ class RunSummary extends Component {
         
         this.props.dispatch( {type: `UPDATE_RUN_NOTES`, payload: this.state} );
         if(this.props.reduxState.user.security_clearance === 2 ){
-            this.props.history.push( `/coach/home` );
+            this.props.history.push( `/home` );
         } else {
-            this.props.history.push( `/team/home` );
+            this.props.history.push( `/home` );
         }
         this.props.dispatch( {type: `RESET_RUN_DETAILS`} );
     }
