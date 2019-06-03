@@ -391,6 +391,7 @@ class RunScoring extends Component {
 
     handleSubmit = () => {
         console.log(`final state`, this.state);
+        console.log(`final runId`, this.state.runId);
         this.props.dispatch({ type: 'UPDATE_RUN_DETAILS', payload: this.state });
         this.props.history.push(`/practice-run/run-summary?runId=${this.state.runId}`)
     }
@@ -439,4 +440,4 @@ RunScoring.propTypes = {
     classes: PropTypes.object.isRequired,
 };
 
-export default connect(mapReduxStateToProps)(withStyles(styles)(RunScoring));
+export default withRouter(connect(mapReduxStateToProps)(withStyles(styles)(RunScoring)));

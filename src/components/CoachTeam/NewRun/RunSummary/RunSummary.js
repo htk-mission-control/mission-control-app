@@ -14,7 +14,7 @@ class RunSummary extends Component {
     componentDidMount(){
         const values = queryString.parse(this.props.location.search);
         console.log( `query runId:`, values.runId);
-        this.props.dispatch( {type: 'GET_RUN_DETAILS', payload: values.runId} );
+        // this.props.dispatch( {type: 'GET_RUN_DETAILS', payload: values.runId} );
     }
 
     componentDidUpdate(prevProps){

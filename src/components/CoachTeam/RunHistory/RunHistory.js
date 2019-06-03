@@ -35,6 +35,7 @@ const styles = theme => ({
   },
   table: {
     maxWidth: 375,
+    width: '100%'
   }
 })
 
@@ -65,7 +66,7 @@ class RunHistory extends Component {
             <TableCell>{run.name}</TableCell>
             <TableCell>{run.count}</TableCell>
             <TableCell>{run.score + run.penalties}</TableCell>
-            <TableCell><Button onClick={() => this.routeToRunSummary(run.id)}></Button></TableCell>
+            <TableCell><Button onClick={() => this.routeToRunSummary(run.id)}>View</Button></TableCell>
           </TableRow>
         )}
       </div>
