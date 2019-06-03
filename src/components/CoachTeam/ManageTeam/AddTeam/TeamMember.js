@@ -5,8 +5,9 @@ class TeamMember extends Component {
 
 state = {
   edit: false,
-  teamMemberName: this.props.item.name,
-  id: this.props.item.member_id,
+  name: this.props.item.name,
+  member_id: this.props.item.member_id,
+  team_id: this.props.reduxState.teamIdReducer,
   teamId: this.props.reduxState.teamIdReducer
 }
 
@@ -19,9 +20,14 @@ handleChange = propertyName => event => {
   }
 
 hide = () => {
+  const hidePayload = {
+    hideProps: this.state,
+    teamId: this.state.team_id
+  }
+
   this.props.dispatch({
     type: "HIDE_TEAM_MEMBER",
-    payload: this.state
+    payload: hidePayload
   })
 }
 

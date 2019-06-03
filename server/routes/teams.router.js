@@ -74,6 +74,8 @@ router.get('/team-info/:id', rejectUnauthenticated, (req, res) => {
  * GET teams by coach id
  */
 router.get('/:id', rejectUnauthenticated, (req, res) => {
+    console.log( `In get teams by coach_id:`, req.params );
+    
     let coachId = req.params.id;
     let sqlText = `SELECT t."id", t."coach_user_id", t."team_user_id",
                     t."name", t."team_number", u."security_clearance" AS "team_access"
