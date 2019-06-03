@@ -47,12 +47,10 @@ class EditPenalty extends Component {
     }
 
     routeBack = () => {
-        this.props.history.goBack();
+        this.props.history.push( `/admin/projects?projectId=${this.props.reduxState.projectDetails.id}`);
     }
 
     updatePenalty = (event) => {
-        event.preventDefault();
-
         let update = {...this.props.reduxState.penalty};
         console.log( update );
 
@@ -65,21 +63,22 @@ class EditPenalty extends Component {
         };
 
         this.props.dispatch( {type: 'UPDATE_PENALTY', payload: penaltyUpdate} );
-        this.props.history.goBack();
+        this.props.history.push( `/admin/projects?projectId=${this.props.reduxState.projectDetails.id}`);
+        event.preventDefault();
     }
 
     render() {
-        // const penalty = this.props.reduxState.penalty;
 
         return(
             <div>
                 <h2>Edit Penalty</h2>
 
-                <div>
+                <form onSubmit={this.updatePenalty} >
                     <label>Name</label>
                     <input type="text" 
                         value={this.state.name}
                         name="name"
+                        required
                         onChange={this.handleChange} />
                     <br/>
 
@@ -93,6 +92,7 @@ class EditPenalty extends Component {
                     <label>Max number of penalties</label>
                     <input type="number" 
                         name="max" min="1"
+                        required
                         value={this.state.max}
                         onChange={this.handleChange} />
                     <br/>
@@ -100,13 +100,14 @@ class EditPenalty extends Component {
                     <label>Points</label>
                     <input type="number" 
                         name="points" max="-1"
+                        required
                         value={this.state.points}
                         onChange={this.handleChange} />
                     <br/>
-                </div>
+                    <button type="submit" >Save Penalty</button>
+                </form>
 
                 <button onClick={this.routeBack} >Back</button>
-                <button onClick={this.updatePenalty} >Save Penalty</button>
 
             </div>
         );

@@ -30,13 +30,13 @@ class AddPenalty extends Component {
     }
 
     routeBack = () => {
-        this.props.history.goBack();
+        this.props.history.push( `/admin/projects?projectId=${this.state.project_id}` );
     }
 
     savePenalty = (event) => {
-        event.preventDefault();
         this.props.dispatch( {type: 'ADD_PENALTY', payload: this.state} );
-        this.props.history.goBack();
+        this.routeBack();
+        event.preventDefault();
     }
 
     render() {
@@ -45,10 +45,11 @@ class AddPenalty extends Component {
             <div>
                 <h2>Add Penalty</h2>
 
-                <div>
+                <form onSubmit={this.savePenalty} >
                     <label>Name</label>
                     <input type="text" placeholder="Penalty Name"
                         name="name"
+                        required
                         value={this.state.name}
                         onChange={this.handleChange} />
                     <br/>
@@ -62,19 +63,21 @@ class AddPenalty extends Component {
                     <label>Max number of penalties</label>
                     <input type="number" placeholder="1" min="1"
                         name="max"
+                        required
                         value={this.state.max}
                         onChange={this.handleChange} />
                     <br/>
                     <label>Points</label>
                     <input type="number" placeholder="-1" max="-1"
                         name="points"
+                        required
                         value={this.state.points}
                         onChange={this.handleChange} />
                     <br/>
-                </div>
+                    <button type="submit" >Save Penalty</button>
+                </form>
 
                 <button onClick={this.routeBack} >Back</button>
-                <button onClick={this.savePenalty} >Save Penalty</button>
 
             </div>
         );
