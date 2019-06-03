@@ -4,85 +4,49 @@ import { connect } from 'react-redux';
 import LogOutButton from '../LogOutButton/LogOutButton';
 import './Nav.css';
 
+//----Material UI----
+import PropTypes from 'prop-types';
+import Typography from '@material-ui/core/Typography';
+import AppBar from '@material-ui/core/AppBar';
+import Toolbar from '@material-ui/core/Toolbar';
+import IconButton from '@material-ui/core/IconButton';
+import MenuIcon from '@material-ui/icons/Menu';
+
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    paddingBottom: 20
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+  },
+  title: {
+    flexGrow: 1,
+    textDecoration: "none"
+  },
+  button: {
+    float: "right",
+  }
+})
+
+
 const Nav = (props) => (
-  <div className="nav">
-    <Link to="/home">
-      <h2 className="nav-title">High Tech Kids: Mission Control</h2>
-    </Link>
-    <div className="nav-right">
-
-      <Link className={props.location.pathname === '/home' ? 'active nav-link' : 'nav-link'} to={"/home"}>
-        {/* Show this link if they are logged in or not,
-        but call this link 'Home' if they are logged in,
-        and call this link 'Login / Register' if they are not */}
-        {props.user.id ? 'Home' : 'Login / Register'}
-      </Link>
-
-      {/* COACH */}
-      {props.user.security_clearance === 2 && (
-        <>
-
-          <Link className={props.location.pathname === '/missions' ? 'active nav-link' : 'nav-link'} to="/missions">
-            View Missions
-          </Link>
-
-          <Link className={props.location.pathname === '/home' ? 'active nav-link' : 'nav-link'} to="/home">
-            View Teams
-          </Link>
-
-          {/* Can't show the following links for coach without getting the team id */}
-          {/* <Link className={props.location.pathname === '/history' ? 'active nav-link' : 'nav-link'} to="/history">
-            View Runs
-          </Link>
-
-          <Link className={props.location.pathname === '/practice-run' ? 'active nav-link' : 'nav-link'} to="/practice-run">
-            Create Run
-          </Link> */}
-        </>
-      )}
-
-      {/* TEAM w/o access */}
-      {props.user.security_clearance === 3 && (
-        <>
-          <Link className={props.location.pathname === '/missions' ? 'active nav-link' : 'nav-link'} to="/missions">
-            View Missions
-          </Link>
-
-          <Link className={props.location.pathname === '/history' ? 'active nav-link' : 'nav-link'} to="/history">
-            View Runs
-          </Link>
-        </>
-      )}
-
-      {/* TEAM W/access */}
-      {props.user.security_clearance === 4 && (
-        <>
-          <Link className={props.location.pathname === '/missions' ? 'active nav-link' : 'nav-link'} to="/missions">
-            View Missions
-          </Link>
-
-          <Link className={props.location.pathname === '/history' ? 'active nav-link' : 'nav-link'} to="/history">
-            View Runs
-          </Link>
-
-          <Link className={props.location.pathname === '/practice-run' ? 'active nav-link' : 'nav-link'} to="/practice-run">
-            Create Run
-          </Link>
-        </>
-      )}
-
-      {/* Show the link to the info page and the logout button if the user is logged in */}
-      {props.user.id && (
-        <>
-          <LogOutButton className="nav-link"/>
-        </>
-      )}
-      
-      {/* Always show this link since the about page is not protected */}
-      {/* <Link className="nav-link" to="/about">
-        About
-      </Link> */}
-    </div>
+  <div className="root">
+    <AppBar position="static">
+      <Toolbar>
+        {/* <IconButton edge="start" className={styles.menuButton} color="inherit" aria-label="Menu">
+          <MenuIcon/>
+        </IconButton> */}
+        <Link to="/home">
+          <Typography variant="h6" className={styles.title}>
+            Mission Control
+          </Typography>
+        </Link>
+        {props.user.id && (
+              <LogOutButton className={styles.button}/>
+        )}
+      </Toolbar>
+    </AppBar>
   </div>
 );
 
@@ -94,5 +58,9 @@ const Nav = (props) => (
 const mapStateToProps = state => ({
   user: state.user,
 });
+
+Nav.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
 
 export default connect(mapStateToProps)(withRouter(Nav));

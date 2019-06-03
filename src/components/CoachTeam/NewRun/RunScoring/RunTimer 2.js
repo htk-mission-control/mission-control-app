@@ -1,35 +1,6 @@
 import React, { Component } from "react";
 import Timer from 'react-compound-timer';
 
-//----Material UI----
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core';
-import Paper from '@material-ui/core/Paper';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import Grid from '@material-ui/core/Grid';
-
-
-const styles = theme => ({
-  root: {
-      flexGrow: 1,
-      textAlign: "center",
-      padding: theme.spacing.unit,
-      overflowX: 'auto',
-  },
-  paper: {
-      margin: theme.spacing.unit,
-      padding: theme.spacing.unit * 2,
-      textAlign: "center",
-  },
-  button: {
-      maxWidth: 300,
-      minWidth: 200,
-      margin: theme.spacing.unit,
-      paddingLeft: theme.spacing.unit * 2,
-      paddingRight: theme.spacing.unit * 2,
-  }
-});
 // This timer will count down from 2:30 and stop at 0:00. The Start Timer button
 // will start/resume, and the Stop Timer button will stop/pause the timer.
 // Checkpoints can be set to run callback functions.
@@ -82,8 +53,6 @@ class RunTimer extends Component {
 
 
   render() {
-    const { classes } = this.props;
-
     return (
         <Timer
           className = '.red-backround'
@@ -111,29 +80,17 @@ class RunTimer extends Component {
         > 
           {({ start, resume, pause, stop, reset, timerState }) => (
             <React.Fragment>
-            <Paper className={classes.paper}> 
               <div>
-              <Typography variant="h3">
                 <Timer.Minutes formatValue={(value) => `${(value < 10 ? `0${value}` : value)}`}/>:
                 <Timer.Seconds formatValue={(value) => `${(value < 10 ? `0${value}` : value)}`} />
-              </Typography>
               </div>
               {/* <div>{ timerState }</div> */}
               <br />
-                <Button 
-                  variant="contained" 
-                  color="primary" 
-                  className={classes.button}
-                  onClick={ start }>Start Timer
-                </Button>
-                <Button 
-                  variant="contained" 
-                  color="primary" 
-                  className={classes.button}
-                  onClick={ stop } >Stop Timer
-                </Button>
+              <div>
+                <button onClick={ start }>Start Timer</button>
+                <button onClick={ stop } >Stop Timer</button>
                 {/* <button onClick={ reset } onclick={ this.resetState }>Reset Timer</button> */}
-              </Paper>
+              </div>
             </React.Fragment>
           )}
         </Timer>
@@ -141,9 +98,4 @@ class RunTimer extends Component {
   }
 }
 
-RunTimer.propTypes = {
-  classes: PropTypes.object.isRequired,
-};
-
-
-export default withStyles(styles)(RunTimer);
+export default RunTimer;

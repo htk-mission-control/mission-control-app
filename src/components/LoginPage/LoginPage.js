@@ -1,6 +1,33 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+//----Material UI----
+import PropTypes from 'prop-types';
+import { withStyles, TextField } from '@material-ui/core';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    textAlign: "center",
+    margin: "auto",
+    maxWidth: 700,
+    padding: theme.spacing.unit * 2,
+  },
+  textField: {
+    marginLeft: theme.spacing.unit,
+    marginRight: theme.spacing.unit,
+  },
+  button: {
+    marginTop: 20,
+    marginBottom: 15,
+    paddingLeft: "5%",
+    paddingRight: "5%",
+  },
+})
+
 class LoginPage extends Component {
   state = {
     username: '',
@@ -30,68 +57,87 @@ class LoginPage extends Component {
   }
 
   render() {
+    const { classes } = this.props;
+
     return (
-      <div>
-        {this.props.errors.loginMessage && (
-          <h2
-            className="alert"
-            role="alert"
-          >
-            {this.props.errors.loginMessage}
-          </h2>
-        )}
-        <form onSubmit={this.login}>
-          <h1>Login</h1>
-          <div>
-            <label htmlFor="username">
-              Username:
-              <input
-                type="text"
-                name="username"
+      <div className={classes.root}>
+        {/* <Paper className={classes.paper}> */}
+        <Grid
+          container
+          direction="column"
+          justify="center"
+          alignItems="center"
+          spacing={24}
+        >
+          {this.props.errors.loginMessage && (
+            <Typography
+              className="alert"
+              role="alert"
+              variant="h3"
+            >
+              {this.props.errors.loginMessage}
+            </Typography>
+          )}
+          <Grid item xs={12}>
+            <form onSubmit={this.login}>
+              <Typography variant="h1">Login</Typography>
+              <TextField
+                required
+                label="Username"
                 value={this.state.username}
+                className={classes.textField}
                 onChange={this.handleInputChangeFor('username')}
+                margin="normal"
               />
-            </label>
-          </div>
-          <div>
-            <label htmlFor="password">
-              Password:
-              <input
+              <TextField
+                required
                 type="password"
-                name="password"
+                label="Password"
                 value={this.state.password}
+                className={classes.textField}
                 onChange={this.handleInputChangeFor('password')}
+                margin="normal"
               />
-            </label>
-          </div>
-          <div>
-            <input
-              className="log-in"
-              type="submit"
-              name="submit"
-              value="Log In"
-            />
-          </div>
-        </form>
-        <center>
-          <button
-            type="button"
-            className="link-button"
-            onClick={() => {this.props.dispatch({type: 'SET_TO_REGISTER_MODE'})}}
-          >
-            Register
-          </button>
-        </center>
+              <br />
+              <Button
+                type="submit"
+                name="submit"
+                className={classes.button}
+                variant="contained"
+                color="primary"
+              >
+                Log In
+              </Button>
+            </form>
+          </Grid>
+          <Grid item>
+            <Typography variant="h5">Need An Account?</Typography>
+            <Button
+              type="button"
+              variant="contained"
+              color="primary"
+              className={classes.button}
+              onClick={() => {
+                this.props.dispatch({ type: 'SET_TO_REGISTER_MODE' });
+              }}
+            >
+              Register
+            </Button>
+          </Grid>
+        </Grid>
+        {/* </Paper> */}
       </div>
     );
   }
 }
 
-// Instead of taking everything from state, we just want the error messages.
-// if you wanted you could write this code like this:
-// const mapStateToProps = ({errors}) => ({ errors });
 const mapStateToProps = state => ({
   errors: state.errors,
 });
 
-export default connect(mapStateToProps)(LoginPage);
+LoginPage.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default connect(mapStateToProps)(withStyles(styles)(LoginPage));
+

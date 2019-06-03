@@ -8,7 +8,7 @@ const encryptLib = require('../modules/encryption');
  * GET team members by team id
  */
 router.get('/members', rejectUnauthenticated, (req, res) => {
-    console.log(`team members user id`, req.user);
+    console.log(`team members team id`, req.user);
     let sqlText = `SELECT "team_members"."id" AS "member_id", "team_members"."team_id", "team_members"."name", "users"."id" AS "user_id" 
                    FROM "team_members"
                    LEFT JOIN "teams" ON "team_members"."team_id" = "teams"."id"
@@ -22,7 +22,7 @@ router.get('/members', rejectUnauthenticated, (req, res) => {
             res.send(results.rows);
         })
         .catch((error) => {
-            console.log(`Couldn't get team members for logged in user.`, error);
+            console.log(`Couldn't get team members by team id.`, error);
             res.sendStatus(500);
         })
 });
@@ -74,6 +74,8 @@ router.get('/team-info/:id', rejectUnauthenticated, (req, res) => {
  * GET teams by coach id
  */
 router.get('/:id', rejectUnauthenticated, (req, res) => {
+    console.log( `In get teams by coach_id:`, req.params );
+    
     let coachId = req.params.id;
     let sqlText = `SELECT t."id", t."coach_user_id", t."team_user_id",
                     t."name", t."team_number", u."security_clearance" AS "team_access"

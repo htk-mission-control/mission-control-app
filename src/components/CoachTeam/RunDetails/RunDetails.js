@@ -42,6 +42,7 @@ class RunDetails extends Component {
 
         return(
             <div>
+                {/* {JSON.stringify(this.props.reduxState.runHistoryDetails)} */}
                 <h2>Details: {runDetails.name}</h2>
 
                 <div>
@@ -55,8 +56,7 @@ class RunDetails extends Component {
 
                 <div>
                     <h4>Completed Goals: {runDetails.count}</h4>
-                    <p>Do we want to list which goals they completed?</p>
-                    <br/>
+                    {/* <p>Do we want to list which goals they completed?</p> */}
                     <h4>Penalties: {runDetails.penalties}</h4>
                 </div>
 
