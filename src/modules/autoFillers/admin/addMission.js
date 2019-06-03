@@ -14,17 +14,6 @@ let newMission = {
     name: 'Printing',
     description: 'Eject red brick ',
   },
-
-  mission4: {
-    name: 'Crater Crossing',
-    description: 'Activate Solar Arrays',
-  },
-
-  mission5: {
-    name: 'Extraction',
-    description: 'Move the four core samples',
-  },
-
 }
 
 module.exports = newMission;
