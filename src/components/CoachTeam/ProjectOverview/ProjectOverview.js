@@ -23,7 +23,6 @@ const styles = theme => ({
         padding: theme.spacing.unit * 2,
         textAlign: "center",
         minWidth: 360,
-
     },
     button: {
         marginTop: 20,

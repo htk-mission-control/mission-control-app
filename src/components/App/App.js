@@ -80,6 +80,7 @@ class App extends Component {
       <Router>
         <div>
           <Nav />
+          <div style={{paddingTop: 65}}>
           <Switch>
             {/* Visiting localhost:3000 will redirect to localhost:3000/home */}
             <Redirect exact from="/" to="/home" />
@@ -189,7 +190,7 @@ class App extends Component {
             />
             <Route render={() => <h1>404</h1>} />
           </Switch>
-          {/* <Footer /> */}
+          </div>
         </div>
       </Router>
       </MuiThemeProvider>

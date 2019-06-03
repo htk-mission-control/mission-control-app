@@ -11,16 +11,16 @@ import Grid from '@material-ui/core/Grid';
 
 const styles = theme => ({
     root: {
-      flexGrow: 1,
-      textAlign: "center",
+        flexGrow: 1,
+        textAlign: "center",
     },
     button: {
-      marginTop: 20,
-      marginBottom: 15,
-      paddingLeft: "5%",
-      paddingRight: "5%",
+        marginTop: 20,
+        marginBottom: 15,
+        paddingLeft: "5%",
+        paddingRight: "5%",
     },
-  })
+})
 
 
 class HomeCoach extends Component {
@@ -47,7 +47,7 @@ class HomeCoach extends Component {
             <Grid className={classes.root}>
                 <Typography variant="h2">Welcome, Coach!</Typography>
                 <Button
-                    className={classes.button}                 
+                    className={classes.button}
                     onClick={this.routeToMissions}
                     variant="contained"
                     color="primary"
@@ -55,9 +55,9 @@ class HomeCoach extends Component {
                     View Missions
                 </Button>
                 <br />
-                <Button 
+                <Button
                     className={classes.button}
-                    onClick={this.routeToTeams} 
+                    onClick={this.routeToTeams}
                     variant="contained"
                     color="primary"
                 >
@@ -75,6 +75,6 @@ const mapReduxStateToProps = (reduxState) => ({
 
 HomeCoach.propTypes = {
     classes: PropTypes.object.isRequired,
-  };
+};
 
 export default connect(mapReduxStateToProps)(withRouter(withStyles(styles)(HomeCoach)));

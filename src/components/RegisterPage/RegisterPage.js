@@ -12,7 +12,8 @@ const styles = theme => ({
   root: {
     flexGrow: 1,
     textAlign: "center",
-    // margin: "auto",
+    marginTop: 60,
+    margin: "auto",
     maxWidth: 700,
     padding: theme.spacing.unit * 2,
   },
