@@ -15,35 +15,33 @@ import MenuIcon from '@material-ui/icons/Menu';
 const styles = theme => ({
   root: {
     flexGrow: 1,
-    paddingBottom: 20
   },
   menuButton: {
     marginRight: theme.spacing(2),
   },
   title: {
     flexGrow: 1,
-    textDecoration: "none"
   },
   button: {
-    float: "right",
+    marginRight: 200,
   }
 })
 
 
 const Nav = (props) => (
   <div className="root">
-    <AppBar position="static">
+    <AppBar>
       <Toolbar>
         {/* <IconButton edge="start" className={styles.menuButton} color="inherit" aria-label="Menu">
           <MenuIcon/>
         </IconButton> */}
         <Link to="/home">
-          <Typography variant="h6" className={styles.title}>
+          <Typography variant="h6" edge="start" className={styles.title}>
             Mission Control
           </Typography>
         </Link>
         {props.user.id && (
-              <LogOutButton className={styles.button}/>
+              <LogOutButton/>
         )}
       </Toolbar>
     </AppBar>

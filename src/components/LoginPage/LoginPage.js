@@ -10,6 +10,7 @@ import Grid from '@material-ui/core/Grid';
 
 const styles = theme => ({
   root: {
+    marginTop: 60,
     flexGrow: 1,
     textAlign: "center",
     margin: "auto",
