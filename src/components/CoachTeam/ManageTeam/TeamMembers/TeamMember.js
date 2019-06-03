@@ -24,10 +24,15 @@ componentDidMount(){
 }
 
 hide = () => {
+
+  const hidePayload = {
+    hideProps: this.props.item,
+    teamId: this.state.teamId
+  }
   
     this.props.dispatch({
       type: "HIDE_TEAM_MEMBER",
-      payload: this.props.item
+      payload: hidePayload
       
     })
   }
