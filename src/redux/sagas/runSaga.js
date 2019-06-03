@@ -38,6 +38,7 @@ function* updateRunDetails( action ){
     try{
         console.log(`updateRunDetails payload`, action.payload);
         yield axios.put(`api/runs/updateDetails`, action.payload)
+        yield put({ type: 'GET_RUN_DETAILS', payload: action.payload.runId })
     } catch (error) {
         console.log(`Couldn't update your run details`);
     }

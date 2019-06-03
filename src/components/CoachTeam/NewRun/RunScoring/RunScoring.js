@@ -274,7 +274,9 @@ class RunScoring extends Component {
     calculateScore = () => {
         let score = this.state.score;
         for (let penalty of this.state.penalties) {
-            score = score + (penalty.count * penalty.points)
+            if (score >= Math.abs(penalty.points)){
+                score = score + (penalty.count * penalty.points)
+            }
         }
         return score;
     }
