@@ -46,7 +46,7 @@ class RunHistory extends Component {
   }
 
   render () {
-    if (this.props.user.security_clearance === 2){
+    if (this.props.user.security_clearance === 2 || this.props.user.security_clearance === 4 ){
     return (
       <div>
         <h1>{ this.props.user.username }</h1>
@@ -59,31 +59,18 @@ class RunHistory extends Component {
       </div>
     )
   }
-if (this.props.user.security_clearance === 4){
-  return (
-    <div>
-      <h1>{ this.props.user.username }</h1>
-      <h2>Practice Runs</h2>
-      <hr></hr>
-      <h3>Run Name | Goals Completed | Score</h3>
-      { this.renderRuns() }
-      <button>Show More</button>
-      <Link to="/practice-run" ><button>Create New Run</button></Link>
-    </div>
-  )
-}
-else return(
-      <div>
-        <h1>{ this.props.user.username }</h1>
-        <h2>Practice Runs</h2>
-        <hr></hr>
-        <h3>Run Name | Goals Completed | Score</h3>
-        { this.renderRuns() }
-        <button>Show More</button>
-      </div>
-    )
+  else return(
+        <div>
+          <h1>{ this.props.user.username }</h1>
+          <h2>Practice Runs</h2>
+          <hr></hr>
+          <h3>Run Name | Goals Completed | Score</h3>
+          { this.renderRuns() }
+          <button>Show More</button>
+        </div>
+      )
+    }
   }
-}
 
 
 const mapStateToProps = ({ teamId, allRuns, user }) => ({ teamId, allRuns, user });
