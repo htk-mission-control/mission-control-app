@@ -58,8 +58,7 @@ class RunHistory extends Component {
         <Link to="/practice-run" ><button>Create New Run</button></Link>
       </div>
     )
-  }
-  else return(
+  } else return(
         <div>
           <h1>{ this.props.user.username }</h1>
           <h2>Practice Runs</h2>
