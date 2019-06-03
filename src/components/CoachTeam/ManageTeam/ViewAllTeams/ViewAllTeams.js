@@ -57,7 +57,6 @@ class ViewAllTeams extends Component {
     render(){
         return(
             <div>
-                {JSON.stringify(this.props.reduxState.allTeams)};
                 <h2>Teams</h2>
 
                 <button className="route-link" onClick={this.routeToAddTeam} >New Team</button>
