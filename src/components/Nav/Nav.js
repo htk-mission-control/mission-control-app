@@ -9,8 +9,8 @@ import PropTypes from 'prop-types';
 import Typography from '@material-ui/core/Typography';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
+import Grid from '@material-ui/core/Grid';
+
 
 const styles = theme => ({
   root: {
@@ -32,17 +32,27 @@ const Nav = (props) => (
   <div className="root">
     <AppBar>
       <Toolbar>
-        {/* <IconButton edge="start" className={styles.menuButton} color="inherit" aria-label="Menu">
+        <Grid
+          justify="space-between" // Add it here :)
+          container
+          spacing={24}
+        >
+          {/* <IconButton edge="start" className={styles.menuButton} color="inherit" aria-label="Menu">
           <MenuIcon/>
-        </IconButton> */}
-        <Link to="/home">
-          <Typography variant="h6" edge="start" className={styles.title}>
-            Mission Control
+           </IconButton> */}
+          <Grid item>
+            <Link to="/home">
+              <Typography variant="h6" edge="start" className={styles.title}>
+                Mission Control
           </Typography>
-        </Link>
-        {props.user.id && (
-              <LogOutButton/>
-        )}
+            </Link>
+          </Grid>
+          <Grid item>
+            {props.user.id && (
+              <LogOutButton />
+            )}
+          </Grid>
+        </Grid>
       </Toolbar>
     </AppBar>
   </div>
