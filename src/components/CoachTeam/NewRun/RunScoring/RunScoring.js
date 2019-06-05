@@ -240,6 +240,7 @@ class RunScoring extends Component {
                         onClick={() => { this.howManyOnClick(goal) }}
                         ><div>{goal.goal_name}</div><div className={classes.pointSpace}>{goal.goal_points} pts each</div>
                     </Button>
+                    <Typography variant="body1">Count: {goal.count}</Typography>
                 </div>
             )
         }
