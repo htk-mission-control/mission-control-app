@@ -16,7 +16,6 @@ state = {
 }
 
 hide = (event) => {
-  console.log( `HIDE:`, this.props.item );
   
   const hidePayload = {
     hideProps: {

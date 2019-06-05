@@ -86,7 +86,6 @@ class AddTeam extends Component {
 
 
     addTeammate = () => {
-        console.log('add team member state', this.state);
         
         this.props.dispatch({
             type: "ADD_TEAM_MEMBER",
