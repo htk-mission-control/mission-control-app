@@ -34,6 +34,7 @@ hide = () => {
   editTeamMember = () => {
     this.setState({
       ...this.state,
+      teamId: this.props.reduxState.teamIdReducer,
       edit: true,
     })
   }
