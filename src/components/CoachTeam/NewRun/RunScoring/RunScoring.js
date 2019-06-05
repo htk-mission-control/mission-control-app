@@ -304,7 +304,6 @@ class RunScoring extends Component {
         if (updatedGoals[goalIndex].count === updatedGoals[goalIndex].how_many_max) {
             updatedGoals[goalIndex].disabled = true;
         }
-        console.log(`updated goal count for how many`, updatedGoals[goalIndex].count);
         this.setState({
             score: currentScore,
             goals: updatedGoals
@@ -313,11 +312,7 @@ class RunScoring extends Component {
 
     // function to add points for yes/no goal type on click and disable button after click
     yesNoOnClick = (goal) => {
-        // console.log('goal', goal);
-
         let updatedGoals = [...this.state.goals];
-        // console.log('updatedGoals', updatedGoals);
-
         let goalIndex = 0;
         let currentScore = this.state.score;
 
@@ -326,8 +321,6 @@ class RunScoring extends Component {
                 goalIndex = i;
             }
         }
-
-        // console.log(`goalIndex`, goalIndex);
         if (updatedGoals[goalIndex].disabled === false) {
             currentScore = currentScore + updatedGoals[goalIndex].goal_points
         }
@@ -337,7 +330,6 @@ class RunScoring extends Component {
             score: currentScore,
             goals: updatedGoals
         })
-        // console.log(`this.state.score`, this.state.score);
     }
 
     // function to add points for either/or goal type on click and disable all options after click
@@ -350,8 +342,6 @@ class RunScoring extends Component {
         let optionIndex = 0;
 
         for (let i = 0; i < updatedGoals.length; i++) {
-            // console.log((` in i loop `,updatedGoals[i]));
-
             if (updatedGoals[i].goal_id === goal.goal_id) {
                 goalIndex = i;
                 updatedGoals[i].isCompleted = true;
@@ -364,10 +354,6 @@ class RunScoring extends Component {
             }
         }
         if (updatedGoals[goalIndex].disabled === false) {
-            // console.log(`goal`, goal)
-            // console.log(`updatedEitherOr optionIndex`, optionIndex)
-            // console.log(`updatedEitherOr`, updatedEitherOr)
-            // console.log(`option`, option);
             currentScore = currentScore + updatedEitherOr[optionIndex].either_or_points
         }
 
@@ -395,8 +381,6 @@ class RunScoring extends Component {
     }
 
     handleSubmit = () => {
-        console.log(`final state`, this.state);
-        console.log(`final runId`, this.state.runId);
         this.props.dispatch({ type: 'UPDATE_RUN_DETAILS', payload: this.state });
         this.props.history.push(`/practice-run/run-summary?runId=${this.state.runId}`)
     }
