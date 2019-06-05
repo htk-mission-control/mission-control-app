@@ -1,13 +1,5 @@
-# Prime Project
-This version uses React, Redux, Express, Passport, and PostgreSQL (a full list of dependencies can be found in `package.json`).
-
-We **STRONGLY** recommend following these instructions carefully. It's a lot, and will take some time to set up, but your life will be much easier this way in the long run.
-
-## Download (Don't Clone) This Repository
-
-* Don't Fork or Clone. Instead, click the `Clone or Download` button and select `Download Zip`.
-* Unzip the project and start with the code in that folder.
-* Create a new GitHub project and push this code to the new repository.
+# Mission Control
+Mission Control is a scorekeeping and recording application to be used when practicing for First Lego League robotics competitions. This version uses React, Redux, Express, and PostgreSQL (a full list of dependencies can be found in `package.json`).
 
 ## Prerequisites
 
@@ -17,99 +9,134 @@ Before you get started, make sure you have the following software installed on y
 - [PostrgeSQL](https://www.postgresql.org/)
 - [Nodemon](https://nodemon.io/)
 
-## Create database and table
+## Installation
 
-Create a new database called `prime_app` and create a `user` table:
-
-```SQL
-CREATE TABLE "user" (
-    "id" SERIAL PRIMARY KEY,
-    "username" VARCHAR (80) UNIQUE NOT NULL,
-    "password" VARCHAR (1000) NOT NULL
-);
+*Use npm to install dependencies
+```bash
+npm install
 ```
 
-If you would like to name your database something else, you will need to change `prime_app` to the name of your new database name in `server/modules/pool.js`
+* Create a PostgreSQL database called `high-tech-kids`
+* Use the included `database.sql` file to generate tables.
 
-## Development Setup Instructions
-
-* Run `npm install`
 * Create a `.env` file at the root of the project and paste this line into the file:
     ```
-    SERVER_SESSION_SECRET=superDuperSecret
+    SERVER_SESSION_SECRET=ggZZs9bDG9HmSG9KWdf5nLxje
     ```
-    While you're in your new `.env` file, take the time to replace `superDuperSecret` with some long random string like `25POUbVtx6RKVNWszd9ERB9Bb6` to keep your application secure. Here's a site that can help you: [https://passwordsgenerator.net/](https://passwordsgenerator.net/). If you don't do this step, create a secret with less than eight characters, or leave it as `superDuperSecret`, you will get a warning.
-* Start postgres if not running already by using `brew services start postgresql`
-* Run `npm run server`
-* Run `npm run client`
-* Navigate to `localhost:3000`
 
-## Debugging
+## Administrator Usage
 
-To debug, you will need to run the client-side separately from the server. Start the client by running the command `npm run client`. Start the debugging server by selecting the Debug button.
-
-![VSCode Toolbar](documentation/images/vscode-toolbar.png)
-
-Then make sure `Launch Program` is selected from the dropdown, then click the green play arrow.
-
-![VSCode Debug Bar](documentation/images/vscode-debug-bar.png)
+* Register as an administrator using Admin access code  `23646`
 
 
-## Testing Routes with Postman
+![Register](public/screenshots/Register.png?raw=true "Register")
 
-To use Postman with this repo, you will need to set up requests in Postman to register a user and login a user at a minimum. 
+* Administrators have a desktop-first view
+* On the landing page you may view already created projects or create a new one.
 
-Keep in mind that once you using the login route, Postman will manage your session cookie for you just like a browser, ensuring it is sent with each subsequent request. If you delete the `localhost` cookie in Postman, it will effectively log you out.
+![Projects](public/screenshots/NewProject.png?raw=true "Projects")
 
-1. Start the server - `npm run server`
-2. [Import the sample routes JSON file](./PostmanPrimeSoloRoutes.json) by clicking `Import` in Passport. Select the file.
-3. Click `Collections` and `Send` the following three calls in order:
-    1. `POST /api/user/register` registers a new user, see body to change username/password
-    2. `POST /api/user/login` will login a user, see body to change username/password
-    3. `GET /api/user` will get user information, by default it's not very much
+* After selecting a project you may view the missions.
+* Newly created projects will not have any missions
 
-After running the login route above, you can try any other route you've created that requires a logged in user!
+![Missions](public/screenshots/ViewMissions.png?raw=true "Missions")
+
+* Clicking to create a penalty will take you to the penalty creation page
+* After filling out the fields click save penalty to return to the previous page
+
+![penalties](public/screenshots/penalties.png?raw=true "penalties")
+
+* Click add mission to be taken to the add mission form
+* After filling out a mission name and description you can choose its first goal
+* goals have three types, Yes/No, Either/Or, and How Many, chooseable from the dropdown
+* Goals are deletable if needed
+* After goal is entered click Add A Goal to add another goal. Once all goals are created click Save Mission to return to the previous page
+
+![goals](public/screenshots/addMission.png?raw=true "goals")
+
+* Once all missions are created click Publish Project to make the project visible to coaches and teams
+
+![publish](public/screenshots/Publish.png?raw=true "publish")
+
+## Coach Usage
+
+* Register as a coach using the access code `26224`
+
+![coach](public/screenshots/coachRegister.png?raw=true "coach")
+
+* Coach view is developed for mobile first
+
+![coachlanding](public/screenshots/CoachLanding.png?raw=true "coachlanding")
+
+* View missions allows you to see all the missions (and penalties) for the current project
+
+![missions](public/screenshots/missions.png?raw=true "missions")
+
+* View teams will show all the coach's teams. Upon registration the first team must be created by clicking Create new Team
+
+![teams](public/screenshots/teams.png?raw=true "teams")
+
+* Input the team's name, number and password. This name and password will be the login for the team. Save this by clicking the Save Team button
+
+![addteam](public/screenshots/addteam.png?raw=true "addteam")
+
+* This page allows you to add team members. The coach will be automatically added.
+* Input a name and click add teammate to add them to the list. List items are deletable
+* After all members are added click save
+
+![members](public/screenshots/teammembers.png?raw=true "members")
+
+* You can create a new run, or at the bottom toggle permissions for the team to create runs
+* You can view the members of the team
+* You can view the run history of the team
+
+![teamdone](public/screenshots/teamDone.png?raw=true "teamdone")
+
+## Team Usage
+
+* Team members log in with the team name and password the coach has created
+
+![teamlogin](public/screenshots/teamLogin.png?raw=true "teamlogin")
+
+* Team landing page features view missions, view run history, and (if enabled) the ability to create a new run.
+
+![teamLanding](public/screenshots/teamLanding.png?raw=true "teamLanding")
+
+* When creating a new run you must input a name and select the missions you will attempt before selecting the run team
+
+![newRun](public/screenshots/newRun.png?raw=true "newRun")
+
+* Select the team member for each role from the dropdown before clicking start
+
+![teammembers](public/screenshots/teamSelect.png?raw=true "teammembers")
+
+* On the run page you can see your current score
+* Clicking add penalty will add the penalty (undo can reverse this)
+* Clicking on a mission will drop down its goals
+* Clicking on a goal will indicate it is completed and your score will be updated
+* The timer can be started and stopped with the corresponding buttons.
+* When the run is completed, click on End Run
+
+![run](public/screenshots/run.png?raw=true "run")
+
+* On the run summary page you will see a summary of the completed run. There is a text field to add notes. When complete click save
+
+![runSummary](public/screenshots/runSummary.png?raw=true "runSummary")
+
+* View run history will now list the completed runs. Clicking on the View button will show more information
+
+![viewRuns](public/screenshots/RunHistory.png?raw=true "runHistory")
+
+* Run details will show a breakdown of all the information about the run
+
+![details](public/screenshots/runDetails.png?raw=true "details")
+
+## Contributors
+
+- [Bradley Hennen](https://github.com/BradleyHennen)
+- [Nina Johnson](https://github.com/9makesthings)
+- [Chase Linzmeyer](https://github.com/linzmeyer)
+- [Rachel Peddie](https://github.com/rachelpeddie)
+- [Rowan Smith](https://github.com/rowanasmith)
 
 
-## Production Build
-
-Before pushing to Heroku, run `npm run build` in terminal. This will create a build folder that contains the code Heroku will be pointed at. You can test this build by typing `npm start`. Keep in mind that `npm start` will let you preview the production build but will **not** auto update.
-
-* Start postgres if not running already by using `brew services start postgresql`
-* Run `npm start`
-* Navigate to `localhost:5000`
-
-## Lay of the Land
-
-* `src/` contains the React application
-* `public/` contains static assets for the client-side
-* `build/` after you build the project, contains the transpiled code from `src/` and `public/` that will be viewed on the production site
-* `server/` contains the Express App
-
-This code is also heavily commented. We recommend reading through the comments, getting a lay of the land, and becoming comfortable with how the code works before you start making too many changes. If you're wondering where to start, consider reading through component file comments in the following order:
-
-* src/components
-  * App/App
-  * Footer/Footer
-  * Nav/Nav
-  * AboutPage/AboutPage
-  * InfoPage/InfoPage
-  * UserPage/UserPage
-  * LoginPage/LoginPage
-  * RegisterPage/RegisterPage
-  * LogOutButton/LogOutButton
-  * ProtectedRoute/ProtectedRoute
-
-## Deployment
-
-1. Create a new Heroku project
-1. Link the Heroku project to the project GitHub Repo
-1. Create an Heroku Postgres database
-1. Connect to the Heroku Postgres database from Postico
-1. Create the necessary tables
-1. Add an environment variable for `SERVER_SESSION_SECRET` with a nice random string for security
-1. In the deploy section, select manual deploy
-
-## Update Documentation
-
-Customize this ReadMe and the code comments in this project to read less like a starter repo and more like a project. Here is an example: https://gist.github.com/PurpleBooth/109311bb0361f32d87a2
