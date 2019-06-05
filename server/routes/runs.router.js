@@ -5,9 +5,8 @@ const router = express.Router();
 const moment = require('moment');
 
 /**
- * GET to get all missions for current project
+ * GET to get all missions for current project 
  */
-
 router.get('/missions', async (req, res) => {
     const client = await pool.connect();
     try {
@@ -27,13 +26,10 @@ router.get('/missions', async (req, res) => {
         const projectId = runsIdResponse.rows[0].id;
         const missionsResponse = await client.query(sqlText2, [projectId])
         await client.query('COMMIT')
-        // console.log(`response in get missions for run request`, missionsResponse.rows);
-        // console.log(`projectId in selected missions get`, projectId);
         res.send(missionsResponse.rows);
     }
     catch (error) {
         await client.query('ROLLBACK')
-        console.log(`error getting your selected missions details`, error)
         res.sendStatus(500);
     }
     finally {
@@ -45,7 +41,6 @@ router.get('/missions', async (req, res) => {
 //POST to post all rundetails for logged in team or coach
 router.post('/saveDetails', async (req, res) => {
     const client = await pool.connect();
-    // console.log(`req.body in saveDetails`, req.body);
     let teamId;
     let runDetails = req.body.runDetails.newRun;
     let runTeam = req.body.runDetails.runTeam;
@@ -81,7 +76,6 @@ router.post('/saveDetails', async (req, res) => {
         }
         catch ( error ) {
             await client.query('ROLLBACK')
-            console.log(`error posting your run detials`, error)
             res.sendStatus(500);
         }
         finally{
@@ -90,7 +84,7 @@ router.post('/saveDetails', async (req, res) => {
 
     }
     else if (req.user.security_clearance === 4) {
-        // console.log(`in save run details`, req.user.id);
+        
         try {
             teamId = req.user.id;
             let sqlText0 = `SELECT "id" FROM "teams"
@@ -122,7 +116,6 @@ router.post('/saveDetails', async (req, res) => {
         }
         catch (error) {
             await client.query('ROLLBACK')
-            console.log(`error posting your run detials`, error)
             res.sendStatus(500);
         }
         finally {
@@ -141,7 +134,7 @@ router.post('/saveDetails', async (req, res) => {
 
 router.get('/selectedMissions', async (req, res) => {
     const client = await pool.connect();
-    // console.log(`in getSelectedMissions`, req.user);
+
     let teamId = req.user.id;
         try {
             let sqlText1 = `SELECT "runs"."id", "runs"."name" FROM "runs"
@@ -172,15 +165,14 @@ router.get('/selectedMissions', async (req, res) => {
             const runId = runsIdResponse.rows[0].id;
             const selectedMissionsGetResponse = await client.query(sqlText2, [runId])
             await client.query('COMMIT')
-            // console.log(`response in get selected missions request`, selectedMissionsGetResponse.rows);
+
             const runInfo = {
                 id: runsIdResponse.rows[0].id, runName: runsIdResponse.rows[0].name, runDetails: selectedMissionsGetResponse.rows };
-            // console.log(`runInfo in selected missions get`, runInfo);
+                
             res.send(runInfo);
         }
         catch (error) {
             await client.query('ROLLBACK')
-            console.log(`error getting your selected missions details`, error)
             res.sendStatus(500);
         }
         finally {
@@ -195,8 +187,8 @@ router.get('/selectedMissions', async (req, res) => {
 
 router.get('/selectedMissions/:id', async (req, res) => {
     const client = await pool.connect();
-    // console.log(`in getSelectedMissionsbyId`, req.params.id);
     let teamId = req.params.id;
+
     try {
         let sqlText1 = `SELECT "runs"."id", "runs"."name" FROM "runs"
                             WHERE "runs"."team_id" = $1
@@ -225,16 +217,15 @@ router.get('/selectedMissions/:id', async (req, res) => {
         const runId = runsIdResponse.rows[0].id;
         const selectedMissionsGetResponse = await client.query(sqlText2, [runId])
         await client.query('COMMIT')
-        // console.log(`response in get selected missions request`, selectedMissionsGetResponse.rows);
+        
         const runInfo = {
             id: runsIdResponse.rows[0].id, runName: runsIdResponse.rows[0].name, runDetails: selectedMissionsGetResponse.rows
         };
-        // console.log(`runInfo in selected missions get`, runInfo);
+        
         res.send(runInfo);
     }
     catch (error) {
-        await client.query('ROLLBACK')
-        console.log(`error getting your selected missions details by id`, error)
+        await client.query('ROLLBACK');
         res.sendStatus(500);
     }
     finally {
@@ -249,8 +240,8 @@ router.get('/selectedMissions/:id', async (req, res) => {
 
 router.get('/selectedEitherOr', async (req, res) => {
     const client = await pool.connect();
-    // console.log(`in getSelectedMissions`, req.user);
     let teamId = req.user.id;
+
     try {
         let sqlText1 = `SELECT "runs"."id", "runs"."name" FROM "runs"
                         JOIN "teams" ON "teams"."id" = "runs"."team_id"
@@ -272,13 +263,11 @@ router.get('/selectedEitherOr', async (req, res) => {
         const runId = runsIdResponse.rows[0].id;
         const eitherOrGetResponse = await client.query(sqlText2, [runId])
         await client.query('COMMIT')
-        // console.log(`response in get selected missions request`, eitherOrGetResponse.rows);
-        // console.log(`runInfo in selected missions get`, runInfo);
+        
         res.send(eitherOrGetResponse.rows);
     }
     catch (error) {
         await client.query('ROLLBACK')
-        console.log(`error getting your selected missions details`, error)
         res.sendStatus(500);
     }
     finally {
@@ -293,7 +282,6 @@ router.get('/selectedEitherOr', async (req, res) => {
 
 router.get('/selectedEitherOr/:id', async (req, res) => {
     const client = await pool.connect();
-    // console.log(`in getSelectedMissionsEitherOr by id`, req.params.id);
     let teamId = req.params.id;
     try {
         let sqlText1 = `SELECT "runs"."id", "runs"."name" FROM "runs"
@@ -315,13 +303,11 @@ router.get('/selectedEitherOr/:id', async (req, res) => {
         const runId = runsIdResponse.rows[0].id;
         const eitherOrGetResponse = await client.query(sqlText2, [runId])
         await client.query('COMMIT')
-        // console.log(`response in get selected missions request`, eitherOrGetResponse.rows);
-        // console.log(`runInfo in selected missions get`, runInfo);
+        
         res.send(eitherOrGetResponse.rows);
     }
     catch (error) {
         await client.query('ROLLBACK')
-        console.log(`error getting your selected missions details`, error)
         res.sendStatus(500);
     }
     finally {
@@ -353,13 +339,11 @@ router.get('/penalties', async (req, res) => {
         const projectId = runsIdResponse.rows[0].id;
         const penaltiesResponse = await client.query(sqlText2, [projectId])
         await client.query('COMMIT')
-        // console.log(`response in get penalties for run request`, penaltiesResponse.rows);
-        // console.log(`runInfo in selected missions get`, projectId);
+
         res.send(penaltiesResponse.rows);
     }
     catch (error) {
         await client.query('ROLLBACK')
-        console.log(`error getting your selected missions details`, error)
         res.sendStatus(500);
     }
     finally {
@@ -376,7 +360,6 @@ router.put('/updateDetails', async (req, res) => {
     for (penalty of req.body.penalties) {
         penaltyCount = penaltyCount + penalty.count;
     }
-    // console.log(`penalty count in updateDetails`, penaltyCount)
 
     try {
 
@@ -392,34 +375,24 @@ router.put('/updateDetails', async (req, res) => {
                         AND "goal_id" = $3;`;
         await client.query('BEGIN')
         const runUpdate = await client.query(sqlText1, [score, penaltyCount, runId])
-        // console.log(`runupdate`);
         
         const selectedMissionsResponse = await client.query(sqlText2, [runId])
-        // console.log(`selectedmissionsresponse`, selectedMissionsResponse.rows);
         
         // loop through goals and if they match selected at selected mission id.mission_id and goal.mission_id, updated completed status
         for (goal of goals) {
             // loop through the selectedmissions to compare id to goal mission id
             for( let i=0; i<selectedMissionsResponse.rows.length; i++){
                 if ( selectedMissionsResponse.rows[i].mission_id === goal.mission_id){
-                    console.log(`goal.goal_id`, goal.goal_id);
-                    console.log(`goal.mission_id`, goal.mission_id);
-                    console.log(`selectedMissionsResponse.rows[i].mission_id`, selectedMissionsResponse.rows[i].mission_id);
-                    console.log('goal.isCompleted', goal.isCompleted);
-                    console.log('selectedMissionsResponse.rows[i].id:', selectedMissionsResponse.rows[i].id);
                     
                     const goalsUpdate = await client.query(sqlText3, [goal.isCompleted, selectedMissionsResponse.rows[i].id, goal.goal_id])
                 }
             }
         }
         await client.query('COMMIT')
-        // console.log(`response in get selected missions request`, eitherOrGetResponse.rows);
-        // console.log(`runInfo in selected missions get`, runInfo);
         res.sendStatus(200);
     }
     catch (error) {
         await client.query('ROLLBACK')
-        console.log(`error updating your run details`, error)
         res.sendStatus(500);
     }
     finally {
@@ -451,10 +424,9 @@ router.get('/coach/:id', (req, res) => {
         });
 });
 
-
+// get details for specified run to display on run summary when a team run has ended
 router.get( '/runHistoryDetails/:id', rejectUnauthenticated, (req, res) => {
     const runId = req.params.id;
-    // console.log( `runId:`, runId );
     
     let sqlText = `SELECT r."id", r."name", r."date", r."score", r."penalties", r."notes",
                     (CASE WHEN r."driver" = t."id" THEN t."name" END) AS "driver", 
@@ -475,17 +447,15 @@ router.get( '/runHistoryDetails/:id', rejectUnauthenticated, (req, res) => {
             res.send(result.rows);
         })
         .catch( (error) => {
-            console.log( `Couldn't get run details by id.`, error );
             res.sendStatus(500);
         })
 } )
 
+// update run details with notes when run is created/saved
 router.put( `/summary/:id`, rejectUnauthenticated, (req, res) => {
-    // console.log( `HERE!` );
     
     const runId = req.params.id;
     const runNotes = req.body.notes;
-    // console.log( `Notes:`, runNotes );
 
     let sqlText = `UPDATE "runs" 
                     SET "notes" = $1
@@ -496,7 +466,6 @@ router.put( `/summary/:id`, rejectUnauthenticated, (req, res) => {
             res.sendStatus(200);
         })
         .catch( (error) => {
-            console.log( `Couldn't update run summary notes.`, error );
             res.sendStatus(500);
         })
 })
@@ -507,7 +476,6 @@ router.put( `/summary/:id`, rejectUnauthenticated, (req, res) => {
 router.get('/team', (req, res) => {
 
     let id = req.user.id;
-    // console.log('user id', id);
     
     const sqlText = `
             SELECT "runs"."id", "runs"."name", COUNT(CASE WHEN "goals_per_run"."is_completed" THEN 1 end), "runs"."score", "runs"."penalties"
@@ -523,7 +491,6 @@ router.get('/team', (req, res) => {
         .then ( result => {
             // result should be an array of objects with run information
             // run id, run name, goals completed count, run score
-            console.log('result', result.rows);
             
             res.send( result.rows );
         }).catch ( error => {
