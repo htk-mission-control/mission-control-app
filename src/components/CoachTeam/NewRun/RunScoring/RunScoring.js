@@ -50,6 +50,9 @@ const styles = theme => ({
     menu: {
         width: 250,
     },
+    span: {
+        padding: 2,
+    }
 })
 
 class RunScoring extends Component {
@@ -283,24 +286,28 @@ class RunScoring extends Component {
         })
     }
 
-    // function to add points for how many goal type on click and disable button when max is reached
+    // function to add points for how many goal type on click
     howManyOnClick = (goal) => {
         let updatedGoals = [...this.state.goals];
         let goalIndex = 0;
         let currentScore = this.state.score;
 
+        // finds index in new array to compare to original array
         for (let i = 0; i < updatedGoals.length; i++) {
             if (updatedGoals[i].goal_id === goal.goal_id) {
                 goalIndex = i;
             }
         }
 
+        // adds one to the count and changes completed status to true in new array
         updatedGoals[goalIndex].count = updatedGoals[goalIndex].count + 1;
         updatedGoals[goalIndex].isCompleted = true;
 
+        // if the count is less than or equal to max, add to score
         if (updatedGoals[goalIndex].count <= updatedGoals[goalIndex].how_many_max) {
             currentScore = currentScore + updatedGoals[goalIndex].goal_points
         }
+        // if count equals max, disable button
         if (updatedGoals[goalIndex].count === updatedGoals[goalIndex].how_many_max) {
             updatedGoals[goalIndex].disabled = true;
         }
@@ -316,14 +323,17 @@ class RunScoring extends Component {
         let goalIndex = 0;
         let currentScore = this.state.score;
 
+        // finds index in new array to compare to original array    
         for (let i = 0; i < updatedGoals.length; i++) {
             if (updatedGoals[i].goal_id === goal.goal_id) {
                 goalIndex = i;
             }
         }
+        // adds to score if button is not disabled
         if (updatedGoals[goalIndex].disabled === false) {
             currentScore = currentScore + updatedGoals[goalIndex].goal_points
         }
+        // sets goal to completed and disabled on click
         updatedGoals[goalIndex].isCompleted = true;
         updatedGoals[goalIndex].disabled = true;
         this.setState({
@@ -334,29 +344,29 @@ class RunScoring extends Component {
 
     // function to add points for either/or goal type on click and disable all options after click
     eitherOrOnClick = (option, goal) => {
-
         let updatedGoals = [...this.state.goals];
         let updatedEitherOr = [...this.state.eitherOr]
         let goalIndex = 0;
         let currentScore = this.state.score;
         let optionIndex = 0;
-
+        // finds index in new goal array to compare to original array
         for (let i = 0; i < updatedGoals.length; i++) {
             if (updatedGoals[i].goal_id === goal.goal_id) {
                 goalIndex = i;
                 updatedGoals[i].isCompleted = true;
             }
-
         }
+        // finds index of option to compare to original either or array
         for (let i = 0; i < updatedEitherOr.length; i++) {
             if (updatedEitherOr[i].either_or_id === option.either_or_id) {
                 optionIndex = i;
             }
         }
+        // adds points if goal is not disabled
         if (updatedGoals[goalIndex].disabled === false) {
             currentScore = currentScore + updatedEitherOr[optionIndex].either_or_points
         }
-
+        // loops through array and changes each option to disabled on click
         for (let choice of updatedEitherOr) {
             if (choice.either_or_goal_id === goal.goal_id) {
                 choice.disabled = true;
@@ -370,6 +380,7 @@ class RunScoring extends Component {
         })
     }
 
+    // calculates score based on penalties added if score is greater than penalty points deducted
     calculateScore = () => {
         let score = this.state.score;
         for (let penalty of this.state.penalties) {
