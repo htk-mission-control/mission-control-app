@@ -4,6 +4,36 @@ import {connect} from 'react-redux';
 
 import './ViewAllTeams.css';
 
+//----Material UI----
+import PropTypes from 'prop-types';
+import { withStyles} from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+
+const styles = theme => ({
+    root: {
+        flexGrow: 1,
+        textAlign: "center",
+        padding: theme.spacing.unit,
+        margin: theme.spacing.unit,
+        // width: '100%',
+    },
+    paper: {
+        margin: theme.spacing.unit * 2,
+        maxWidth: 700,
+        padding: theme.spacing.unit * 2,
+        textAlign: "center",
+    },
+    button: {
+        marginTop: 20,
+        marginBottom: 10,
+        paddingLeft: "5%",
+        paddingRight: "5%",
+    },
+})
+
 class ViewAllTeams extends Component {
 
     componentDidMount(){
@@ -20,17 +50,19 @@ class ViewAllTeams extends Component {
     // The following three routes are dependent on team's id
     // OR should we set these up as links and pass team_id as props?
     routeToCreateRun = (event) => {
-        let team_id = event.target.value;
+        let team_id = event.currentTarget.value;
         console.log('team_id', team_id);
         
         this.props.history.push(`/practice-run?teamId=${team_id}`);
     }
     routeToTeamMembers = (event) => {
-        let team_id = event.target.value;
+        console.log('team_id', event.currentTarget.value);
+        
+        let team_id = event.currentTarget.value;
         this.props.history.push(`/coach?teamId=${team_id}`);
     }
     routeToRunHistory = (event) => {
-        let team_id = event.target.value;
+        let team_id = event.currentTarget.value;
         this.props.history.push(`/history?teamId=${team_id}`);
     }
 
@@ -55,34 +87,67 @@ class ViewAllTeams extends Component {
 
 
     render(){
+
+        const { classes } = this.props;
+
         return(
-            <div>
-                <h2>Teams</h2>
+            <Grid
+                className={classes.root}
+                container
+                direction="column"
+                justify="center"
+                alignItems="center"
+                spacing={5}
+            >
+                <Grid item>
+                    <Typography variant="h3">Teams</Typography>
 
-                <button className="route-link" onClick={this.routeToAddTeam} >New Team</button>
-
+                    <Button 
+                        variant="contained"
+                        color="secondary" 
+                        className={classes.button}
+                        onClick={this.routeToAddTeam} 
+                    >
+                        Create New Team
+                    </Button>
+                </Grid>
                 {/* map teams connected to coach's id and display as a card with button-links */}
                 {this.props.reduxState.allTeams.map( team => 
-                    <div className="team-card" key={team.id} >
-                        <h3>{team.name}</h3>
-                        <button className="route-link" 
+                    <Paper className={classes.paper} key={team.id} >
+                        <Typography variant="h4">{team.name}</Typography>
+                        <Button 
+                            variant="contained"
+                            color="primary"
+                            className={classes.button}
                             onClick={this.routeToCreateRun}
-                            value={team.id} >
-                                Create New Run</button>
+                            value={team.id} 
+                            >
+                                Create New Run
+                        </Button>
                         <br/>
-                        <button className="route-link" 
+                        <Button 
+                            variant="contained"
+                            color="primary" 
+                            className={classes.button}
                             onClick={this.routeToTeamMembers}
-                            value={team.id} >
-                                View Team Members</button>
+                            value={team.id} 
+                        >
+                                View Team Members
+                        </Button>
                         <br/>
-                        <button className="route-link" 
+                        <Button 
+                            variant="contained"
+                            color="primary" 
+                            className={classes.button}
                             onClick={this.routeToRunHistory}
-                            value={team.id} >
-                                View Run History</button>
+                            value={team.id}
+                        >
+                                View Run History
+                        </Button>
                         <br/>
                         
-                        <div>
-                            <p>Allow your team to create runs</p>
+                        <Grid item>
+                            <Typography variant="h6">Allow your team to create runs</Typography>
                             
                             {/* Toggle switch for team_access */}
                             <label className="switch">
@@ -92,10 +157,10 @@ class ViewAllTeams extends Component {
                                     checked={team.team_access === 4} />
                                 <span className="slider round"></span>
                             </label>
-                        </div>
-                    </div>
+                        </Grid>
+                    </Paper>
                 )}
-            </div>
+            </Grid>
         );
     }
 }
@@ -104,4 +169,8 @@ const mapReduxStateToProps = (reduxState) => ({
     reduxState,
 });
 
-export default connect(mapReduxStateToProps)(withRouter(ViewAllTeams));
+ViewAllTeams.propTypes = {
+    classes: PropTypes.object.isRequired,
+  };
+
+export default connect(mapReduxStateToProps)(withRouter(withStyles(styles)(ViewAllTeams)));

@@ -2,6 +2,54 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import qs from 'query-string';
 
+//----Material UI----
+import PropTypes from 'prop-types';
+import { withStyles, TextField } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+
+const styles = theme => ({
+    root: {
+        flexGrow: 1,
+        textAlign: "center",
+        padding: theme.spacing.unit,
+        overflowX: 'auto',
+    },
+    paper: {
+        minWidth: 1000,
+        margin: theme.spacing.unit * 2,
+        padding: theme.spacing.unit * 2,
+        textAlign: "center",
+    },
+    button: {
+        maxWidth: 300,
+        margin: theme.spacing.unit,
+        paddingLeft: theme.spacing.unit * 2,
+        paddingRight: theme.spacing.unit * 2,
+    },
+    textField: {
+        width: 250,
+        margin: theme.spacing.unit,
+        padding: theme.spacing.unit,
+    },
+    mulitline: {
+        width: 400,
+        margin: theme.spacing.unit,
+        padding: theme.spacing.unit,
+    },
+    description: {
+        maxWidth: 800,
+    },
+    border: {
+        border: "1px solid black",
+        margin: theme.spacing.unit,
+        borderRadius: 5,
+        padding: 15
+    }
+})
+
 class ViewProject extends Component {
 
     state = {
@@ -59,6 +107,8 @@ class ViewProject extends Component {
     }
 
     groundControl = () => {
+        const { classes } = this.props;
+
         let missionArr = this.state.projectMissions;
         let eitherOrArr = this.state.projectEitherOr;
         let newMissionArr = [];
@@ -92,11 +142,10 @@ class ViewProject extends Component {
         return (
             newMissionArr.map((mission, i) => {
                 return (
-                    <div key={i}>
-                        <h3>Mission {i + 1}: {mission[0].mission_name}</h3>
-                        <button value={mission[0].mission_id} onClick={this.editMission}>Edit</button>
-                        <button value={mission[0].mission_id} onClick={this.handleDeleteMission}>Delete</button>
-                        <h4>{mission[0].description}</h4>
+                    <div className={classes.border} key={i}>
+                        <Typography variant="h4">Mission {i + 1}: {mission[0].mission_name}</Typography>
+                        
+                        <Typography variant="h5">{mission[0].description}</Typography>
                         {mission.map((mission, i) => {
                             return (
                                 <div key={i}>
@@ -104,6 +153,22 @@ class ViewProject extends Component {
                                 </div>
                             )
                         })}
+                        <Button 
+                            className={classes.button}
+                            variant="contained"
+                            color="primary"
+                            value={mission[0].mission_id} 
+                            onClick={this.editMission}
+                        >Edit
+                        </Button>
+                        <Button 
+                            className={classes.button}
+                            variant="contained"
+                            color="primary"
+                            value={mission[0].mission_id} 
+                            onClick={this.handleDeleteMission}
+                        >Delete
+                        </Button>
                     </div>
                 )
             })
@@ -111,8 +176,13 @@ class ViewProject extends Component {
     }
 
     renderGoals = (mission, eitherOr) => {
+
         if (mission.goal_type_id === 1) {
-            return <h5>Goal: {mission.name} = {mission.points} points</h5>
+            return (
+                <Grid item >
+                    <Typography variant="body2">Goal: {mission.name} = {mission.points} points</Typography>
+                </Grid>
+            )
         }
         else if (mission.goal_type_id === 2) {
             return (
@@ -122,14 +192,14 @@ class ViewProject extends Component {
                         eithers.map( (either, i) => {
                             if (mission.goal_id === either.goal_id) {
                                 console.log('either second loop', either);
-
                                 return (
-                                    <div key={i}>
-                                        <h5>Goal: {either.name} = {either.points} points</h5>
+                                    <Grid item key={i}>
+                                        <Typography variant="body2">Goal: {either.name} = {either.points} points</Typography>
                                         {this.renderOrText(eithers, i)}
-                                    </div>
+                                    </Grid>
                                 )
                             }
+                            return <div></div>
                         })
                     )
                 })
@@ -138,10 +208,9 @@ class ViewProject extends Component {
         else if (mission.goal_type_id === 3) {
 
             return (
-                <div>
-                    <h5>Goal: {mission.name} = {mission.points} points each</h5>
-                    <h6></h6>
-                </div>
+                <Grid item>
+                    <Typography variant="body2">Goal: {mission.name} = {mission.points} points each</Typography>
+                </Grid>
             )
         }
     }
@@ -149,7 +218,7 @@ class ViewProject extends Component {
     renderOrText = (either, i) => {
         console.log('either length', either.length);
         if (i < (either.length - 1)) {
-            return <h5>OR</h5>
+            return <Typography variant="body2">OR</Typography>
         }
         return
     }
@@ -157,7 +226,7 @@ class ViewProject extends Component {
     handleDeletePenalty = (event) => {
         let info = {
             projectId: this.state.projectId,
-            penaltyId: event.target.value,
+            penaltyId: event.currentTarget.value,
         }
         // console.log('event.target.value', info);
         this.props.dispatch({ type: 'DELETE_PENALTY', payload: info })
@@ -166,7 +235,7 @@ class ViewProject extends Component {
     handleDeleteMission = (event) => {
         let info = {
             projectId: this.state.projectId,
-            missionId: event.target.value
+            missionId: event.currentTarget.value
         }
         this.props.dispatch({ type: 'DELETE_MISSION', payload: info });
     }
@@ -176,7 +245,7 @@ class ViewProject extends Component {
     }
 
     editMission = (event) => {
-        this.props.history.push(`projects/edit-mission?missionId=${event.target.value}`)
+        this.props.history.push(`projects/edit-mission?missionId=${event.currentTarget.value}`)
     }
 
     addPenalty = () => {
@@ -184,7 +253,7 @@ class ViewProject extends Component {
     }
 
     editPenalty = (event) => {
-        this.props.history.push(`projects/edit-penalty?penaltyId=${event.target.value}`)
+        this.props.history.push(`projects/edit-penalty?penaltyId=${event.currentTarget.value}`)
     }
 
     deleteProject = () => {
@@ -212,69 +281,158 @@ class ViewProject extends Component {
         this.setState({
             projectInfo: {
                 ...this.state.projectInfo,
-                [propertyName]: event.target.value,
+                [propertyName]: event.currentTarget.value,
             }
         });
     }
 
     render() {
+        const { classes } = this.props;
+
         if(this.state.projectDetails.hidden === true) {
            return <h1>404</h1>
         }
         else {
             return (
-                <div>
-                    {this.state.editProject === false ?
-                        <h1>{this.state.projectDetails.name}: {this.state.projectDetails.year}</h1>
-                        :
-                        <div>
-                            <input onChange={this.handleChange('projectName')} value={this.state.projectInfo.projectName}></input>
-                            <input onChange={this.handleChange('year')} value={this.state.projectInfo.year}></input>
-                        </div>
-                    }
-                    <h2>The Project:</h2>
-                    {this.state.editProject === false ?
-                        <p>{this.state.projectDetails.description}</p>
-                        :
-                        <input onChange={this.handleChange('projectDescription')} value={this.state.projectInfo.projectDescription}></input>
-                    }
-                    <button onClick={this.deleteProject}>Delete Project</button>
-                    {this.state.editProject === false ?
-                        <button onClick={this.editProjectName}>Edit Project Info</button>
-                        :
-                        <button onClick={this.editProjectName}>Save Project Info</button>
-                    }
-                    {this.state.projectDetails.published === false ?
-                        <button onClick={this.publishProject}>Publish Project</button>
-                        :
-                        <button onClick={this.publishProject}>Unpublish Project</button>
-                    }
-                    <div>
-                        <h2>Penalties</h2>
-                        <button onClick={this.addPenalty}>Add Penalty</button>
-                        <hr />
-                        {this.state.projectPenalties.map(penalty => {
-                            return (
-                                <div key={penalty.id}>
-                                    <h3>{penalty.name}</h3>
-                                    <p>Description: {penalty.description}</p>
-                                    <p>Max Penalties: {penalty.max}</p>
-                                    <p>Points: {penalty.points}</p>
-                                    <button value={penalty.id} onClick={this.editPenalty}>EDIT</button>
-                                    <button value={penalty.id} onClick={this.handleDeletePenalty}>DELETE</button>
-                                </div>
-                            )
-                        })}
-                        <hr />
-                    </div>
-                    <div>
-                        <h2>Missions</h2>
-                        <button onClick={this.addMission}>Add Mission</button>
-                        <hr />
-                        {this.groundControl()}
-                    </div>
-    
-                </div>
+                <Grid
+                    container
+                    className={classes.root}
+                    direction="column"
+                    justify="center"
+                    alignItems="center"
+                    spacing={4}
+                >
+                    <Paper className={classes.paper}>
+                    <Grid item>
+                        
+                        {this.state.editProject === false ?
+                            <Typography variant="h2">{this.state.projectDetails.name}: {this.state.projectDetails.year}</Typography>
+                            :
+                            <div>
+                                <TextField 
+                                    className={classes.textField}
+                                    label="Project Name" 
+                                    onChange={this.handleChange('projectName')} 
+                                    value={this.state.projectInfo.projectName}>
+                                </TextField>
+                                <TextField 
+                                    className={classes.textField}
+                                    label="Project Year" 
+                                    onChange={this.handleChange('year')} 
+                                    value={this.state.projectInfo.year}>                               
+                                </TextField>
+                            </div>
+                        }
+                        {this.state.editProject === false ?
+                            <Typography className={classes.description} variant="body1">{this.state.projectDetails.description}</Typography>
+                            :
+                            <TextField 
+                                multiline
+                                label="Project Description"
+                                className={classes.mulitline}
+                                onChange={this.handleChange('projectDescription')} 
+                                value={this.state.projectInfo.projectDescription}>
+                            </TextField>
+                        }
+                        </Grid>
+                        <Grid item>
+                        <Button 
+                            className={classes.button}
+                            variant="contained"
+                            color="primary"
+                            onClick={this.deleteProject}
+                        >Delete Project
+                        </Button>
+                        {this.state.editProject === false ?
+                            <Button 
+                                className={classes.button}
+                                variant="contained"
+                                color="primary"
+                                onClick={this.editProjectName}
+                            >Edit Project Info
+                            </Button>
+                            :
+                            <Button 
+                                className={classes.button}
+                                variant="contained"
+                                color="primary"
+                                onClick={this.editProjectName}
+                            >Save Project Info
+                            </Button>
+                        }
+                        {this.state.projectDetails.published === false ?
+                            <Button 
+                                className={classes.button}
+                                variant="contained"
+                                color="primary"
+                                onClick={this.publishProject}
+                            >Publish Project
+                            </Button>
+                            :
+                            <Button 
+                                className={classes.button}
+                                variant="contained"
+                                color="primary"
+                                onClick={this.publishProject}
+                            >Unpublish Project
+                            </Button>
+                        }
+                    </Grid>
+                    </Paper>
+                    <Grid item>
+                        <Paper className={classes.paper}>
+                            <div >
+                                <Typography variant="h3">Penalties</Typography>
+                                <Button 
+                                    className={classes.button}
+                                    variant="contained"
+                                    color="secondary"
+                                    onClick={this.addPenalty}
+                                >Add Penalty
+                                </Button>
+                                {this.state.projectPenalties.map(penalty => {
+                                    return (
+                                        <div className={classes.border} key={penalty.id}>
+                                            <Typography variant="h4">{penalty.name}</Typography>
+                                            <Typography variant="h6">{penalty.description}</Typography>
+                                            <Typography variant="body2">Max Penalties: {penalty.max}</Typography>
+                                            <Typography variant="body2">Points: {penalty.points}</Typography>
+                                            <Button 
+                                                className={classes.button}
+                                                variant="contained"
+                                                color="primary"
+                                                value={penalty.id} 
+                                                onClick={this.editPenalty}
+                                            >EDIT
+                                            </Button>
+                                            <Button 
+                                                className={classes.button}
+                                                variant="contained"
+                                                color="primary"
+                                                value={penalty.id} 
+                                                onClick={this.handleDeletePenalty}
+                                            >DELETE
+                                            </Button>
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        </Paper>
+                    </Grid>
+                    <Grid item>
+                        <Paper className={classes.paper}>
+                            <Typography variant="h3">Missions</Typography>
+                            <Button 
+                                className={classes.button}
+                                variant="contained"
+                                color="secondary"
+                                onClick={this.addMission}
+                            >Add Mission
+                            </Button>
+                            {this.groundControl()}
+                        </Paper>
+                    </Grid>
+                </Grid>
             )
         }
         
@@ -285,4 +443,8 @@ const mapStateToProps = reduxState => ({
     reduxState
 });
 
-export default connect(mapStateToProps)(ViewProject);
+ViewProject.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
+
+export default connect(mapStateToProps)(withStyles(styles)(ViewProject));

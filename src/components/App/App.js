@@ -13,9 +13,9 @@ import ProtectedTeams from '../ProtectedRoutes/ProtectedTeams/ProtectedTeams';
 import ProtectedTeamWithAccess from '../ProtectedRoutes/ProtectedTeamWithAccess/ProtectedTeamWithAccess';
 
 import Nav from '../Nav/Nav';
-import Footer from '../Footer/Footer';
-import AboutPage from '../AboutPage/AboutPage';
-import UserPage from '../UserPage/UserPage';
+// import Footer from '../Footer/Footer';
+// import AboutPage from '../AboutPage/AboutPage';
+// import UserPage from '../UserPage/UserPage';
 import HomeAdmin from '../Admin/HomeAdmin/HomeAdmin';
 import CreateRun from '../CoachTeam/NewRun/CreateRun/CreateRun';
 import HomeTeam from '../CoachTeam/HomeTeam/HomeTeam';
@@ -31,6 +31,9 @@ import TeamMembers from '../CoachTeam/ManageTeam/TeamMembers/TeamMembers';
 
 
 import './App.css';
+import theme from './theme';
+import MuiThemeProvider from '@material-ui/core/styles/MuiThemeProvider';
+
 import ProtectedCoachAndTeams from '../ProtectedRoutes/ProtectedCoachAndTeams/ProtectedCoachAndTeams';
 import AddPenalty from '../Admin/ViewProject/Penalty/AddPenalty';
 import EditPenalty from '../Admin/ViewProject/Penalty/EditPenalty';
@@ -73,9 +76,11 @@ class App extends Component {
 
   render() {
     return (
+      <MuiThemeProvider theme={theme}>
       <Router>
         <div>
           <Nav />
+          <div style={{paddingTop: 65}}>
           <Switch>
             {/* Visiting localhost:3000 will redirect to localhost:3000/home */}
             <Redirect exact from="/" to="/home" />
@@ -185,9 +190,10 @@ class App extends Component {
             />
             <Route render={() => <h1>404</h1>} />
           </Switch>
-          <Footer />
+          </div>
         </div>
       </Router>
+      </MuiThemeProvider>
   )}
 }
 
