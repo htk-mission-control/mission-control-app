@@ -62,6 +62,7 @@ class RunScoring extends Component {
         penalties: []
     }
 
+    // checks for existing reduxState, updates local state if reduxState has changed
     componentDidUpdate(prevProps) {
         if (this.props.reduxState.runDetails !== prevProps.reduxState.runDetails) {
             this.setState({
@@ -85,6 +86,7 @@ class RunScoring extends Component {
         }
     };
 
+    // renders list of missions on DOM
     missionList = () => {
         const { classes } = this.props;
 
@@ -96,15 +98,16 @@ class RunScoring extends Component {
 
         //Find a way to stop loop other than #100
         for (let count = 0; count < 100; count++) {
+            // filters goals by mission id, creates new array with all goals with matching mission id
             test = missionArr.filter(x => x.mission_id === count)
 
             if (test.length !== 0) {
                 newMissionArr.push(test)
             }
         }
-        // console.log('newMissionsArr', newMissionArr);
 
         for (let count = 0; count < 100; count++) {
+            // filters either or options by goal id, creates new array with all options with matching goal id
             test = eitherOrArr.filter(x => x.either_or_goal_id === count)
 
             if (test.length !== 0) {
@@ -112,8 +115,8 @@ class RunScoring extends Component {
             }
         }
 
-        // console.log('newEitherOrArr', newEitherOrArr);
         return (
+            // mapping through new array of goals to display the corresponding mission headers on DOM
             newMissionArr.map((mission, i) => {
                 return (
                     <div key={i}>
@@ -132,6 +135,7 @@ class RunScoring extends Component {
                                     justify="center"
                                     alignItems="center"
                                 >
+                                    {/* for each mission, render goals */}
                                     {mission.map((goal, y) => {
                                         return (
                                             <div key={y}>
@@ -152,6 +156,7 @@ class RunScoring extends Component {
         const { classes } = this.props;
 
         return (
+            // mapping through array of penalties to display each as a clickable button with a clickable undo button for each
             this.state.penalties.map((penalty, i) => {
                 return (
                     <Grid item key={penalty.id}>
@@ -183,7 +188,7 @@ class RunScoring extends Component {
 
     renderGoals = (goal, eitherOr) => {
         const { classes } = this.props;
-
+        // conditionally renders goals as clickable buttons based on type id with corresponding information for each type
         if (goal.goal_type_id === 1) {
             return (
                 <Button 
@@ -201,6 +206,7 @@ class RunScoring extends Component {
             return (
                 eitherOr.map((options) => {
                     return (
+                        // if goal type is either, map through options and display as clickable buttons on DOM under corresponding mission
                         options.map((option, i) => {
                             if (goal.goal_id === option.either_or_goal_id) {
                                 return (
@@ -239,37 +245,37 @@ class RunScoring extends Component {
         }
     }
 
+    // renders 'OR' after each option except for last option in array
     renderOrText = (options, i) => {
-        // console.log('options length', options.length);
         if (i < (options.length - 1)) {
             return <Typography variant="h5">Or</Typography>
         }
         return null;
     }
 
+    // updates penalty information on click of each penalty button
     penaltyOnClick = (i) => {
         let updatedPenalties = [...this.state.penalties];
-        // console.log(`penalty.count is`, updatedPenalties[i].count);
-        // console.log(`penalty.max is`, updatedPenalties[i].max);
+        // if penalty max is not reached, add one to penalty count
         if ((updatedPenalties[i].count < updatedPenalties[i].max) && (updatedPenalties[i].disabled === false)) {
             updatedPenalties[i].count = updatedPenalties[i].count + 1
         }
+        // if penalty max is reached, disable button
         if (updatedPenalties[i].count === updatedPenalties[i].max) {
             updatedPenalties[i].disabled = true;
         }
         this.setState({
             penalties: updatedPenalties
         })
-        // console.log(`penalty.count end is`, updatedPenalties[i].count);
-        // console.log(`penalty.disabled end is`, updatedPenalties[i].disabled);
     }
 
+    // updates penalty information for corresponding penalty if undo option is clicked
     undoOnClick = (i) => {
         let updatedPenalties = [...this.state.penalties];
         updatedPenalties[i].disabled = false;
+        // if the penalty count is 1 or more, remove a penalty from count on click
         if (updatedPenalties[i].count <= (updatedPenalties[i].max + 1) && updatedPenalties[i].count > 0) {
             updatedPenalties[i].count = updatedPenalties[i].count - 1
-            // console.log(`penalty.count is undooooo`, updatedPenalties[i].count);
         }
         this.setState({
             penalties: updatedPenalties
@@ -278,11 +284,7 @@ class RunScoring extends Component {
 
     // function to add points for how many goal type on click and disable button when max is reached
     howManyOnClick = (goal) => {
-        // console.log('goal', goal);
-
         let updatedGoals = [...this.state.goals];
-        // console.log('updatedGoals', updatedGoals);
-
         let goalIndex = 0;
         let currentScore = this.state.score;
 
@@ -301,7 +303,7 @@ class RunScoring extends Component {
         if (updatedGoals[goalIndex].count === updatedGoals[goalIndex].how_many_max) {
             updatedGoals[goalIndex].disabled = true;
         }
-
+        console.log(`updated goal count for how many`, updatedGoals[goalIndex].count);
         this.setState({
             score: currentScore,
             goals: updatedGoals
