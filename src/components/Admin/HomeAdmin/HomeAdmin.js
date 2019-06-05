@@ -9,7 +9,6 @@ import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
 
 import './HomeAdmin.css'
-import savedForm from '../../../modules/autoFillers/admin/newProject';
 
 const styles = theme => ({
     root: {
@@ -47,15 +46,6 @@ class HomeAdmin extends Component {
             year: '',
             published: false,
         }
-    }
-
-    // quickly init form
-    autoFillForm = () => {
-        this.setState({
-            newProject: {
-                ...this.state.newProject, ...savedForm.animalAllies
-            }
-        });
     }
 
     componentDidMount() {
@@ -168,7 +158,6 @@ class HomeAdmin extends Component {
                                 className={classes.textField}
                                 value={this.state.newProject.name}
                                 onChange={this.handleChange('name')}
-                                onClick={ this.autoFillForm }
                             >
                             </TextField>
                             <br />
