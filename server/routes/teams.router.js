@@ -8,7 +8,7 @@ const encryptLib = require('../modules/encryption');
  * GET team members by team id
  */
 router.get('/members', rejectUnauthenticated, (req, res) => {
-    console.log(`team members team id`, req.user);
+    
     let sqlText = `SELECT "team_members"."id" AS "member_id", "team_members"."team_id", "team_members"."name", "users"."id" AS "user_id" 
                    FROM "team_members"
                    LEFT JOIN "teams" ON "team_members"."team_id" = "teams"."id"
@@ -17,12 +17,10 @@ router.get('/members', rejectUnauthenticated, (req, res) => {
                    ORDER BY "team_members"."id";`;
     pool.query(sqlText, [req.user.id])
         .then(results => {
-            // console.log(`result.rows in team member get`, results.rows);
             
             res.send(results.rows);
         })
         .catch((error) => {
-            console.log(`Couldn't get team members by team id.`, error);
             res.sendStatus(500);
         })
 });
@@ -32,7 +30,7 @@ router.get('/members', rejectUnauthenticated, (req, res) => {
  * GET team members by team id for coach
  */
 router.get('/members/:id', rejectUnauthenticated, (req, res) => {
-    console.log(`team members user id`, req.params.id);
+
     let sqlText = `SELECT "team_members"."id" AS "member_id", "team_members"."team_id", "team_members"."name"
                    FROM "team_members"
                    LEFT JOIN "teams" ON "team_members"."team_id" = "teams"."id"
@@ -41,12 +39,10 @@ router.get('/members/:id', rejectUnauthenticated, (req, res) => {
                    ORDER BY "team_members"."id";`;
     pool.query(sqlText, [req.params.id])
         .then(results => {
-            console.log(`result.rows in team member get`, results.rows);
 
             res.send(results.rows);
         })
         .catch((error) => {
-            console.log(`Couldn't get team members for logged in user.`, error);
             res.sendStatus(500);
         })
 });
@@ -55,17 +51,14 @@ router.get('/members/:id', rejectUnauthenticated, (req, res) => {
 
 router.get('/team-info/:id', rejectUnauthenticated, (req, res) => {
     let teamId = req.params.id
-    console.log('team id is', teamId);
     
     let sqlText = `SELECT * FROM teams WHERE "id" = $1`
     pool.query (sqlText, [teamId])
     .then( results => {
-        console.log('results are', results.rows);
         
         res.send(results.rows);
     })
     .catch( (error) => {
-        console.log( `Couldn't get team info.`);
         res.sendStatus(500);
     })
 })
@@ -74,7 +67,6 @@ router.get('/team-info/:id', rejectUnauthenticated, (req, res) => {
  * GET teams by coach id
  */
 router.get('/:id', rejectUnauthenticated, (req, res) => {
-    console.log( `In get teams by coach_id:`, req.params );
     
     let coachId = req.params.id;
     let sqlText = `SELECT t."id", t."coach_user_id", t."team_user_id",
@@ -87,7 +79,6 @@ router.get('/:id', rejectUnauthenticated, (req, res) => {
             res.send(results.rows);
         })
         .catch( (error) => {
-            console.log( `Couldn't get teams by coach_user_id.`, error );
             res.sendStatus(500);
         })
 });
@@ -102,7 +93,6 @@ router.get(`/team-id/:id`, rejectUnauthenticated, (req, res) => {
         res.send(results.rows);
     })
     .catch( (error) => {
-        console.log( `Couldn't get team id.`, error );
         res.sendStatus(500);
     })
 });
@@ -118,7 +108,6 @@ router.post(`/team-member`, (req, res) => {
          res.sendStatus(200);
      })
      .catch((error) => {
-         console.log('Error adding new project', error);
          res.sendStatus(500);
      })
 })
@@ -151,7 +140,6 @@ router.post(`/team-name`, rejectUnauthenticated, async (req, res) => {
     }
     catch (error) {
     await client.query('ROLLBACK');
-    console.log(`Error making database query`, error);
     res.sendStatus(500);
   } finally {
     client.release()
@@ -160,10 +148,8 @@ router.post(`/team-name`, rejectUnauthenticated, async (req, res) => {
 
 //PUT to hide the team member
 router.put(`/hide-team-member`, rejectUnauthenticated, (req, res) => {
-    console.log('req body', req.body)
     let id = req.body.member_id
     let hidden = true
-    console.log('id is', id);
     
     let sqlText = `UPDATE "team_members" SET "hidden" = $1 WHERE "id" = $2`
     pool.query( sqlText, [hidden, id])
@@ -171,7 +157,6 @@ router.put(`/hide-team-member`, rejectUnauthenticated, (req, res) => {
             res.sendStatus(200)
         })
         .catch((error) => {
-            console.log('could not hide team member', error)
             alert('Could not hide team member')
         })
 })
@@ -186,7 +171,6 @@ router.put(`/edit-team-member`, rejectUnauthenticated, (req, res) => {
                 res.sendStatus(200);
             })
             .catch((error) => {
-                console.log( `Couldn't update team member.`, error );
                 res.sendStatus(500);
             })
 })
@@ -195,36 +179,29 @@ router.put(`/edit-team-member`, rejectUnauthenticated, (req, res) => {
 router.put( `/teamAccess`, rejectUnauthenticated, (req, res) => {
     let team_id = req.body.team_id;
     let access = req.body.permission;
-    console.log( `in update access:`, access, team_id );
     
     let sqlText = `UPDATE "users" SET "security_clearance" = $1 WHERE "id" = $2;`;
     let newAccess;
 
     if( access === 4 ){
         newAccess = 4;
-        console.log( `newAccess:`, newAccess );
 
         pool.query( sqlText, [newAccess, team_id] )
             .then((response) => {
-                console.log( `it works!` );
                 res.sendStatus(200);
             })
             .catch((error) => {
-                console.log( `Couldn't update team access.`, error );
                 res.sendStatus(500);
             })
       
     } else if(access === 3) {
         newAccess = 3;
-        console.log( `newAccess:`, newAccess );
       
         pool.query( sqlText, [newAccess, team_id] )
             .then((response) => {
-                // console.log( `it works!` );
                 res.sendStatus(200);
             })
             .catch((error) => {
-                console.log( `Couldn't update team access.`, error );
                 res.sendStatus(500);
             })
     }
