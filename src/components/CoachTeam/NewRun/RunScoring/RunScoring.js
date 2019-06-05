@@ -4,7 +4,6 @@ import { FaUndo } from 'react-icons/fa';
 import { withRouter } from 'react-router-dom';
 import RunTimer from './RunTimer';
 
-
 //----Material UI----
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core';
@@ -93,26 +92,46 @@ class RunScoring extends Component {
         let newMissionArr = [];
         let newEitherOrArr = [];
         let test = [];
+        let missionMin = 0;
+        let missionMax = 0;
+        let missionMinMaxArr = [];
+        let eitherOrMin = 0;
+        let eitherOrMax = 0;
+        let eitherOrMinMaxArr = [];
 
-        //Find a way to stop loop other than #100
-        for (let count = 0; count < 100; count++) {
+        for (let i = 0; i < missionArr.length; i++) {
+            missionMinMaxArr.push(missionArr[i].mission_id);
+        }
+        missionMin = Math.min(...missionMinMaxArr);
+        missionMax = Math.max(...missionMinMaxArr);
+        
+        for (let i = 0; i < eitherOrArr.length; i++) {
+            eitherOrMinMaxArr.push(eitherOrArr[i].either_or_goal_id);
+        }
+        
+        eitherOrMin = Math.min(...eitherOrMinMaxArr);
+        eitherOrMax = Math.max(...eitherOrMinMaxArr);
+
+
+        for (let count = missionMin; count <= missionMax; count++) {
             test = missionArr.filter(x => x.mission_id === count)
 
             if (test.length !== 0) {
+
                 newMissionArr.push(test)
             }
-        }
-        // console.log('newMissionsArr', newMissionArr);
 
-        for (let count = 0; count < 100; count++) {
+        }
+        for (let count = eitherOrMin; count <= eitherOrMax; count++) {
             test = eitherOrArr.filter(x => x.either_or_goal_id === count)
 
             if (test.length !== 0) {
+
                 newEitherOrArr.push(test)
             }
+
         }
 
-        // console.log('newEitherOrArr', newEitherOrArr);
         return (
             newMissionArr.map((mission, i) => {
                 return (
