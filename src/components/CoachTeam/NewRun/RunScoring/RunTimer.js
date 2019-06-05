@@ -30,56 +30,8 @@ const styles = theme => ({
       paddingRight: theme.spacing.unit * 2,
   }
 });
-// This timer will count down from 2:30 and stop at 0:00. The Start Timer button
-// will start/resume, and the Stop Timer button will stop/pause the timer.
-// Checkpoints can be set to run callback functions.
-// COMMENTED CODE are functions based on checkpoints.
-// In the future, we could give admin the ability to set how long runs should be.
+
 class RunTimer extends Component {
-
-  // state = {
-  //   buttonIsDisabled: false,
-  //   checkpoint1: false,
-  //   checkpoint2: false,
-  //   checkpoint3: false,
-  // }
-
-  // setBackroundColor = () => {
-  //   if ( this.state.checkpoint1 ) {
-  //     console.log('setting background color to orange');
-  //     return('orange-backround');
-  //   } else if ( this.state.checkpoint2 ) {
-  //     console.log(('setting background color to darker orange'));
-  //     return('dark-orange-backround');
-  //   } else if ( this.state.checkpoint3 ) {
-  //     console.log(('setting background color to red'));
-  //     return('red-backround');
-  //   }
-  // }  
-
-  // disableButtons = () => {
-  //   this.setState({buttonIsDisabled: true})
-  // }
-
-  // resetRun = () => {
-  //   console.log('resetting run:', this.state);
-  //   this.setState({
-  //     score: 0,
-  //     runId: 0,
-  //     goals: [],
-  //     eitherOr: [],
-  //     penalties: []
-  //   })
-  // }
-
-  // resetState = () => {
-  //   this.setState({
-  //     checkpoint1: false,
-  //     checkpoint2: false,
-  //     checkpoint3: false,
-  //   });
-  // }
-
 
   render() {
     const { classes } = this.props;
@@ -90,6 +42,7 @@ class RunTimer extends Component {
           initialTime = { 150000  }
           startImmediately = { false }
           direction = "backward"
+          {/* sets up checkpoints to disable buttons, change color, etc.*/}
           checkpoints={[
             {
               time: 0,
@@ -114,11 +67,11 @@ class RunTimer extends Component {
             <Paper className={classes.paper}> 
               <div>
               <Typography variant="h3">
+                {/* ensures formatting is always 2 digits on either side of colon */}
                 <Timer.Minutes formatValue={(value) => `${(value < 10 ? `0${value}` : value)}`}/>:
                 <Timer.Seconds formatValue={(value) => `${(value < 10 ? `0${value}` : value)}`} />
               </Typography>
               </div>
-              {/* <div>{ timerState }</div> */}
               <br />
                 <Button 
                   variant="contained" 
@@ -132,7 +85,6 @@ class RunTimer extends Component {
                   className={classes.button}
                   onClick={ stop } >Stop Timer
                 </Button>
-                {/* <button onClick={ reset } onclick={ this.resetState }>Reset Timer</button> */}
               </Paper>
             </React.Fragment>
           )}
