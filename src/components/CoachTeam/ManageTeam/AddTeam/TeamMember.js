@@ -1,65 +1,44 @@
 import React, { Component } from "react";
 import {connect} from 'react-redux';
 
+//----Material UI----
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
+import DeleteIcon from '@material-ui/icons/Delete';
+
 class TeamMember extends Component {
 
 state = {
-  edit: false,
-  teamMemberName: this.props.item.name,
-  id: this.props.item.member_id,
+  name: this.props.item.name,
+  member_id: this.props.item.member_id,
+  team_id: this.props.reduxState.teamIdReducer,
   teamId: this.props.reduxState.teamIdReducer
 }
 
-
-handleChange = propertyName => event => {
-  this.setState({
-      ...this.state,
-      [propertyName]: event.target.value
-    })
+hide = (event) => {
+  
+  const hidePayload = {
+    hideProps: {
+      name: this.props.item.name,
+      member_id: this.props.item.member_id,
+    },
+    teamId: this.state.team_id
   }
 
-hide = () => {
   this.props.dispatch({
     type: "HIDE_TEAM_MEMBER",
-    payload: this.state
+    payload: hidePayload
   })
 }
 
-  editTeamMember = () => {
-    this.setState({
-      ...this.state,
-      edit: true,
-    })
-  }
-
-  saveTeamMember = () => {
-    this.setState({
-      ...this.state,
-      edit: false
-    })
-    this.props.dispatch({
-      type: "EDIT_TEAM_MEMBER",
-      payload: this.state
-    })
-  }
-
 //Takes in team members as props
   render() {
-    if (this.state.edit === false)
     return (
-        <tr>
-        <td>{this.props.item.name}</td>
-        <td><button onClick={this.editTeamMember}>Edit</button></td>
-        <td><button onClick={this.hide}>Delete</button></td>
-      </tr>
+      <TableRow>
+        <TableCell>{this.props.item.name}</TableCell>
+        <TableCell><DeleteIcon onClick={this.hide} value={this.props.item.member_id} >Delete</DeleteIcon></TableCell>
+      </TableRow>
     );
-    else if (this.state.edit === true) 
-    return (
-      <tr>
-        <td><input value={this.state.teamMemberName} onChange={this.handleChange("teamMemberName")}></input></td>
-        <td><button  onClick={this.saveTeamMember}>Save</button></td>
-      </tr>
-    )
   }
 }
 

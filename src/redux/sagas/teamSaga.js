@@ -70,7 +70,7 @@ function* addTeamMember(action) {
     try {
         console.log(action.payload);
         yield axios.post( `/api/teams/team-member`, action.payload );  
-        yield put ({ type: 'GET_TEAM_MEMBERS_WITH_ID', payload: action.payload.teamId})      
+        yield put ({ type: 'GET_TEAM_MEMBERS_WITH_ID', payload: action.payload})      
     }
     catch(error) {
         console.log(`Couldn't add team members`, error);
@@ -101,7 +101,7 @@ function* getTeamId(action) {
         console.log('response is', response.data);
         
         yield put({ type: 'SET_TEAM_ID', payload: response.data[0].id });
-        yield put({type: 'GET_TEAM_MEMBERS_WITH_ID', payload: response.data[0].id})
+        yield put({type: 'GET_TEAM_MEMBERS_WITH_ID', payload: {teamId: response.data[0].id}})
 
     }
     catch(error) {
@@ -113,7 +113,7 @@ function* getTeamId(action) {
 function* editTeamMember(action){
     try {
         yield axios.put(`/api/teams/edit-team-member`, action.payload);
-        yield put ({type: 'GET_TEAM_MEMBERS_WITH_ID', payload: action.payload.teamId})
+        yield put ({type: 'GET_TEAM_MEMBERS_WITH_ID', payload: action.payload})
     }
     catch(error) {
         console.log(`Couldn't edit team member`, error);
@@ -125,8 +125,8 @@ function* hideTeamMember(action){
     try{
         console.log('hide payload is', action.payload);
         
-        yield axios.put(`/api/teams/hide-team-member`, action.payload);
-        yield put ({type: "GET_TEAM_MEMBERS_WITH_ID", payload: action.payload.team_id})
+        yield axios.put(`/api/teams/hide-team-member`, action.payload.hideProps);
+        yield put ({type: "GET_TEAM_MEMBERS_WITH_ID", payload: action.payload})
     }
     catch(error) {
         console.log(`Couldn't hide team member`, error);

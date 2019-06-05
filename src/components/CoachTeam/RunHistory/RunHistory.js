@@ -1,14 +1,44 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { Link } from 'react-router-dom';
-import {withRouter} from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import qs from 'query-string';
 
+//----Material UI----
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
 
-
-
-// TODO: Need to get team_id as a coach for GET_RUNS_AS_COACH dispatch.
-//        currently hard coaded
+const styles = theme => ({
+  root: {
+    flexGrow: 1,
+    textAlign: "center",
+    padding: theme.spacing.unit,
+    overflowX: 'auto',
+  },
+  paper: {
+    padding: theme.spacing.unit,
+    textAlign: "center",
+  },
+  button: {
+    maxWidth: 300,
+    margin: theme.spacing.unit * 2,
+    paddingLeft: theme.spacing.unit * 2,
+    paddingRight: theme.spacing.unit * 2,
+  },
+  table: {
+    // maxWidth: 360,
+    padding: 200
+    // // width: '100%'
+  }
+})
 
 class RunHistory extends Component {
 
@@ -20,46 +50,79 @@ class RunHistory extends Component {
 
     // 1. if the user is a coach
     // 2. if the user is a team or a team with access
-    if ( this.props.user.security_clearance === 2 ) {
+    if (this.props.user.security_clearance === 2) {
       this.props.dispatch({ type: 'GET_RUNS_AS_COACH', payload: searchObject });
-    } else if ( this.props.user.security_clearance === 3 || this.props.user.security_clearance === 4 ) {
+    } else if (this.props.user.security_clearance === 3 || this.props.user.security_clearance === 4) {
       this.props.dispatch({ type: 'GET_RUNS_AS_TEAM' });
     }
   }
 
-  renderRuns = () => {
-    // render all runs returned from database
-    // run id, run name, goals completed count, run score
-    return (
-      <div>
-        { 
-          this.props.allRuns.map( run =>
-            <Link key={run.id} to={`/history/run?runId=${run.id}`}>
-              <div>
-                <div>{ run.name } | { run.count } | { run.score + run.penalties }</div>
-              </div>
-            </Link>
-          )
-        }
-      </div>
-    )
+  routeToPracticeRun = () => {
+    this.props.history.push('/practice-run')
   }
 
-  render () {
+  routeToRunSummary = (runId) => {
+    this.props.history.push(`/history/run?runId=${runId}`)
+  }
+
+  render() {
+    const { classes } = this.props;
+
     return (
-      <div>
-        <h1>{ this.props.user.username }</h1>
-        <h2>Practice Runs</h2>
-        <hr></hr>
-        <h3>Run Name | Goals Completed | Score</h3>
-        { this.renderRuns() }
-        <button>Show More</button>
-        <Link to="/practice-run" ><button>Create New Run</button></Link>
-      </div>
+      <Grid
+        container
+        className={classes.root}
+        direction="column"
+        justify="center"
+        alignItems="center"
+        spacing={8}
+      >
+        <Grid item>
+          <Typography variant="h2">{this.props.user.username}</Typography>
+        </Grid>
+        <Grid item>
+          <Paper className={classes.paper}>
+          <Typography variant="h4">Practice Runs</Typography>
+            <Table padding='checkbox' className={classes.table}>
+              <TableHead>
+                <TableRow>
+                  <TableCell>Name</TableCell>
+                  <TableCell>Goals Completed</TableCell>
+                  <TableCell>Score</TableCell>
+                  <TableCell>View</TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+              {this.props.allRuns.map(run =>
+                <TableRow>
+                  <TableCell>{run.name}</TableCell>
+                  <TableCell>{run.count}</TableCell>
+                  <TableCell>{run.score + run.penalties}</TableCell>
+                  <TableCell><Button onClick={() => this.routeToRunSummary(run.id)}>View</Button></TableCell>
+                </TableRow>
+              )}
+              </TableBody>
+            </Table>
+          </Paper>
+        </Grid>
+        <Grid item>
+          <Button
+            className={classes.button}
+            variant="contained"
+            color="primary"
+            onClick={this.routeToPracticeRun}
+          >Create New Run
+          </Button>
+        </Grid>
+      </Grid>
     )
   }
 }
 
 const mapStateToProps = ({ teamId, allRuns, user }) => ({ teamId, allRuns, user });
 
-export default connect(mapStateToProps)(withRouter(RunHistory));
+RunHistory.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default connect(mapStateToProps)(withRouter(withStyles(styles)(RunHistory)));

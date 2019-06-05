@@ -1,6 +1,40 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+//----Material UI----
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+const styles = theme => ({
+    root: {
+        flexGrow: 1,
+        textAlign: "center",
+        padding: theme.spacing.unit,
+    },
+    paper: {
+        maxWidth: 375,
+        padding: theme.spacing.unit * 2,
+        textAlign: "center",
+        minWidth: 360,
+    },
+    button: {
+        marginTop: 20,
+        marginBottom: 15,
+        paddingLeft: "5%",
+        paddingRight: "5%",
+    },
+    panel: {
+        minWidth: 360,
+    }
+})
+
 class ProjectOverview extends Component {
 
     state = {
@@ -14,7 +48,7 @@ class ProjectOverview extends Component {
     }
 
     componentDidMount() {
-        this.props.dispatch({ type: 'GET_ALL_PROJECTS'})
+        this.props.dispatch({ type: 'GET_ALL_PROJECTS' })
         this.props.dispatch({ type: 'GET_PROJECT_DETAILS', payload: this.state });
         this.props.dispatch({ type: 'GET_PENALTIES', payload: this.state });
         this.props.dispatch({ type: 'GET_MISSIONS', payload: this.state });
@@ -33,7 +67,7 @@ class ProjectOverview extends Component {
                 projectId: this.props.reduxState.projects[0].id
             })
         };
-        if (this.props.reduxState.projectDetails !== prevProps.reduxState.projectDetails) {            
+        if (this.props.reduxState.projectDetails !== prevProps.reduxState.projectDetails) {
             this.setState({
                 projectId: this.props.reduxState.projects[0].id,
                 projectName: this.props.reduxState.projectDetails.name,
@@ -59,54 +93,119 @@ class ProjectOverview extends Component {
     }
 
     groundControl = () => {
-        let missionArr = this.state.projectMissions;
-        let newArr = [];
-        let test = [];
+        const { classes } = this.props;
 
-        //Find a way to stop loop other than #100
-        for (let count = 0; count < 100; count++) {
+        let missionArr = this.state.projectMissions;
+        let eitherOrArr = this.state.projectEitherOr;
+        let newMissionArr = [];
+        let newEitherOrArr = [];
+        let test = [];
+        let missionMin = 0;
+        let missionMax = 0;
+        let missionMinMaxArr = [];
+        let eitherOrMin = 0;
+        let eitherOrMax = 0;
+        let eitherOrMinMaxArr = [];
+
+        for (let i = 0; i < missionArr.length; i++) {
+            missionMinMaxArr.push(missionArr[i].mission_id);
+        }
+        missionMin = Math.min(...missionMinMaxArr);
+        missionMax = Math.max(...missionMinMaxArr);
+        
+        for (let i = 0; i < eitherOrArr.length; i++) {
+            eitherOrMinMaxArr.push(eitherOrArr[i].goal_id);
+        }
+        eitherOrMin = Math.min(...eitherOrMinMaxArr);
+        eitherOrMax = Math.max(...eitherOrMinMaxArr);
+        
+
+        for (let count = missionMin; count <= missionMax; count++) {
             test = missionArr.filter(x => x.mission_id === count)
 
             if (test.length !== 0) {
 
-                newArr.push(test)
+                newMissionArr.push(test)
+            }
+
+        }
+        for (let count = eitherOrMin; count <= eitherOrMax; count++) {
+            test = eitherOrArr.filter(x => x.goal_id === count)
+
+            if (test.length !== 0) {
+
+                newEitherOrArr.push(test)
             }
         }
+
         return (
-            newArr.map((mission, i) => {
+            newMissionArr.map((mission, i) => {
                 return (
                     <div key={i}>
-                        <h3>Mission {i + 1}: {mission[0].mission_name}</h3>
-                        <h4>{mission[0].description}</h4>
-                        {mission.map((mission, i) => {
-                            return (
-                                <div key={i}>
-                                    {this.renderGoals(mission)}
-                                </div>
-                            )
-                        })}
+                        <ExpansionPanel className={classes.panel}>
+                            <ExpansionPanelSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1a-content"
+                                id="panel1a-header"
+                            >
+                                <Typography variant="body2">Mission {i + 1}: {mission[0].mission_name}</Typography>
+                            </ExpansionPanelSummary>
+                            <ExpansionPanelDetails>
+                            <Grid 
+                                container
+                                direction="column"
+                                justify="center"
+                                alignItems="center"    
+                            >   
+                                        <Grid item>                     
+                                        <Typography variant="h6">Desription:</Typography>
+                                        <Typography variant="body1">{mission[0].description}</Typography>
+
+                                        </Grid>     
+                                        <Grid item>
+                                        <Typography variant="h6">Goals:</Typography>
+                                        {mission.map((mission, i) => {
+                                            return (
+                                                <div key={i}>
+                                                        {this.renderGoals(mission, newEitherOrArr)}
+                                                </div>
+                                            )
+                                        })}
+                                         </Grid>
+                            </Grid>
+                            </ExpansionPanelDetails>
+                        </ExpansionPanel>
                     </div>
                 )
             })
         )
     }
 
-    renderGoals = (mission) => {
+    renderGoals = (mission, eitherOr) => {
         if (mission.goal_type_id === 1) {
-            return <h5>Goal: {mission.name} = {mission.points} points</h5>
+            return (
+                <div>
+                    <Typography variant="body1">{mission.name}</Typography>
+                    <Typography variant="body2">{mission.points} points</Typography>
+                </div>
+            )
         }
         else if (mission.goal_type_id === 2) {
             return (
-                this.state.projectEitherOr.map((either, i) => {
-                    if (mission.goal_id === either.goal_id) {
-                        return (
-                            <div key={i}>
-                                <h5>Goal: {either.name} = {either.points} points</h5>
-                                {this.renderOrText(either)}
-                            </div>
-                        )
-                    }
-                    return
+                eitherOr.map((eithers) => {
+                    return (
+                        eithers.map( (either, i) => {
+                            if (mission.goal_id === either.goal_id) {
+                                return (
+                                    <Grid item key={i}>
+                                        <Typography variant="body2">Goal: {either.name} = {either.points} points</Typography>
+                                        {this.renderOrText(eithers, i)}
+                                    </Grid>
+                                )
+                            }
+                            return <div></div>
+                        })
+                    )
                 })
             )
         }
@@ -114,46 +213,62 @@ class ProjectOverview extends Component {
 
             return (
                 <div>
-                    <h5>Goal: {mission.name} = {mission.points} points each</h5>
-                    <h6></h6>
+                    <Typography variant="body1">{mission.name}</Typography>
+                    <Typography variant="body2">{mission.points} points each</Typography>
                 </div>
             )
         }
     }
     //-----TODO-----
     //finish OR render to DOM
-    renderOrText = (either) => {
-        // console.log('either length', either);
-        return <h5>OR</h5>
+    renderOrText = (either, i) => {
+        if (i < (either.length - 1)) {
+            return <Typography variant="body2">OR</Typography>
+        }
+        return
     }
 
     render() {
+        const { classes } = this.props;
+
         return (
-            <div>
-                <h1>{this.state.projectDetails.name}: {this.state.projectDetails.year}</h1>
-                <h2>The Project:</h2>
-                <p>{this.state.projectDetails.description}</p>
-                
-                <div>
-                    <h2>Missions</h2>
-                    <hr />
+            <Grid
+                className={classes.root}
+                container
+                direction="column"
+                justify="center"
+                alignItems="center"
+                spacing={16}
+            >
+                <Grid item>
+                    <Typography variant="h3">{this.state.projectDetails.name}:</Typography>
+                    <Typography variant="h3">{this.state.projectDetails.year}</Typography>
+                </Grid>
+                <Grid item>
+                    <Paper className={classes.paper}>
+                        <Typography variant="h4">The Project:</Typography>
+                        <Typography variant="body1">{this.state.projectDetails.description}</Typography>
+                    </Paper>
+                </Grid>
+                <Grid item>
+                    <Typography variant="h3">Missions</Typography>
                     {this.groundControl()}
-                </div>
-                <div>
-                    <h2>Penalties</h2>
-                    <hr />
+                </Grid>
+                <Grid item>
+                    <Typography variant="h3">Penalties</Typography>
                     {this.state.projectPenalties.map(penalty => {
                         return (
-                            <div key={penalty.id}>
-                                <h3>{penalty.name}</h3>
-                                <p>Description: {penalty.description}</p>
-                                <p>Max Penalties: {penalty.max}</p>
-                                <p>Points: {penalty.points}</p>
-                            </div>
+                            <Paper key={penalty.id} className={classes.paper}>
+                                <Typography variant="h4">{penalty.name}</Typography>
+                                {/* <Typography variant="h5">Description</Typography> */}
+                                <Typography variant="body2">{penalty.description}</Typography>
+                                <Typography variant="body1">Penalty Points: {penalty.points}</Typography>
+                                <Typography variant="body1">Max Penalties: {penalty.max}</Typography>
+                            </Paper>
                         )
                     })}
-                </div>
-            </div>
+                </Grid>
+            </Grid>
         )
     }
 }
@@ -162,4 +277,8 @@ const mapStateToProps = reduxState => ({
     reduxState
 });
 
-export default connect(mapStateToProps)(ProjectOverview);
+ProjectOverview.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
+
+export default connect(mapStateToProps)(withStyles(styles)(ProjectOverview));

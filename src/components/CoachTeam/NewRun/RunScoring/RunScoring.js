@@ -4,6 +4,52 @@ import { FaUndo } from 'react-icons/fa';
 import { withRouter } from 'react-router-dom';
 import RunTimer from './RunTimer';
 
+//----Material UI----
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core';
+import Paper from '@material-ui/core/Paper';
+import Typography from '@material-ui/core/Typography';
+import Button from '@material-ui/core/Button';
+import Grid from '@material-ui/core/Grid';
+import ExpansionPanel from '@material-ui/core/ExpansionPanel';
+import ExpansionPanelSummary from '@material-ui/core/ExpansionPanelSummary';
+import ExpansionPanelDetails from '@material-ui/core/ExpansionPanelDetails';
+import ExpandMoreIcon from '@material-ui/icons/ExpandMore';
+
+const styles = theme => ({
+    root: {
+        flexGrow: 1,
+        textAlign: "center",
+        padding: theme.spacing.unit,
+        overflowX: 'auto',
+    },
+    pointSpace: {
+        margin: 10,
+    },
+    panel: {
+        minWidth: 350,
+    },
+    paper: {
+        maxWidth: 375,
+        padding: theme.spacing.unit * 2,
+        textAlign: "center",
+    },
+    button: {
+        maxWidth: 300,
+        minWidth: 200,
+        margin: theme.spacing.unit * 2,
+        paddingLeft: theme.spacing.unit * 2,
+        paddingRight: theme.spacing.unit * 2,
+    },
+    textField: {
+        width: 250,
+        margin: theme.spacing.unit,
+        padding: theme.spacing.unit,
+    },
+    menu: {
+        width: 250,
+    },
+})
 
 class RunScoring extends Component {
 
@@ -39,43 +85,82 @@ class RunScoring extends Component {
     };
 
     missionList = () => {
+        const { classes } = this.props;
+
         let missionArr = this.state.goals;
         let eitherOrArr = this.state.eitherOr;
         let newMissionArr = [];
         let newEitherOrArr = [];
         let test = [];
+        let missionMin = 0;
+        let missionMax = 0;
+        let missionMinMaxArr = [];
+        let eitherOrMin = 0;
+        let eitherOrMax = 0;
+        let eitherOrMinMaxArr = [];
 
-        //Find a way to stop loop other than #100
-        for (let count = 0; count < 100; count++) {
+        for (let i = 0; i < missionArr.length; i++) {
+            missionMinMaxArr.push(missionArr[i].mission_id);
+        }
+        missionMin = Math.min(...missionMinMaxArr);
+        missionMax = Math.max(...missionMinMaxArr);
+        
+        for (let i = 0; i < eitherOrArr.length; i++) {
+            eitherOrMinMaxArr.push(eitherOrArr[i].either_or_goal_id);
+        }
+        
+        eitherOrMin = Math.min(...eitherOrMinMaxArr);
+        eitherOrMax = Math.max(...eitherOrMinMaxArr);
+
+
+        for (let count = missionMin; count <= missionMax; count++) {
             test = missionArr.filter(x => x.mission_id === count)
 
             if (test.length !== 0) {
+
                 newMissionArr.push(test)
             }
-        }
-        // console.log('newMissionsArr', newMissionArr);
 
-        for (let count = 0; count < 100; count++) {
+        }
+        for (let count = eitherOrMin; count <= eitherOrMax; count++) {
             test = eitherOrArr.filter(x => x.either_or_goal_id === count)
 
             if (test.length !== 0) {
+
                 newEitherOrArr.push(test)
             }
+
         }
 
-        // console.log('newEitherOrArr', newEitherOrArr);
         return (
-            newMissionArr.map((mission, i) => {                
+            newMissionArr.map((mission, i) => {
                 return (
                     <div key={i}>
-                        <h3>Mission {i + 1}: {mission[0].mission_name}</h3>
-                        {mission.map((goal, y) => {
-                            return (
-                                <div key={y}>
-                                    {this.renderGoals(goal, newEitherOrArr)}
-                                </div>
-                            )
-                        })}
+                        <ExpansionPanel className={classes.panel}>
+                            <ExpansionPanelSummary
+                                expandIcon={<ExpandMoreIcon />}
+                                aria-controls="panel1a-content"
+                                id="panel1a-header"
+                            >
+                                <Typography variant="body2">Mission {i + 1}: {mission[0].mission_name}</Typography>
+                            </ExpansionPanelSummary>
+                            <ExpansionPanelDetails>
+                                <Grid
+                                    container
+                                    direction="column"
+                                    justify="center"
+                                    alignItems="center"
+                                >
+                                    {mission.map((goal, y) => {
+                                        return (
+                                            <div key={y}>
+                                                {this.renderGoals(goal, newEitherOrArr)}
+                                            </div>
+                                        )
+                                    })}
+                                </Grid>
+                            </ExpansionPanelDetails>
+                        </ExpansionPanel>
                     </div>
                 )
             })
@@ -83,13 +168,32 @@ class RunScoring extends Component {
     }
 
     penaltyList = () => {
+        const { classes } = this.props;
+
         return (
             this.state.penalties.map((penalty, i) => {
                 return (
-                    <div key={penalty.id}>
-                        {penalty.count} <button onClick={() => { this.penaltyOnClick(i) }} disabled={penalty.disabled}>{penalty.name}</button>
-                        <button onClick={() => { this.undoOnClick(i) }}><FaUndo /></button>
-                    </div>
+                    <Grid item key={penalty.id}>
+                        <Paper className={classes.paper}>
+                            <Typography variant="h4">{penalty.name}</Typography>
+                            <Typography variant="h6">Count: {penalty.count}</Typography>
+                            <Button
+                                className={classes.button}
+                                variant="contained"
+                                color="primary"
+                                onClick={() => { this.penaltyOnClick(i) }}
+                                disabled={penalty.disabled}
+                            >Add Penalty
+                            </Button>
+                            <Button
+                                className={classes.button}
+                                variant="contained"
+                                color="primary"
+                                onClick={() => { this.undoOnClick(i) }}
+                            >Undo<FaUndo />
+                            </Button>
+                        </Paper>
+                    </Grid>
                 )
             })
         )
@@ -97,8 +201,19 @@ class RunScoring extends Component {
 
 
     renderGoals = (goal, eitherOr) => {
+        const { classes } = this.props;
+
         if (goal.goal_type_id === 1) {
-            return <button disabled={goal.disabled} onClick={() => { this.yesNoOnClick(goal) }}><div>{goal.goal_name}</div> <div>{goal.goal_points} pts</div></button>
+            return (
+                <Button 
+                    variant="contained" 
+                    color="primary" 
+                    className={classes.button}
+                    disabled={goal.disabled} 
+                    onClick={() => { this.yesNoOnClick(goal) }}
+                ><div>{goal.goal_name}</div> <div className={classes.pointSpace}>{goal.goal_points} pts</div>
+                </Button>
+            )
         }
         else if (goal.goal_type_id === 2) {
 
@@ -109,7 +224,14 @@ class RunScoring extends Component {
                             if (goal.goal_id === option.either_or_goal_id) {
                                 return (
                                     <div key={i}>
-                                        <button disabled={option.disabled} onClick={() => { this.eitherOrOnClick(option, goal) }}><div>{option.either_or_name}</div> <div>{option.either_or_points} pts</div></button>
+                                        <Button 
+                                            variant="contained" 
+                                            color="primary" 
+                                            className={classes.button}
+                                            disabled={option.disabled} 
+                                            onClick={() => { this.eitherOrOnClick(option, goal) }}
+                                            ><div>{option.either_or_name}</div> <div className={classes.pointSpace}>{option.either_or_points} pts</div>
+                                        </Button>
                                         {this.renderOrText(options, i)}
                                     </div>
                                 )
@@ -123,7 +245,14 @@ class RunScoring extends Component {
 
             return (
                 <div>
-                    <button disabled={goal.disabled} onClick={() => { this.howManyOnClick(goal) }}><div>{goal.goal_name}</div><div>{goal.goal_points} pts each</div></button>
+                    <Button 
+                        disabled={goal.disabled} 
+                        variant="contained" 
+                        color="primary" 
+                        className={classes.button}
+                        onClick={() => { this.howManyOnClick(goal) }}
+                        ><div>{goal.goal_name}</div><div className={classes.pointSpace}>{goal.goal_points} pts each</div>
+                    </Button>
                 </div>
             )
         }
@@ -132,7 +261,7 @@ class RunScoring extends Component {
     renderOrText = (options, i) => {
         // console.log('options length', options.length);
         if (i < (options.length - 1)) {
-            return <h5>OR</h5>
+            return <Typography variant="h5">Or</Typography>
         }
         return null;
     }
@@ -169,13 +298,13 @@ class RunScoring extends Component {
     // function to add points for how many goal type on click and disable button when max is reached
     howManyOnClick = (goal) => {
         // console.log('goal', goal);
-        
+
         let updatedGoals = [...this.state.goals];
         // console.log('updatedGoals', updatedGoals);
-        
+
         let goalIndex = 0;
         let currentScore = this.state.score;
-       
+
         for (let i = 0; i < updatedGoals.length; i++) {
             if (updatedGoals[i].goal_id === goal.goal_id) {
                 goalIndex = i;
@@ -201,13 +330,13 @@ class RunScoring extends Component {
     // function to add points for yes/no goal type on click and disable button after click
     yesNoOnClick = (goal) => {
         // console.log('goal', goal);
-        
+
         let updatedGoals = [...this.state.goals];
         // console.log('updatedGoals', updatedGoals);
-        
+
         let goalIndex = 0;
         let currentScore = this.state.score;
-       
+
         for (let i = 0; i < updatedGoals.length; i++) {
             if (updatedGoals[i].goal_id === goal.goal_id) {
                 goalIndex = i;
@@ -234,16 +363,16 @@ class RunScoring extends Component {
         let updatedEitherOr = [...this.state.eitherOr]
         let goalIndex = 0;
         let currentScore = this.state.score;
-        let optionIndex =0;
+        let optionIndex = 0;
 
         for (let i = 0; i < updatedGoals.length; i++) {
             // console.log((` in i loop `,updatedGoals[i]));
-            
+
             if (updatedGoals[i].goal_id === goal.goal_id) {
                 goalIndex = i;
                 updatedGoals[i].isCompleted = true;
             }
-            
+
         }
         for (let i = 0; i < updatedEitherOr.length; i++) {
             if (updatedEitherOr[i].either_or_id === option.either_or_id) {
@@ -258,8 +387,8 @@ class RunScoring extends Component {
             currentScore = currentScore + updatedEitherOr[optionIndex].either_or_points
         }
 
-        for (let choice of updatedEitherOr) {            
-            if (choice.either_or_goal_id === goal.goal_id){
+        for (let choice of updatedEitherOr) {
+            if (choice.either_or_goal_id === goal.goal_id) {
                 choice.disabled = true;
             }
         }
@@ -283,22 +412,44 @@ class RunScoring extends Component {
 
     handleSubmit = () => {
         console.log(`final state`, this.state);
+        console.log(`final runId`, this.state.runId);
         this.props.dispatch({ type: 'UPDATE_RUN_DETAILS', payload: this.state });
         this.props.history.push(`/practice-run/run-summary?runId=${this.state.runId}`)
     }
 
     render() {
+        const { classes } = this.props;
+
 
         return (
 
-            <div>
-                <h2>{this.props.reduxState.runDetails.name}</h2>
-                <p>Score: {this.calculateScore()}</p>
-                {this.penaltyList()}
-                {this.missionList()}
-                <button onClick={this.handleSubmit}>End Run</button>
+            <Grid
+                container
+                className={classes.root}
+                direction="column"
+                justify="center"
+                alignItems="center"
+                spacing={16}
+            >
+                <Grid item>
+                    <Typography variant="h3">Score: {this.calculateScore()}</Typography>
+                    <Typography variant="h4">{this.props.reduxState.runDetails.name}</Typography>
+                </Grid>
+                <Grid item>
+                    {this.penaltyList()}
+                </Grid>
+                <Grid item>
+                    {this.missionList()}
+                </Grid>
+                <Button
+                    className={classes.button}
+                    variant="contained"
+                    color="secondary"
+                    onClick={this.handleSubmit}
+                >End Run
+                </Button>
                 <RunTimer />
-            </div>
+            </Grid>
         )
     }
 }
@@ -307,4 +458,8 @@ const mapReduxStateToProps = (reduxState) => ({
     reduxState,
 });
 
-export default withRouter( connect(mapReduxStateToProps)(RunScoring) );
+RunScoring.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
+
+export default withRouter(connect(mapReduxStateToProps)(withStyles(styles)(RunScoring)));
