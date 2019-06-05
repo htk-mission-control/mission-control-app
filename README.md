@@ -11,7 +11,7 @@ Before you get started, make sure you have the following software installed on y
 
 ## Installation
 
-*Use npm to install dependencies
+* Use npm to install dependencies
 ```bash
 npm install
 ```
@@ -44,7 +44,7 @@ npm install
 * Clicking to create a penalty will take you to the penalty creation page
 * After filling out the fields click save penalty to return to the previous page
 
-![penalties](public/screenshots/penalties.png?raw=true "penalties")
+![penalties](public/screenshots/Penalties.png?raw=true "penalties")
 
 * Click add mission to be taken to the add mission form
 * After filling out a mission name and description you can choose its first goal
