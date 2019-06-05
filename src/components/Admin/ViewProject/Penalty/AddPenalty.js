@@ -61,13 +61,14 @@ class AddPenalty extends Component {
     }
 
     routeBack = () => {
-        this.props.history.goBack();
+        this.props.history.push( `/admin/projects?projectId=${this.state.project_id}` );
     }
 
     savePenalty = (event) => {
         event.preventDefault();
         this.props.dispatch({ type: 'ADD_PENALTY', payload: this.state });
         this.props.history.goBack();
+        event.preventDefault();
     }
 
     render() {
@@ -83,8 +84,10 @@ class AddPenalty extends Component {
                 spacing={16}
             >
                 <Paper className={classes.paper}>
+                    <form>
                     <Typography variant="h3" >Add Penalty</Typography>
 
+                    
                     <div>
                         <TextField 
                             type="text" 
@@ -133,6 +136,7 @@ class AddPenalty extends Component {
                         onClick={this.savePenalty}
                     >Save Penalty
                     </Button>
+                    </form>
                 </Paper>
             </Grid>
         );
