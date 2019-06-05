@@ -18,6 +18,7 @@ const styles = theme => ({
         overflowX: 'auto',
     },
     paper: {
+        minWidth: 1000,
         margin: theme.spacing.unit * 2,
         padding: theme.spacing.unit * 2,
         textAlign: "center",

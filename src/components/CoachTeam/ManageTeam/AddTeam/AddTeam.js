@@ -1,8 +1,6 @@
-//Will allow us to create a new team
-
 import React, { Component } from "react";
 import { connect } from "react-redux";
-import TeamMember from './TeamMember'
+import TeamMember from './TeamMember';
 
 //----Material UI----
 import PropTypes from 'prop-types';
@@ -23,7 +21,6 @@ const styles = theme => ({
         textAlign: "center",
         padding: theme.spacing.unit,
         margin: theme.spacing.unit,
-        // width: '100%',
     },
     paper: {
         margin: theme.spacing.unit * 2,
@@ -54,10 +51,10 @@ class AddTeam extends Component {
             newTeamMember: '',
             teamId: ''
         },
-        teamSaved: false
+        teamSaved: false,
     }
 
-    handleChange = propertyName => event => {
+    handleChange = propertyName => (event) => {
         this.setState({
             newTeam: {
                 ...this.state.newTeam,
