@@ -31,6 +31,7 @@ router.get('/missions', async (req, res) => {
     catch (error) {
         await client.query('ROLLBACK')
         res.sendStatus(500);
+        console.log(`Error getting all the missions for your current project`, error);
     }
     finally {
         client.release();
@@ -77,6 +78,7 @@ router.post('/saveDetails', async (req, res) => {
         catch ( error ) {
             await client.query('ROLLBACK')
             res.sendStatus(500);
+            console.log(`Error saving your initial run details for coach`, error);
         }
         finally{
             client.release();
@@ -117,6 +119,7 @@ router.post('/saveDetails', async (req, res) => {
         catch (error) {
             await client.query('ROLLBACK')
             res.sendStatus(500);
+            console.log(`Error saving your initial run details for team`, error);
         }
         finally {
             client.release();
@@ -174,6 +177,7 @@ router.get('/selectedMissions', async (req, res) => {
         catch (error) {
             await client.query('ROLLBACK')
             res.sendStatus(500);
+            console.log(`Error getting all the selected missions for your run as a team`, error);
         }
         finally {
             client.release();
@@ -227,6 +231,7 @@ router.get('/selectedMissions/:id', async (req, res) => {
     catch (error) {
         await client.query('ROLLBACK');
         res.sendStatus(500);
+        console.log(`Error getting all the selected missions for your run as a coach`, error);
     }
     finally {
         client.release();
@@ -269,6 +274,7 @@ router.get('/selectedEitherOr', async (req, res) => {
     catch (error) {
         await client.query('ROLLBACK')
         res.sendStatus(500);
+        console.log(`Error getting all the selected either or goals for your run as a team`, error);
     }
     finally {
         client.release();
@@ -309,6 +315,7 @@ router.get('/selectedEitherOr/:id', async (req, res) => {
     catch (error) {
         await client.query('ROLLBACK')
         res.sendStatus(500);
+        console.log(`Error getting all the selected either or goals for your run as a coach`, error);
     }
     finally {
         client.release();
@@ -345,6 +352,7 @@ router.get('/penalties', async (req, res) => {
     catch (error) {
         await client.query('ROLLBACK')
         res.sendStatus(500);
+        console.log(`Error getting all the penalties for your run`, error);
     }
     finally {
         client.release();
@@ -394,6 +402,7 @@ router.put('/updateDetails', async (req, res) => {
     catch (error) {
         await client.query('ROLLBACK')
         res.sendStatus(500);
+        console.log(`Error updating the scoring details for your run`, error);
     }
     finally {
         client.release();
@@ -421,6 +430,7 @@ router.get('/coach/:id', (req, res) => {
             res.send( result.rows );
         }).catch ( error => {
             res.sendStatus( 500 );
+            console.log(`Error getting the run summary details as a coach`, error);
         });
 });
 
@@ -448,6 +458,7 @@ router.get( '/runHistoryDetails/:id', rejectUnauthenticated, (req, res) => {
         })
         .catch( (error) => {
             res.sendStatus(500);
+            console.log(`Error getting the run history details as a coach`, error);
         })
 } )
 
@@ -467,6 +478,7 @@ router.put( `/summary/:id`, rejectUnauthenticated, (req, res) => {
         })
         .catch( (error) => {
             res.sendStatus(500);
+            console.log(`Error updating run details with notes`, error);
         })
 })
 
@@ -495,6 +507,7 @@ router.get('/team', (req, res) => {
             res.send( result.rows );
         }).catch ( error => {
             res.sendStatus( 500 );
+            console.log(`Error getting the run history for your team`, error);
         });
 });
 
