@@ -144,6 +144,7 @@ class SelectRunDetails extends Component {
         })
     }
 
+    // toggles state for stepOne on click
     changeView() {
 
         if (this.state.newRun.runName === '') {
@@ -157,6 +158,7 @@ class SelectRunDetails extends Component {
 
     }
 
+    // checks security clearance for coach or team with access, conditionally dispatches corresponding information
     handleSubmit = event => {
         event.preventDefault();
 
@@ -172,6 +174,7 @@ class SelectRunDetails extends Component {
         }
     }
 
+    // checks for reduxState array, maps through array if existing and creates a checkbox for each 
     selectedMissionsView = () => {
         const { classes } = this.props;
         let missionList;
@@ -216,6 +219,7 @@ class SelectRunDetails extends Component {
         )
     }
 
+    // mapping through team members to create drop down selections from loggedin team/search query if coach
     selectedRunTeam = () => {
         const { classes } = this.props;
 
@@ -315,7 +319,9 @@ class SelectRunDetails extends Component {
                 alignItems="center"
                 spacing={16}
             >
+                {/* conditionally renders views based on stepOne boolean toggle in changeView function */}
                 {this.state.stepOne === true ? (this.selectedMissionsView()) : (this.selectedRunTeam())}
+                {/* conditionally renders button text based on stepOne boolean toggle in changeView function */}
                 <Button
                     className={classes.button}
                     variant="contained"
