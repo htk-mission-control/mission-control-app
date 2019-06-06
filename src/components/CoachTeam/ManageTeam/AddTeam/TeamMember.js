@@ -15,8 +15,8 @@ state = {
   teamId: this.props.reduxState.teamIdReducer
 }
 
-hide = (event) => {
-  
+//Handles click to update database to show the teammate as hidden
+hide = (event) => { 
   const hidePayload = {
     hideProps: {
       name: this.props.item.name,
