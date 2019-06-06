@@ -18,12 +18,6 @@ const styles = theme => ({
         width: '100%',
         overflowX: 'auto',
     },
-    paper: {
-        margin: theme.spacing.unit * 2,
-        maxWidth: 700,
-        padding: theme.spacing.unit,
-        textAlign: "center",
-    },
     button: {
         marginTop: 20,
         marginBottom: 15,
