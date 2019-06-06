@@ -78,12 +78,10 @@ class EditPenalty extends Component {
     }
 
     routeBack = () => {
-        this.props.history.goBack();
+        this.props.history.push( `/admin/projects?projectId=${this.props.reduxState.projectDetails.id}`);
     }
 
     updatePenalty = (event) => {
-        event.preventDefault();
-
         let update = {...this.props.reduxState.penalty};
         console.log( update );
 
@@ -96,10 +94,12 @@ class EditPenalty extends Component {
         };
 
         this.props.dispatch( {type: 'UPDATE_PENALTY', payload: penaltyUpdate} );
-        this.props.history.goBack();
+        this.props.history.push( `/admin/projects?projectId=${this.props.reduxState.projectDetails.id}`);
+        event.preventDefault();
     }
 
     render() {
+
         const { classes } = this.props;
 
         return(
@@ -112,6 +112,7 @@ class EditPenalty extends Component {
                 spacing={16}
             >
                 <Paper className={classes.paper}>
+                <form>
                 <Typography variant="h3">Edit Penalty</Typography>
 
                 <div>
@@ -164,6 +165,7 @@ class EditPenalty extends Component {
                     onClick={this.updatePenalty} 
                 >Save Penalty
                 </Button>
+            </form>
             </Paper>
             </Grid>
         );

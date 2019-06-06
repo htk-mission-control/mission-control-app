@@ -37,12 +37,12 @@ class RunTimer extends Component {
     const { classes } = this.props;
 
     return (
+      // sets up checkpoints to disable buttons, change color, etc.
         <Timer
           className = '.red-backround'
           initialTime = { 150000  }
           startImmediately = { false }
           direction = "backward"
-          {/* sets up checkpoints to disable buttons, change color, etc.*/}
           checkpoints={[
             {
               time: 0,

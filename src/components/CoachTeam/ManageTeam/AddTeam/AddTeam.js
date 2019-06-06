@@ -86,7 +86,6 @@ class AddTeam extends Component {
 
 
     addTeammate = () => {
-        console.log('add team member state', this.state);
         
         this.props.dispatch({
             type: "ADD_TEAM_MEMBER",
@@ -107,7 +106,6 @@ class AddTeam extends Component {
     }
 
     render() {
-        console.log(this.props);
         const { classes } = this.props;
 
 
@@ -171,12 +169,11 @@ class AddTeam extends Component {
                         <TableRow>
                             <TableCell>Name</TableCell>
                             <TableCell>{' '}</TableCell>
-                            <TableCell>{' '}</TableCell>
                         </TableRow>
                     </TableHead>
                     <TableBody>
                         {this.props.reduxState.teamMembers.map(item =>
-                            (<TeamMember item={item} key={item.id} />)
+                            (<TeamMember item={item} key={item.member_id} />)
                         )}
                     </TableBody>
                 </Table>

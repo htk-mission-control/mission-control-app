@@ -4,6 +4,7 @@ const pool = require('../modules/pool');
 var moment = require('moment');
 const router = express.Router();
 
+// getting project info for project list on homepage
 router.get('/', rejectUnauthenticated, (req, res) => {
     let sqlText = (`SELECT * FROM "projects" WHERE "hidden" = false ORDER BY "id" DESC;`)
     pool.query(sqlText)
@@ -11,11 +12,12 @@ router.get('/', rejectUnauthenticated, (req, res) => {
             res.send(results.rows);
         })
         .catch((error) => {
-            console.log('Something went wrong getting project info', error);
             res.sendStatus(500);
+            console.log(`Error getting all the projects from the database`, error);
         })
 });
 
+// getting specific project details
 router.get('/details/:id', rejectUnauthenticated, (req, res) => {
     let sqlText = (`SELECT * FROM "projects" WHERE "id" = $1;`)
     pool.query(sqlText, [req.params.id])
@@ -23,14 +25,14 @@ router.get('/details/:id', rejectUnauthenticated, (req, res) => {
             res.send(results.rows[0]);
         })
         .catch((error) => {
-            console.log('Something went wrong getting project details', error);
             res.sendStatus(500);
+            console.log(`Error getting your project details from the database`, error);
         })
 });
 
+// updating projects to hidden = true when user "deletes" a project
 router.put('/project/:id', rejectUnauthenticated, async (req, res) => {
     let id = req.params.id;
-    // console.log('id', id);
     
     let sqlText = (`UPDATE "projects" SET "hidden" = NOT "hidden" WHERE "id" = $1`)
     pool.query(sqlText, [id])
@@ -38,14 +40,14 @@ router.put('/project/:id', rejectUnauthenticated, async (req, res) => {
             res.sendStatus(200);
         })
         .catch((error) => {
-            console.log('Error deleting project', error);
             res.sendStatus(500);
+            console.log(`Error updating your project in the database`, error);
         })
 })
 
+// updating project to published = true when user "publishes" a project
 router.put('/publish/:id', rejectUnauthenticated, (req, res) => {
     let id = req.params.id;
-    // console.log('id', id);
     
     let sqlText = (`UPDATE "projects" SET "published" = NOT "published" WHERE "id" = $1`)
     pool.query(sqlText, [id])
@@ -53,11 +55,12 @@ router.put('/publish/:id', rejectUnauthenticated, (req, res) => {
             res.sendStatus(200);
         })
         .catch((error) => {
-            console.log('Error updating published status', error);
             res.sendStatus(500);
+            console.log(`Error publishing your project`, error);
         })
 });
 
+// updating name and description when user makes edits
 router.put('/info/:id', rejectUnauthenticated, (req, res) => {
     let id = req.params.id;
     let info = req.body.projectInfo;
@@ -68,11 +71,12 @@ router.put('/info/:id', rejectUnauthenticated, (req, res) => {
             res.sendStatus(200);
         })
         .catch((error) => {
-            console.log('Error updating project information', error);
             res.sendStatus(500);
+            console.log(`Error updating project info`, error);
         })
 });
 
+// get penalty information for specific project
 router.get('/penalties/:id', rejectUnauthenticated, (req, res) => {
     let sqlText = (`SELECT * FROM "penalties" WHERE "project_id" = $1;`)
     pool.query(sqlText, [req.params.id])
@@ -80,11 +84,12 @@ router.get('/penalties/:id', rejectUnauthenticated, (req, res) => {
             res.send(results.rows);
         })
         .catch((error) => {
-            console.log('Something went wrong getting penalty info', error);
             res.sendStatus(500);
+            console.log(`Error getting all the penalties for your project from the database`, error);
         })
 });
 
+// delete penalty by its id (from a specified project)
 router.delete('/penalties/:id', rejectUnauthenticated, (req, res) => {
     let sqlText = (`DELETE FROM "penalties" WHERE "id" = $1;`)
     pool.query(sqlText, [req.params.id])
@@ -92,12 +97,12 @@ router.delete('/penalties/:id', rejectUnauthenticated, (req, res) => {
             res.sendStatus(201);
         })
         .catch((error) => {
-            console.log('Something went wrong deleting penalty info', error);
             res.sendStatus(500);
+            console.log(`Error deleting your penalty from the database`, error);
         })
 })
 
-// getting mission details
+// getting mission details for a specified project by project id
 router.get('/missions/:id', rejectUnauthenticated, (req, res) => {
     let sqlText = (`SELECT "missions"."id" AS "mission_id", 
                            "missions"."name" AS "mission_name", 
@@ -116,11 +121,12 @@ router.get('/missions/:id', rejectUnauthenticated, (req, res) => {
             res.send(results.rows);
         })
         .catch((error) => {
-            console.log('Something went wrong getting missions and goals', error);
             res.sendStatus(500);
+            console.log(`Error getting all the missions for your project`, error);
         })
 });
 
+// delete specific mission by id and it's corresponding goals and eitherOr goal options
 router.delete('/missions/:id', rejectUnauthenticated, async (req, res) => {
     const client = await pool.connect();
     let id = req.params.id;
@@ -135,7 +141,6 @@ router.delete('/missions/:id', rejectUnauthenticated, async (req, res) => {
         await client.query('BEGIN')
 
         let maybe = await client.query(goalId, [id])
-        // console.log('maybe', maybe.rows.length);
         if (maybe.rows.length != 0) {
             await client.query(eitherOr, [maybe.rows[0].id])           
         } 
@@ -146,13 +151,14 @@ router.delete('/missions/:id', rejectUnauthenticated, async (req, res) => {
         res.sendStatus(201);
       } catch (error) {
         await client.query('ROLLBACK')
-        console.log('Error deleting mission', error);
         res.sendStatus(500);
+        console.log(`Error getting all the missions for your project`, error);
       } finally {
         client.release()
       }
 })
 
+// get option details when goal-type is either/or on project id
 router.get('/missions/either-or/:id', rejectUnauthenticated, (req, res) => {
     let sqlText = (`SELECT 
                         "either_or"."id", 
@@ -168,15 +174,15 @@ router.get('/missions/either-or/:id', rejectUnauthenticated, (req, res) => {
             res.send(results.rows);
         })
         .catch((error) => {
-            console.log('Something went wrong getting either/or goals', error);
             res.sendStatus(500);
+            console.log(`Error getting all the either/or goals for your project`, error);
         })
 });
 
+// create a new project in admin homepage
 router.post('/', rejectUnauthenticated, (req, res) => {
     let newProject = req.body;
     let currentDate = moment().format()
-    // console.log('req.body post', newProject);
 
     let sqlText = (`INSERT INTO "projects" ("name", "description", "year", "published", "date_created")
                     VALUES ($1, $2, $3, $4, $5) RETURNING id;`);
@@ -185,14 +191,13 @@ router.post('/', rejectUnauthenticated, (req, res) => {
             res.send(result.row);
         })
         .catch((error) => {
-            console.log('Error adding new project', error);
             res.sendStatus(500);
+            console.log(`Error adding your project to the database`, error);
         })
 })
 
-// add penalty
+// add penalty to project with project id
 router.post( '/penalty', rejectUnauthenticated, (req, res) => {
-    // console.log( `req.body:`, req.body );
     let penalty = req.body;
 
     let sqlText = `INSERT INTO "penalties" ("project_id", "name", "description", "points", "max")
@@ -200,14 +205,14 @@ router.post( '/penalty', rejectUnauthenticated, (req, res) => {
     pool.query(sqlText, [penalty.project_id, penalty.name, penalty.description, penalty.points, penalty.max] )
         .then( (response) => {
             res.sendStatus(201);
+            console.log(`Error adding your penalty to the database`, error);
         })
         .catch( (error) => {
-            console.log( `Couldn't add penalty.`, error );
             res.sendStatus(500);
         })
 })
 
-// get penalty data for edit
+// get penalty data for edit by the penalty id
 router.get( `/penalty/:id`, rejectUnauthenticated, (req, res) => {
     let penalty_id = req.params.id;
 
@@ -217,12 +222,12 @@ router.get( `/penalty/:id`, rejectUnauthenticated, (req, res) => {
             res.send(result.rows[0]);
         })
         .catch( (error) => {
-            console.log( `Couldn't get penalty data.`, error );
             res.sendStatus(500);
+            console.log(`Error getting the penalties for your project`, error);
         })
 })
 
-// update edited penalty
+// update edited penalty by the penalty id
 router.put( `/penalty`, rejectUnauthenticated, (req, res) => {
     let penalty = req.body;
 
@@ -236,8 +241,8 @@ router.put( `/penalty`, rejectUnauthenticated, (req, res) => {
             res.sendStatus(200);
         })
         .catch( (error) => {
-            console.log( `Couldn't update penatly.`, error );
             res.sendStatus(500);
+            console.log(`Error updating your penalty`, error);
         })
 })
 
@@ -250,14 +255,13 @@ router.get( '/goalTypes', rejectUnauthenticated, (req, res) => {
             res.send(result.rows);
         })
         .catch( (error) => {
-            console.log( `Couldn't get goal types.`, error );
             res.sendStatus(500);
+            console.log(`Error getting the goal types for your project`, error);
         })
 })
 
-// add mission data
+// add mission and goals to project with project id
 router.post( '/mission', rejectUnauthenticated, async(req, res) => {
-    // console.log( 'in mission POST...', req.body );
     
     const client = await pool.connect();
     let mission = req.body.mission;
@@ -265,7 +269,6 @@ router.post( '/mission', rejectUnauthenticated, async(req, res) => {
     let eitherOrOptions = req.body.options;
     
     try {
-        console.log( 'in mission POST try...' );
         
         await client.query('BEGIN');
 
@@ -279,10 +282,8 @@ router.post( '/mission', rejectUnauthenticated, async(req, res) => {
         const missionId = id.rows[0].id;
 
         for( let goal of goals ){
-            console.log( `in da looooop...`, goal );
             
             if(goal.type === '1'){
-                console.log( `in Yes/No..` );
                 
                 let sqlText2 = `INSERT INTO "goals" 
                                 ("mission_id", "goal_type_id", "name", "points")
@@ -290,7 +291,6 @@ router.post( '/mission', rejectUnauthenticated, async(req, res) => {
                 await client.query( sqlText2, [missionId, goal.type, goal.name, goal.points]);
 
             } else if(goal.type === '2'){
-                console.log( `in E/O..`, goal.goal );
 
                 let sqlText2 = `INSERT INTO "goals" 
                                 ("mission_id", "goal_type_id")
@@ -301,7 +301,6 @@ router.post( '/mission', rejectUnauthenticated, async(req, res) => {
 
                 for( let option of eitherOrOptions ){
                     if( goal.goal === option.goal_id ){
-                        console.log( `In option loop...`, option );
                         let sqlText3 = `INSERT INTO "either_or" ("goal_id", "name", "points")
                                         VALUES ( $1, $2, $3 );`;
                         
@@ -310,7 +309,6 @@ router.post( '/mission', rejectUnauthenticated, async(req, res) => {
                 }
 
             } else if(goal.type === '3'){
-                console.log( `in How many..` );
                 let sqlText2 = `INSERT INTO "goals" 
                                 ("mission_id", "goal_type_id", "name", "points", "how_many_max", "how_many_min")
                                 VALUES ( $1, $2, $3, $4, $5, $6 );`;
@@ -322,20 +320,18 @@ router.post( '/mission', rejectUnauthenticated, async(req, res) => {
         res.sendStatus(201);
     } catch(error) {   
         await client.query('ROLLBACK');
-        console.log( `Couldn't POST mission, goal data.`, error );
         res.sendStatus(500);
+        console.log(`Error adding your mission and goals to the database`, error);
     } finally {
         client.release()
     }
 })
 
-// get mission data for edit
+// get mission and goal data for edit by mission id
 router.get( `/mission/:id`, rejectUnauthenticated, async(req, res) => {
     const client = await pool.connect();
     let mission_id = req.params.id;
-    // console.log( `REQ.PARAMS:`, req.params );
     
-
     try {
         await client.query('BEGIN');
 
@@ -348,7 +344,6 @@ router.get( `/mission/:id`, rejectUnauthenticated, async(req, res) => {
                         WHERE m."id" = $1
                         ORDER BY g."id";`;
         const result = await client.query( sqlText, [mission_id] );
-        // console.log( `Result from 1:`, result.rows );
 
         let optionArray = [];
 
@@ -361,16 +356,12 @@ router.get( `/mission/:id`, rejectUnauthenticated, async(req, res) => {
                                 ORDER BY "id";`;
                 
                 let result2 = await client.query( sqlText2, [row.goal_id] );
-                // console.log( `Result 2 is:`, result2 );
                 
                 for( let option of result2.rows ){
-                    // console.log( `option loop:`, option );
                     optionArray.push(option);
                 }
             }
         }
-        // console.log( `Result2:`, result2.rows );
-        // console.log( `optionArray:`, optionArray );
 
         const allResults = {
             missionGoals: result.rows,
@@ -381,24 +372,21 @@ router.get( `/mission/:id`, rejectUnauthenticated, async(req, res) => {
         res.send( allResults );
     } catch(error) {   
         await client.query('ROLLBACK');
-        console.log( `Couldn't get mission and goal details.`, error );
         res.sendStatus(500);
+        console.log(`Error getting the mission and goal data for editing`, error);
     } finally {
         client.release()
     }
 })
 
-// update mission, goals, and either/or options
+// update mission, goals, and either/or options on mission id
 router.put( `/mission`, rejectUnauthenticated, async(req, res) => {
     const client = await pool.connect();
     let mission = req.body;
     let goalList = mission.goals;
     let eitherOrOptions = mission.eitherOrOptions;
-    // console.log( goalList );
 
     try {
-        // console.log( 'in mission PUT try...' );
-        
         await client.query('BEGIN');
 
         let sqlText = `UPDATE "missions"
@@ -408,10 +396,8 @@ router.put( `/mission`, rejectUnauthenticated, async(req, res) => {
         await client.query( sqlText, [ mission.name, mission.description, mission.mission_id ]);
         
         for( let goal of goalList ){
-            // console.log( `in PUT loop`);
             
             if(goal.goal_type_id === 1){
-                // console.log( `in PUT if`, goal.goal_id  );
                 let sqlText2 = `UPDATE "goals"
                                 SET "goal_type_id" = $1,
                                 "name" = $2,
@@ -428,7 +414,6 @@ router.put( `/mission`, rejectUnauthenticated, async(req, res) => {
                 await client.query( sqlText2, [goal.goal_type_id, goal.goal_id] );
 
                 for( let option of eitherOrOptions ){
-                    // console.log( `In option loop...`, option );
                     
                     if( goal.goal_id === option.goal_id ){
                         let sqlText3 = `UPDATE "either_or" 
@@ -456,17 +441,17 @@ router.put( `/mission`, rejectUnauthenticated, async(req, res) => {
         res.sendStatus(201);
     } catch(error) {   
         await client.query('ROLLBACK');
-        console.log( `Couldn't update mission, goal data.`, error );
         res.sendStatus(500);
+        console.log(`Error editing your mission data`, error);
     } finally {
         client.release()
     }
     
 })
 
+// add goal data to mission with mission id, return goal id for edits
 router.post( `/goal`, rejectUnauthenticated, async(req, res) => {
     const client = await pool.connect();
-    // console.log( `in addGoal`, req.body );
     
     const missionId = req.body.missionId;
 
@@ -478,22 +463,21 @@ router.post( `/goal`, rejectUnauthenticated, async(req, res) => {
                         RETURNING "id";`;
 
         const result = await client.query( sqlText, [missionId] );
-        // console.log( `Result:`, result.rows );
 
         await client.query('COMMIT');
         res.send( result.rows );
     } catch(error) {   
         await client.query('ROLLBACK');
-        // console.log( `Couldn't add goal.`, error );
         res.sendStatus(500);
+        console.log(`Error adding your goal to your mission in the database `, error);
     } finally {
         client.release()
     }
 })
 
+// add option to goal of type either/or with goal id, return option id for edits
 router.post( `/option`, rejectUnauthenticated, (req, res) => {
     const goal_id = req.body.goal_id;
-    // console.log( `in option POST:`, goal_id );
 
     let sqlText = `INSERT INTO "either_or" ("goal_id")
                     VALUES ($1)
@@ -503,13 +487,13 @@ router.post( `/option`, rejectUnauthenticated, (req, res) => {
             res.send(result.rows);
         })
         .catch( (error) => {
-            console.log( `Couldn't add option to goal.`, error );
             res.sendStatus(500);
+            console.log(`Error adding either/or goal to the database`, error);
         })
 })
 
+// delete goal from mission/project by goal id
 router.delete( '/goal/:id', rejectUnauthenticated, (req, res) => {
-    // console.log( `in delete goal`, req.params.id );
     
     const goal_id = req.params.id;
 
@@ -521,13 +505,13 @@ router.delete( '/goal/:id', rejectUnauthenticated, (req, res) => {
             res.sendStatus(200);
         })
         .catch( (error) => {
-            console.log( `Couldn't delete goal.`, error );
             res.sendStatus(500);
+            console.log(`Error deleting the goal from your project`, error);
         })
 })
 
+// delete option from goal/mission/project by option id from either_or table
 router.delete( '/option/:id', rejectUnauthenticated, (req, res) => {
-    // console.log( `in delete option`, req.params.id );
     
     const option_id = req.params.id;
 
@@ -539,16 +523,9 @@ router.delete( '/option/:id', rejectUnauthenticated, (req, res) => {
             res.sendStatus(200);
         })
         .catch( (error) => {
-            console.log( `Couldn't delete option.`, error );
             res.sendStatus(500);
+            console.log(`Error deleting either or option`, error);
         })
 })
-
-/**
- * POST route template
- */
-router.post('/', (req, res) => {
-
-});
 
 module.exports = router;

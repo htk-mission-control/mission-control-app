@@ -68,7 +68,6 @@ class ViewProject extends Component {
 
     componentDidMount() {
         const searchObject = qs.parse(this.props.location.search);
-        console.log('searchObject', searchObject);
         this.setState({
             projectId: searchObject.projectId,
         })
@@ -114,31 +113,45 @@ class ViewProject extends Component {
         let newMissionArr = [];
         let newEitherOrArr = [];
         let test = [];
+        let missionMin = 0;
+        let missionMax = 0;
+        let missionMinMaxArr = [];
+        let eitherOrMin = 0;
+        let eitherOrMax = 0;
+        let eitherOrMinMaxArr = [];
 
-        //Find a way to stop loop other than #100
-        for (let count = 0; count < 100; count++) {
+        for (let i = 0; i < missionArr.length; i++) {
+            missionMinMaxArr.push(missionArr[i].mission_id);
+        }
+        missionMin = Math.min(...missionMinMaxArr);
+        missionMax = Math.max(...missionMinMaxArr);
+        
+        for (let i = 0; i < eitherOrArr.length; i++) {
+            eitherOrMinMaxArr.push(eitherOrArr[i].goal_id);
+        }
+        eitherOrMin = Math.min(...eitherOrMinMaxArr);
+        eitherOrMax = Math.max(...eitherOrMinMaxArr);
+        
+
+        for (let count = missionMin; count <= missionMax; count++) {
             test = missionArr.filter(x => x.mission_id === count)
 
             if (test.length !== 0) {
-                // console.log('test length', test.length);
 
                 newMissionArr.push(test)
             }
 
         }
-        console.log('newMissionArr', newMissionArr);
-        for (let count = 0; count < 100; count++) {
+        for (let count = eitherOrMin; count <= eitherOrMax; count++) {
             test = eitherOrArr.filter(x => x.goal_id === count)
 
             if (test.length !== 0) {
-                // console.log('test length', test.length);
 
                 newEitherOrArr.push(test)
             }
 
         }
-        console.log('newEitherOrArr', newEitherOrArr);
-        // console.log('eitherOrArr', eitherOrArr);
+        
         return (
             newMissionArr.map((mission, i) => {
                 return (
@@ -187,11 +200,9 @@ class ViewProject extends Component {
         else if (mission.goal_type_id === 2) {
             return (
                 eitherOr.map((eithers) => {
-                    console.log('either first loop', eithers);
                     return (
                         eithers.map( (either, i) => {
                             if (mission.goal_id === either.goal_id) {
-                                console.log('either second loop', either);
                                 return (
                                     <Grid item key={i}>
                                         <Typography variant="body2">Goal: {either.name} = {either.points} points</Typography>
@@ -216,7 +227,6 @@ class ViewProject extends Component {
     }
 
     renderOrText = (either, i) => {
-        console.log('either length', either.length);
         if (i < (either.length - 1)) {
             return <Typography variant="body2">OR</Typography>
         }
@@ -228,7 +238,6 @@ class ViewProject extends Component {
             projectId: this.state.projectId,
             penaltyId: event.currentTarget.value,
         }
-        // console.log('event.target.value', info);
         this.props.dispatch({ type: 'DELETE_PENALTY', payload: info })
     }
 
