@@ -16,7 +16,7 @@ Before you get started, make sure you have the following software installed on y
 npm install
 ```
 
-* Create a PostgreSQL database called `high-tech-kids`
+* Create a PostgreSQL database called `high_tech_kids`
 * Use the included `database.sql` file to generate tables.
 
 * Create a `.env` file at the root of the project and paste this line into the file:
