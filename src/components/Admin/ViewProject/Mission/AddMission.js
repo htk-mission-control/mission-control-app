@@ -64,7 +64,6 @@ class AddMission extends Component {
 
     componentDidMount(){
         const searchObject = qs.parse(this.props.location.search);
-        console.log('searchObject', searchObject);
         this.setState({
             project_id: searchObject.projectId,
         })
@@ -77,7 +76,6 @@ class AddMission extends Component {
             ...this.state,
             [event.target.name]: event.target.value,
         })
-        // console.log( `new state:`, this.state );
     }
 
     addGoal = () => {
@@ -92,20 +90,16 @@ class AddMission extends Component {
                 }
             ]
         })
-        // console.log( `Last state:`, this.state );
     }
 
     handleGoal = (i, name) => (event) => {
-        // console.log( `State:`, this.state );
         let newGoals = [...this.state.goals];
         for (let goal of newGoals) {
             if (goal.goal - 1 === i) {
                 let index = newGoals.indexOf(goal);
-                console.log(`index:`, index);
                 newGoals[index][name] = event.target.value;
             }
         }
-
         this.setState({
             ...this.state,
             goals: newGoals,
@@ -114,13 +108,10 @@ class AddMission extends Component {
 
     removeGoal = (i) => (event) => {
         event.preventDefault();
-        // console.log( `ready to remove a goal:`, i );
         let newGoals = [...this.state.goals];
-
         for (let goal of newGoals) {
             if (goal.goal - 1 === i) {
                 let index = newGoals.indexOf(goal);
-                console.log(`index:`, index);
                 newGoals.splice(index, 1);
             }
         }
@@ -129,7 +120,6 @@ class AddMission extends Component {
             ...this.state,
             goals: newGoals,
         })
-        // console.log( `New state:`, this.state.goals );
     }
 
     handleSave = () => {
@@ -138,7 +128,6 @@ class AddMission extends Component {
             mission: this.state,
             options: eitherOrOptions
         };
-
         this.props.dispatch({ type: 'ADD_MISSION', payload: addMissionPayload });
         this.props.history.goBack();
     }
@@ -147,6 +136,7 @@ class AddMission extends Component {
         const { classes } = this.props;
 
         let goalCount = 0;
+        {/* maps through goals and conditionally renders corresponding goal info based on goal type */ }
         let goalList =
             this.state.goals.map((goal, index) => {
                 index = goal.goal - 1;

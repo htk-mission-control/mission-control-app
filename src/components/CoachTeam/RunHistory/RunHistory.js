@@ -41,13 +41,9 @@ const styles = theme => ({
 })
 
 class RunHistory extends Component {
-
+  // conditionally gets runs based on security clearance
   componentDidMount() {
-
     const searchObject = qs.parse(this.props.location.search);
-    console.log('searchObject: ', searchObject);
-    console.log('searchObject: ', this.props);
-
     // 1. if the user is a coach
     // 2. if the user is a team or a team with access
     if (this.props.user.security_clearance === 2) {
@@ -92,6 +88,7 @@ class RunHistory extends Component {
                   <TableCell>View</TableCell>
                 </TableRow>
               </TableHead>
+              {/* maps through all runs and creates table display of history */}
               <TableBody>
               {this.props.allRuns.map(run =>
                 <TableRow>
