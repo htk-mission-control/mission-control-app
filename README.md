@@ -24,6 +24,16 @@ npm install
     SERVER_SESSION_SECRET=ggZZs9bDG9HmSG9KWdf5nLxje
     ```
 
+* Start the server with
+    ```
+    npm run server
+    ```
+
+* Start the client with
+    ```
+    npm run client
+    ```
+
 ## Administrator Usage
 
 * Register as an administrator using Admin access code  `23646`
