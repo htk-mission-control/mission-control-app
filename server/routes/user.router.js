@@ -23,9 +23,6 @@ router.post('/register', (req, res, next) => {
   const ADMIN_ACCESS_CODE = '23646';
   const COACH_ACCESS_CODE = '26224';
 
-  console.log('req.body:', req.body);
-  console.log('req.body.access_code:', req.body.access_code);
-
   // 1. if the user is admin
   // 2. if the user is coach
   // 3. if the user is someone else
@@ -41,9 +38,11 @@ router.post('/register', (req, res, next) => {
     pool.query(queryText, [username, password, 2])
     .then(() => res.sendStatus(201))
     .catch(() => res.sendStatus(500));
+
   } else {
     // send 500 error
     res.sendStatus(500);
+    console.log(`Error adding user to database`, error);
   }
 });
 

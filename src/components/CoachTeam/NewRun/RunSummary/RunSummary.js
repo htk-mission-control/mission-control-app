@@ -50,20 +50,14 @@ class RunSummary extends Component {
         runId: this.props.reduxState.runHistoryDetails.id,
     }
 
-    componentDidMount() {
-        const values = queryString.parse(this.props.location.search);
-        console.log(`query runId:`, values.runId);
-        // this.props.dispatch( {type: 'GET_RUN_DETAILS', payload: values.runId} );
-    }
-
+    // checks for updates in redux state, sets id when updated
     componentDidUpdate(prevProps) {
         if (this.props.reduxState.runHistoryDetails !== prevProps.reduxState.runHistoryDetails) {
             this.setState({ ...this.state, runId: this.props.reduxState.runHistoryDetails.id });
-            console.log(`Count:`, this.state.count);
-
         }
     }
 
+    // updates notes for run when changes are made to notes input
     handleChange = (event) => {
         event.preventDefault();
         this.setState({
@@ -72,26 +66,16 @@ class RunSummary extends Component {
         })
     }
 
+    // dispatches state to store values in redux, re-routes to home page on click
     handleSave = () => {
-        console.log(`State:`, this.state);
-        console.log(`runId should be:`, this.props.reduxState.runHistoryDetails.id);
-
-
         this.props.dispatch({ type: `UPDATE_RUN_NOTES`, payload: this.state });
-        if (this.props.reduxState.user.security_clearance === 2) {
-            this.props.history.push(`/home`);
-        } else {
-            this.props.history.push(`/home`);
-        }
         this.props.dispatch({ type: `RESET_RUN_DETAILS` });
+        this.props.history.push(`/home`);
     }
 
     render() {
         const runDetails = this.props.reduxState.runHistoryDetails;
-        console.log(`RunDetails:`, runDetails);
         const { classes } = this.props;
-
-
 
         return (
             <Grid
