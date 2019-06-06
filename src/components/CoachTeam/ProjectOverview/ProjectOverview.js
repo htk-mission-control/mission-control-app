@@ -107,19 +107,23 @@ class ProjectOverview extends Component {
         let eitherOrMax = 0;
         let eitherOrMinMaxArr = [];
 
+        //Pushes missions ids into its own array
         for (let i = 0; i < missionArr.length; i++) {
             missionMinMaxArr.push(missionArr[i].mission_id);
         }
+        //Finds min and mix id numbers for loop
         missionMin = Math.min(...missionMinMaxArr);
         missionMax = Math.max(...missionMinMaxArr);
         
+        //Pushes either/or ids into its own array
         for (let i = 0; i < eitherOrArr.length; i++) {
             eitherOrMinMaxArr.push(eitherOrArr[i].goal_id);
         }
+        //Finds min and mix id numbers for loop        
         eitherOrMin = Math.min(...eitherOrMinMaxArr);
         eitherOrMax = Math.max(...eitherOrMinMaxArr);
         
-
+        //Organizes array based on ids 
         for (let count = missionMin; count <= missionMax; count++) {
             test = missionArr.filter(x => x.mission_id === count)
 
@@ -127,8 +131,8 @@ class ProjectOverview extends Component {
 
                 newMissionArr.push(test)
             }
-
         }
+        //Organizes array based on ids 
         for (let count = eitherOrMin; count <= eitherOrMax; count++) {
             test = eitherOrArr.filter(x => x.goal_id === count)
 
@@ -139,6 +143,7 @@ class ProjectOverview extends Component {
         }
 
         return (
+            // mapping through new array of goals to display the corresponding mission headers on DOM
             newMissionArr.map((mission, i) => {
                 return (
                     <div key={i}>
@@ -164,6 +169,7 @@ class ProjectOverview extends Component {
                                         </Grid>     
                                         <Grid item>
                                         <Typography variant="h6">Goals:</Typography>
+                                        {/* for each mission, render goals */}
                                         {mission.map((mission, i) => {
                                             return (
                                                 <div key={i}>
@@ -182,6 +188,7 @@ class ProjectOverview extends Component {
     }
 
     renderGoals = (mission, eitherOr) => {
+        // conditionally renders goals as clickable buttons based on type id with corresponding information for each type
         if (mission.goal_type_id === 1) {
             return (
                 <div>
@@ -194,6 +201,7 @@ class ProjectOverview extends Component {
             return (
                 eitherOr.map((eithers) => {
                     return (
+                        // if goal type is either, map through options and display as clickable buttons on DOM under corresponding mission
                         eithers.map( (either, i) => {
                             if (mission.goal_id === either.goal_id) {
                                 return (
@@ -219,8 +227,8 @@ class ProjectOverview extends Component {
             )
         }
     }
-    //-----TODO-----
-    //finish OR render to DOM
+
+    // renders 'OR' after each option except for last option in array
     renderOrText = (either, i) => {
         if (i < (either.length - 1)) {
             return <Typography variant="body2">OR</Typography>
@@ -260,7 +268,6 @@ class ProjectOverview extends Component {
                         return (
                             <Paper key={penalty.id} className={classes.paper}>
                                 <Typography variant="h4">{penalty.name}</Typography>
-                                {/* <Typography variant="h5">Description</Typography> */}
                                 <Typography variant="body2">{penalty.description}</Typography>
                                 <Typography variant="body1">Penalty Points: {penalty.points}</Typography>
                                 <Typography variant="body1">Max Penalties: {penalty.max}</Typography>

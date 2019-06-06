@@ -104,20 +104,25 @@ class RunScoring extends Component {
         let eitherOrMax = 0;
         let eitherOrMinMaxArr = [];
 
+        //Pushes missions ids into its own array
         for (let i = 0; i < missionArr.length; i++) {
             missionMinMaxArr.push(missionArr[i].mission_id);
         }
+
+        //Finds min and mix id numbers for loop
         missionMin = Math.min(...missionMinMaxArr);
         missionMax = Math.max(...missionMinMaxArr);
         
+        //Pushes either/or ids into its own array
         for (let i = 0; i < eitherOrArr.length; i++) {
             eitherOrMinMaxArr.push(eitherOrArr[i].either_or_goal_id);
         }
-        
+
+        //Finds min and mix id numbers for loop        
         eitherOrMin = Math.min(...eitherOrMinMaxArr);
         eitherOrMax = Math.max(...eitherOrMinMaxArr);
 
-
+        //Organizes array based on ids 
         for (let count = missionMin; count <= missionMax; count++) {
             test = missionArr.filter(x => x.mission_id === count)
 
@@ -127,6 +132,8 @@ class RunScoring extends Component {
             }
 
         }
+        
+        //Organizes array based on ids 
         for (let count = eitherOrMin; count <= eitherOrMax; count++) {
             test = eitherOrArr.filter(x => x.either_or_goal_id === count)
 
