@@ -9,19 +9,19 @@ class RunDetails extends Component {
         count: 1,
     }
 
+    // finds id in query string and dispatches to get run details
     componentDidMount(){
         const values = queryString.parse(this.props.location.search);
-        console.log( `query runId:`, values.runId);
         this.props.dispatch( {type: 'GET_RUN_DETAILS', payload: values.runId} );
     }
 
+    // checks for updates in reduxState, sets count if updated
     componentDidUpdate(prevProps){
         if( this.props.reduxState.runHistoryDetails !== prevProps.reduxState.runHistoryDetails ){
-            this.setState({ ...this.state, count: this.state.count + 1 });
-            console.log( `Count:`, this.state.count );
-            
+            this.setState({ ...this.state, count: this.state.count + 1 });   
         }
     }
+
 
     routeToTeam = () => {
         if(this.props.reduxState.user.security_clearance === 2 ){
@@ -42,13 +42,10 @@ class RunDetails extends Component {
 
         return(
             <div>
-                {/* {JSON.stringify(this.props.reduxState.runHistoryDetails)} */}
                 <h2>Details: {runDetails.name}</h2>
-
                 <div>
                     <h3>Final Score</h3>
                     <h1>{runDetails.score}</h1>
-                    {/* <h5>Possible Points: N/A</h5> */}
                     <p><b>Driver:</b> {runDetails.driver}</p>
                     <p><b>Assistant:</b> {runDetails.assistant}</p>
                     <p><b>Scorekeeper:</b> {runDetails.score_keeper}</p>
@@ -56,12 +53,10 @@ class RunDetails extends Component {
 
                 <div>
                     <h4>Completed Goals: {runDetails.count}</h4>
-                    {/* <p>Do we want to list which goals they completed?</p> */}
                     <h4>Penalties: {runDetails.penalties}</h4>
                 </div>
 
                 <div>
-                    {/* TO DO: get notes from table in router's get request */}
                     <p><b>Notes:</b></p>
                     <p>{runDetails.notes}</p>
                 </div>
