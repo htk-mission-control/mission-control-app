@@ -45,6 +45,8 @@ class AddPenalty extends Component {
         points: -1
     }
 
+    // on page load, get project id from url and add it to state
+    // this will be used when saving a new penalty to a project
     componentDidMount() {
         const searchObject = qs.parse(this.props.location.search);
         console.log('searchObject', searchObject);
@@ -53,6 +55,7 @@ class AddPenalty extends Component {
         })
     }
 
+    // set state with input field changes
     handleChange = (event) => {
         this.setState({
             ...this.state,
@@ -60,14 +63,16 @@ class AddPenalty extends Component {
         })
     }
 
+    // on click of "Back" button, route user to project page
     routeBack = () => {
         this.props.history.push( `/admin/projects?projectId=${this.state.project_id}` );
     }
 
+    // on click of "Save Penalty", POST data to DB and route user to project page
     savePenalty = (event) => {
         event.preventDefault();
         this.props.dispatch({ type: 'ADD_PENALTY', payload: this.state });
-        this.props.history.goBack();
+        this.props.history.push( `/admin/projects?projectId=${this.state.project_id}` );
         event.preventDefault();
     }
 

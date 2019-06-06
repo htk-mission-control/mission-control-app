@@ -13,6 +13,7 @@ router.get('/', rejectUnauthenticated, (req, res) => {
         })
         .catch((error) => {
             res.sendStatus(500);
+            console.log(`Error getting all the projects from the database`, error);
         })
 });
 
@@ -25,6 +26,7 @@ router.get('/details/:id', rejectUnauthenticated, (req, res) => {
         })
         .catch((error) => {
             res.sendStatus(500);
+            console.log(`Error getting your project details from the database`, error);
         })
 });
 
@@ -39,6 +41,7 @@ router.put('/project/:id', rejectUnauthenticated, async (req, res) => {
         })
         .catch((error) => {
             res.sendStatus(500);
+            console.log(`Error updating your project in the database`, error);
         })
 })
 
@@ -53,6 +56,7 @@ router.put('/publish/:id', rejectUnauthenticated, (req, res) => {
         })
         .catch((error) => {
             res.sendStatus(500);
+            console.log(`Error publishing your project`, error);
         })
 });
 
@@ -68,6 +72,7 @@ router.put('/info/:id', rejectUnauthenticated, (req, res) => {
         })
         .catch((error) => {
             res.sendStatus(500);
+            console.log(`Error updating project info`, error);
         })
 });
 
@@ -80,6 +85,7 @@ router.get('/penalties/:id', rejectUnauthenticated, (req, res) => {
         })
         .catch((error) => {
             res.sendStatus(500);
+            console.log(`Error getting all the penalties for your project from the database`, error);
         })
 });
 
@@ -92,6 +98,7 @@ router.delete('/penalties/:id', rejectUnauthenticated, (req, res) => {
         })
         .catch((error) => {
             res.sendStatus(500);
+            console.log(`Error deleting your penalty from the database`, error);
         })
 })
 
@@ -115,6 +122,7 @@ router.get('/missions/:id', rejectUnauthenticated, (req, res) => {
         })
         .catch((error) => {
             res.sendStatus(500);
+            console.log(`Error getting all the missions for your project`, error);
         })
 });
 
@@ -144,6 +152,7 @@ router.delete('/missions/:id', rejectUnauthenticated, async (req, res) => {
       } catch (error) {
         await client.query('ROLLBACK')
         res.sendStatus(500);
+        console.log(`Error getting all the missions for your project`, error);
       } finally {
         client.release()
       }
@@ -166,6 +175,7 @@ router.get('/missions/either-or/:id', rejectUnauthenticated, (req, res) => {
         })
         .catch((error) => {
             res.sendStatus(500);
+            console.log(`Error getting all the either/or goals for your project`, error);
         })
 });
 
@@ -182,6 +192,7 @@ router.post('/', rejectUnauthenticated, (req, res) => {
         })
         .catch((error) => {
             res.sendStatus(500);
+            console.log(`Error adding your project to the database`, error);
         })
 })
 
@@ -194,6 +205,7 @@ router.post( '/penalty', rejectUnauthenticated, (req, res) => {
     pool.query(sqlText, [penalty.project_id, penalty.name, penalty.description, penalty.points, penalty.max] )
         .then( (response) => {
             res.sendStatus(201);
+            console.log(`Error adding your penalty to the database`, error);
         })
         .catch( (error) => {
             res.sendStatus(500);
@@ -211,6 +223,7 @@ router.get( `/penalty/:id`, rejectUnauthenticated, (req, res) => {
         })
         .catch( (error) => {
             res.sendStatus(500);
+            console.log(`Error getting the penalties for your project`, error);
         })
 })
 
@@ -229,6 +242,7 @@ router.put( `/penalty`, rejectUnauthenticated, (req, res) => {
         })
         .catch( (error) => {
             res.sendStatus(500);
+            console.log(`Error updating your penalty`, error);
         })
 })
 
@@ -242,6 +256,7 @@ router.get( '/goalTypes', rejectUnauthenticated, (req, res) => {
         })
         .catch( (error) => {
             res.sendStatus(500);
+            console.log(`Error getting the goal types for your project`, error);
         })
 })
 
@@ -306,6 +321,7 @@ router.post( '/mission', rejectUnauthenticated, async(req, res) => {
     } catch(error) {   
         await client.query('ROLLBACK');
         res.sendStatus(500);
+        console.log(`Error adding your mission and goals to the database`, error);
     } finally {
         client.release()
     }
@@ -357,6 +373,7 @@ router.get( `/mission/:id`, rejectUnauthenticated, async(req, res) => {
     } catch(error) {   
         await client.query('ROLLBACK');
         res.sendStatus(500);
+        console.log(`Error getting the mission and goal data for editing`, error);
     } finally {
         client.release()
     }
@@ -425,6 +442,7 @@ router.put( `/mission`, rejectUnauthenticated, async(req, res) => {
     } catch(error) {   
         await client.query('ROLLBACK');
         res.sendStatus(500);
+        console.log(`Error editing your mission data`, error);
     } finally {
         client.release()
     }
@@ -451,6 +469,7 @@ router.post( `/goal`, rejectUnauthenticated, async(req, res) => {
     } catch(error) {   
         await client.query('ROLLBACK');
         res.sendStatus(500);
+        console.log(`Error adding your goal to your mission in the database `, error);
     } finally {
         client.release()
     }
@@ -469,6 +488,7 @@ router.post( `/option`, rejectUnauthenticated, (req, res) => {
         })
         .catch( (error) => {
             res.sendStatus(500);
+            console.log(`Error adding either/or goal to the database`, error);
         })
 })
 
@@ -486,6 +506,7 @@ router.delete( '/goal/:id', rejectUnauthenticated, (req, res) => {
         })
         .catch( (error) => {
             res.sendStatus(500);
+            console.log(`Error deleting the goal from your project`, error);
         })
 })
 
@@ -503,6 +524,7 @@ router.delete( '/option/:id', rejectUnauthenticated, (req, res) => {
         })
         .catch( (error) => {
             res.sendStatus(500);
+            console.log(`Error deleting either or option`, error);
         })
 })
 

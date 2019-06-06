@@ -64,9 +64,6 @@ class SelectRunDetails extends Component {
 
     componentDidMount() {
         const searchObject = qs.parse(this.props.location.search);
-        console.log('teamId', searchObject.teamId);
-        console.log(`user security clearance`, this.props.reduxState.user.security_clearance);
-
         // gets all the team members for logged in team
         if (this.props.reduxState.user.security_clearance === 4) {
             this.props.dispatch({ type: 'GET_TEAM_MEMBERS' });
@@ -99,14 +96,10 @@ class SelectRunDetails extends Component {
 
     // function to run on button click to select all of the missions for the current project, takes in allMissionsReducer state
     selectAllMissions(missions) {
-        console.log(`this is selectAllMissions`);
-        console.log(`missions props`, missions);
         let newSelection = [...missions];
 
         // changes selected state of all individual missions within reducer to true
         if (this.state.newRun.allSelected === false) {
-            console.log(`selectAllMissions false turning true`);
-
             for (let mission of newSelection) {
                 mission.selected = true;
             }
@@ -114,7 +107,6 @@ class SelectRunDetails extends Component {
 
         // changes selected state of all individual missions within reducer to false
         if (this.state.newRun.allSelected === true) {
-            console.log(`selectAllMissions true turning false`);
             for (let mission of newSelection) {
                 mission.selected = false;
             }
@@ -140,11 +132,7 @@ class SelectRunDetails extends Component {
 
     // function to select mission at index i to selected, updates newSelection array with new selected value
     updateMission(i) {
-        console.log('i is', i)
-        console.log('current state', this.state.newRun.selectedMissions)
-
         let newSelection = [...this.props.reduxState.missions];
-        console.log('newSelection[i]', newSelection[i])
         newSelection[i].selected = !newSelection[i].selected;
 
         // sets selectedMissions to updated newSelection array
@@ -156,6 +144,7 @@ class SelectRunDetails extends Component {
         })
     }
 
+    // toggles state for stepOne on click
     changeView() {
 
         if (this.state.newRun.runName === '') {
@@ -169,27 +158,23 @@ class SelectRunDetails extends Component {
 
     }
 
+    // checks security clearance for coach or team with access, conditionally dispatches corresponding information
     handleSubmit = event => {
         event.preventDefault();
 
         const searchObject = qs.parse(this.props.location.search);
-        console.log('searchObject', searchObject);
-        console.log(`user security clearance`, this.props.reduxState.user.security_clearance);
 
         if (this.props.reduxState.user.security_clearance === 4) {
-            // this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: { runDetails: this.state } })
             this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: { runDetails: this.state, userClearance: 4 }})
             this.props.history.push(`/practice-run/run-scoring`);
         }
         else if (this.props.reduxState.user.security_clearance === 2) {
-            console.log(`searchObject in handleSubmit`, searchObject); 
             this.props.dispatch({ type: 'SAVE_RUN_DETAILS', payload: { runDetails: this.state, id: searchObject.teamId, userClearance: 2 }});
             this.props.history.push(`/practice-run/run-scoring?teamId=${searchObject.teamId}`);
         }
-        console.log(`current runTeam state`, this.state.runTeam);
-        console.log(`current run state`, this.state.newRun);
     }
 
+    // checks for reduxState array, maps through array if existing and creates a checkbox for each 
     selectedMissionsView = () => {
         const { classes } = this.props;
         let missionList;
@@ -234,6 +219,7 @@ class SelectRunDetails extends Component {
         )
     }
 
+    // mapping through team members to create drop down selections from loggedin team/search query if coach
     selectedRunTeam = () => {
         const { classes } = this.props;
 
@@ -333,7 +319,9 @@ class SelectRunDetails extends Component {
                 alignItems="center"
                 spacing={16}
             >
+                {/* conditionally renders views based on stepOne boolean toggle in changeView function */}
                 {this.state.stepOne === true ? (this.selectedMissionsView()) : (this.selectedRunTeam())}
+                {/* conditionally renders button text based on stepOne boolean toggle in changeView function */}
                 <Button
                     className={classes.button}
                     variant="contained"

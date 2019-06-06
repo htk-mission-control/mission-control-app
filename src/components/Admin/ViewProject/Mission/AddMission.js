@@ -62,9 +62,11 @@ class AddMission extends Component {
         editState: false,
     }
 
+    // on load of component, get project id from url and add it to state
+    // need project id to save mission to current project
     componentDidMount(){
         const searchObject = qs.parse(this.props.location.search);
-        console.log('searchObject', searchObject);
+        
         this.setState({
             project_id: searchObject.projectId,
         })
@@ -72,14 +74,15 @@ class AddMission extends Component {
         this.props.dispatch({ type: 'REFRESH_OPTIONS' });
     }
 
+    // set state with changes in mission forms
     handleChange = (event) => {
         this.setState({
             ...this.state,
             [event.target.name]: event.target.value,
         })
-        // console.log( `new state:`, this.state );
     }
 
+    // add goal to goals array in state on click of "Add a Goal"
     addGoal = () => {
         this.setState({
             ...this.state,
@@ -92,16 +95,15 @@ class AddMission extends Component {
                 }
             ]
         })
-        // console.log( `Last state:`, this.state );
     }
 
-    handleGoal = (i, name) => (event) => {
-        // console.log( `State:`, this.state );
+    // make changes to goal data when user changes inputs in form
+    handleGoal = (i, name) => (event) => { 
         let newGoals = [...this.state.goals];
         for (let goal of newGoals) {
             if (goal.goal - 1 === i) {
                 let index = newGoals.indexOf(goal);
-                console.log(`index:`, index);
+                
                 newGoals[index][name] = event.target.value;
             }
         }
@@ -112,15 +114,16 @@ class AddMission extends Component {
         })
     }
 
+    // remove goal from goals in state when user clicks trash can button
     removeGoal = (i) => (event) => {
         event.preventDefault();
-        // console.log( `ready to remove a goal:`, i );
+        
         let newGoals = [...this.state.goals];
 
         for (let goal of newGoals) {
             if (goal.goal - 1 === i) {
                 let index = newGoals.indexOf(goal);
-                console.log(`index:`, index);
+                
                 newGoals.splice(index, 1);
             }
         }
@@ -129,9 +132,9 @@ class AddMission extends Component {
             ...this.state,
             goals: newGoals,
         })
-        // console.log( `New state:`, this.state.goals );
     }
 
+    // gather all page details and send with ADD_MISSION dispatch to add to db
     handleSave = () => {
         let eitherOrOptions = this.props.reduxState.goalOptions.optionList;
         let addMissionPayload = {
@@ -147,6 +150,9 @@ class AddMission extends Component {
         const { classes } = this.props;
 
         let goalCount = 0;
+
+        // Mapping through goals to display on DOM
+        // conditional checks goal type to display corresponding form structure
         let goalList =
             this.state.goals.map((goal, index) => {
                 index = goal.goal - 1;
