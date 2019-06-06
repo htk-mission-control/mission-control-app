@@ -96,20 +96,50 @@ class ProjectOverview extends Component {
         const { classes } = this.props;
 
         let missionArr = this.state.projectMissions;
-        let newArr = [];
+        let eitherOrArr = this.state.projectEitherOr;
+        let newMissionArr = [];
+        let newEitherOrArr = [];
         let test = [];
+        let missionMin = 0;
+        let missionMax = 0;
+        let missionMinMaxArr = [];
+        let eitherOrMin = 0;
+        let eitherOrMax = 0;
+        let eitherOrMinMaxArr = [];
 
-        //Find a way to stop loop other than #100
-        for (let count = 0; count < 100; count++) {
+        for (let i = 0; i < missionArr.length; i++) {
+            missionMinMaxArr.push(missionArr[i].mission_id);
+        }
+        missionMin = Math.min(...missionMinMaxArr);
+        missionMax = Math.max(...missionMinMaxArr);
+        
+        for (let i = 0; i < eitherOrArr.length; i++) {
+            eitherOrMinMaxArr.push(eitherOrArr[i].goal_id);
+        }
+        eitherOrMin = Math.min(...eitherOrMinMaxArr);
+        eitherOrMax = Math.max(...eitherOrMinMaxArr);
+        
+
+        for (let count = missionMin; count <= missionMax; count++) {
             test = missionArr.filter(x => x.mission_id === count)
 
             if (test.length !== 0) {
 
-                newArr.push(test)
+                newMissionArr.push(test)
+            }
+
+        }
+        for (let count = eitherOrMin; count <= eitherOrMax; count++) {
+            test = eitherOrArr.filter(x => x.goal_id === count)
+
+            if (test.length !== 0) {
+
+                newEitherOrArr.push(test)
             }
         }
+
         return (
-            newArr.map((mission, i) => {
+            newMissionArr.map((mission, i) => {
                 return (
                     <div key={i}>
                         <ExpansionPanel className={classes.panel}>
@@ -137,7 +167,7 @@ class ProjectOverview extends Component {
                                         {mission.map((mission, i) => {
                                             return (
                                                 <div key={i}>
-                                                        {this.renderGoals(mission)}
+                                                        {this.renderGoals(mission, newEitherOrArr)}
                                                 </div>
                                             )
                                         })}
@@ -151,7 +181,7 @@ class ProjectOverview extends Component {
         )
     }
 
-    renderGoals = (mission) => {
+    renderGoals = (mission, eitherOr) => {
         if (mission.goal_type_id === 1) {
             return (
                 <div>
@@ -162,17 +192,20 @@ class ProjectOverview extends Component {
         }
         else if (mission.goal_type_id === 2) {
             return (
-                this.state.projectEitherOr.map((either, i) => {
-                    if (mission.goal_id === either.goal_id) {
-                        return (
-                            <div key={i}>
-                                <Typography variant="body1">{either.name}</Typography>
-                                <Typography variant="body2">{either.points} points</Typography>
-                                {this.renderOrText(either)}
-                            </div>
-                        )
-                    }
-                    return <div></div>
+                eitherOr.map((eithers) => {
+                    return (
+                        eithers.map( (either, i) => {
+                            if (mission.goal_id === either.goal_id) {
+                                return (
+                                    <Grid item key={i}>
+                                        <Typography variant="body2">Goal: {either.name} = {either.points} points</Typography>
+                                        {this.renderOrText(eithers, i)}
+                                    </Grid>
+                                )
+                            }
+                            return <div></div>
+                        })
+                    )
                 })
             )
         }
@@ -188,9 +221,11 @@ class ProjectOverview extends Component {
     }
     //-----TODO-----
     //finish OR render to DOM
-    renderOrText = (either) => {
-        // console.log('either length', either);
-        return <Typography variant="title">OR</Typography>
+    renderOrText = (either, i) => {
+        if (i < (either.length - 1)) {
+            return <Typography variant="body2">OR</Typography>
+        }
+        return
     }
 
     render() {
