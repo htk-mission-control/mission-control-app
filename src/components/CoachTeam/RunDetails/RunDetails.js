@@ -21,8 +21,7 @@ class RunDetails extends Component {
             this.setState({ ...this.state, count: this.state.count + 1 });   
         }
     }
-
-
+    
     routeToTeam = () => {
         if(this.props.reduxState.user.security_clearance === 2 ){
             this.props.history.push( `/coach/home` );
