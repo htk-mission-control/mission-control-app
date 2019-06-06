@@ -22,6 +22,7 @@ router.get('/members', rejectUnauthenticated, (req, res) => {
         })
         .catch((error) => {
             res.sendStatus(500);
+            console.log(`Error getting your team members as a team`, error);
         })
 });
 
@@ -44,6 +45,7 @@ router.get('/members/:id', rejectUnauthenticated, (req, res) => {
         })
         .catch((error) => {
             res.sendStatus(500);
+            console.log(`Error getting your team members as a coach`, error);
         })
 });
 
@@ -60,6 +62,7 @@ router.get('/team-info/:id', rejectUnauthenticated, (req, res) => {
     })
     .catch( (error) => {
         res.sendStatus(500);
+        console.log(`Error getting team info by team id`, error);
     })
 })
 
@@ -80,6 +83,7 @@ router.get('/:id', rejectUnauthenticated, (req, res) => {
         })
         .catch( (error) => {
             res.sendStatus(500);
+            console.log(`Error getting all teams for coach`, error);
         })
 });
 
@@ -94,6 +98,7 @@ router.get(`/team-id/:id`, rejectUnauthenticated, (req, res) => {
     })
     .catch( (error) => {
         res.sendStatus(500);
+        console.log(`Error getting team id based on team number`, error);
     })
 });
    
@@ -109,6 +114,7 @@ router.post(`/team-member`, (req, res) => {
      })
      .catch((error) => {
          res.sendStatus(500);
+         console.log(`Error adding new team member`, error);
      })
 })
 
@@ -141,6 +147,7 @@ router.post(`/team-name`, rejectUnauthenticated, async (req, res) => {
     catch (error) {
     await client.query('ROLLBACK');
     res.sendStatus(500);
+    console.log(`Error adding new team to database`, error);
   } finally {
     client.release()
   }
@@ -157,7 +164,8 @@ router.put(`/hide-team-member`, rejectUnauthenticated, (req, res) => {
             res.sendStatus(200)
         })
         .catch((error) => {
-            alert('Could not hide team member')
+            res.sendStatus(500);
+            console.log(`Error hiding the team member`, error);
         })
 })
 
@@ -172,6 +180,7 @@ router.put(`/edit-team-member`, rejectUnauthenticated, (req, res) => {
             })
             .catch((error) => {
                 res.sendStatus(500);
+                console.log(`Error editing team member information`, error);
             })
 })
 
@@ -192,6 +201,7 @@ router.put( `/teamAccess`, rejectUnauthenticated, (req, res) => {
             })
             .catch((error) => {
                 res.sendStatus(500);
+                console.log(`Error giving your team create run access`, error);
             })
       
     } else if(access === 3) {
@@ -203,6 +213,7 @@ router.put( `/teamAccess`, rejectUnauthenticated, (req, res) => {
             })
             .catch((error) => {
                 res.sendStatus(500);
+                console.log(`Error removing your team's create run access`, error);
             })
     }
 })
