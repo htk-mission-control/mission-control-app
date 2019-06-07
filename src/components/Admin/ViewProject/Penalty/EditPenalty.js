@@ -37,10 +37,7 @@ const styles = theme => ({
 
 class EditPenalty extends Component {
 
-    // TO DO!!! 
-    // need to get penalty_id from Brad
     state = {
-        // penalty_id source needs to change, or call it directly in componentDidMount/dispatch/payload
         penalty_id: this.props.reduxState.projects.id || 1,
         name: '',
         description: '',
@@ -48,15 +45,18 @@ class EditPenalty extends Component {
         points: ''
     }
 
+    // on page load, get penalty id from url
+    // then get specific penalty data from DB
     componentDidMount(){
         const searchObject = qs.parse(this.props.location.search);
-        console.log('searchObject', searchObject);
+        
         this.setState({
             penalty_id: searchObject.penaltyId,
         })
         this.props.dispatch( {type: 'GET_PENALTY', payload: searchObject.penaltyId} );
     }
 
+    // wait for reduxState to populate with penalty data and add data to state
     componentDidUpdate(prevProps){
         if( this.props.reduxState.penalty !== prevProps.reduxState.penalty ){
             this.setState({
@@ -69,21 +69,22 @@ class EditPenalty extends Component {
         }
     }
 
+    // set state with input field changes
     handleChange = (event) => {
         this.setState({
             ...this.state,
             [event.target.name]: event.target.value,
         })
-        // console.log( `new state:`, this.state );
     }
 
+    // on click of "Back" button, route user to project page
     routeBack = () => {
         this.props.history.push( `/admin/projects?projectId=${this.props.reduxState.projectDetails.id}`);
     }
 
+    // on click of "Save Penalty", PUT data to update DB and route user to project page
     updatePenalty = (event) => {
         let update = {...this.props.reduxState.penalty};
-        console.log( update );
 
         let penaltyUpdate = {
             penalty_id: this.state.penalty_id || 1,

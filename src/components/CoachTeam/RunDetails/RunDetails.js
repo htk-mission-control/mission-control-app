@@ -36,22 +36,26 @@ class RunDetails extends Component {
         count: 1,
     }
 
+    // finds id in query string and dispatches to get run details
     componentDidMount(){
         const values = queryString.parse(this.props.location.search);
-        console.log( `query runId:`, values.runId);
         this.props.dispatch( {type: 'GET_RUN_DETAILS', payload: values.runId} );
     }
 
+    // checks for updates in reduxState, sets count if updated
     componentDidUpdate(prevProps){
         if( this.props.reduxState.runHistoryDetails !== prevProps.reduxState.runHistoryDetails ){
-            this.setState({ ...this.state, count: this.state.count + 1 });
-            console.log( `Count:`, this.state.count );
-            
+            this.setState({ ...this.state, count: this.state.count + 1 });   
         }
     }
-
+    
     routeToTeam = () => {
         this.props.history.push( `/home` );
+        if(this.props.reduxState.user.security_clearance === 2 ){
+            this.props.history.push( `/home` );
+        } else {
+            this.props.history.push( `/home` );
+        }
         this.props.dispatch( {type: `RESET_RUN_DETAILS`} );
     }
 

@@ -45,9 +45,12 @@ class EitherOr extends Component {
         count: 1,
     }
 
+    // on page load, get mission id from url and add it to state
+    // if a goal is new, editState will be false and dispatch to reduxState
+    // to add starting option fields
     componentDidMount() {
         const searchObject = qs.parse(this.props.location.search);
-        console.log('searchObject', searchObject);
+        
         this.setState({
             missionId: searchObject.missionId,
         })
@@ -59,8 +62,9 @@ class EitherOr extends Component {
         }
     }
 
+    // Once optionList and missionDetails in reduxState is populated, 
+    // set state with data from those reducers
     componentDidUpdate(prevProps) {
-        console.log(`in componentDidUpdate, E/O`, this.state);
         if (this.props.reduxState.goalOptions.optionList !== prevProps.reduxState.goalOptions.optionList) {
             this.setState({
                 optionArray: this.props.reduxState.goalOptions.optionList,
@@ -72,13 +76,14 @@ class EitherOr extends Component {
         }
     }
 
+    // On click of "Add an Option"
+    // If goal is new and editState is false, add an option to the goal array in reduxState
+    // if not, add option to DB table either_or
     addOption = () => {
         if (this.props.editState === false) {
-            console.log(`In AddMission`);
             this.props.dispatch({ type: 'ADD_OPTION', payload: this.state });
 
         } else {
-            console.log(`In EditMission`);
             this.props.dispatch({ type: 'ADD_OPTION_TO_GOAL', payload: this.state });
         }
 
@@ -86,13 +91,14 @@ class EitherOr extends Component {
         this.setState({ state: this.state });
     }
 
+    // update reduxState with changes of goal's option input fields
     handleOption = (i, name) => (event) => {
         let newOptions = [...this.props.reduxState.goalOptions.optionList];
 
         for (let option of newOptions) {
             if (option.id === i) {
                 let index = newOptions.indexOf(option);
-                console.log(`index:`, index);
+                
                 newOptions[index][name] = event.target.value;
                 newOptions[index].goal_id = this.props.goal;
             }
@@ -103,6 +109,9 @@ class EitherOr extends Component {
         this.setState({ state: this.state });
     }
 
+    // Delete an option on click of trash can icon
+    // either from reduxState (if editState is false)
+    // or from DB
     removeOption = (i) => (event) => {
         event.preventDefault();
         if (this.props.editState === false) {
@@ -111,7 +120,6 @@ class EitherOr extends Component {
             for (let option of newOptions) {
                 if (option.id === i) {
                     let index = newOptions.indexOf(option);
-                    console.log(`index:`, index);
                     newOptions.splice(index, 1);
                 }
             }
@@ -122,7 +130,6 @@ class EitherOr extends Component {
                 option_id: i,
                 missionId: this.state.missionId,
             }
-            console.log(`in delete option:`, removeOptionPayload);
 
             this.props.dispatch({ type: 'DELETE_OPTION', payload: removeOptionPayload });
         }
@@ -137,12 +144,12 @@ class EitherOr extends Component {
         let optionArray = this.props.reduxState.goalOptions.optionList;
         let optionCount = this.props.reduxState.goalOptions.optionCount;
         let optionMap;
-        // let optionNum = 0;
 
+        // map through options in optionList reducer
+        // display form fields for each option 
+        // and pre-populate if reduxState holds option data
         if (optionCount > 1) {
             optionMap = optionArray.map(option => {
-                // optionNum += 1;
-                console.log(`in goal options:`, option.goal_id);
 
                 let option_name = option.option_name;
                 let option_points = option.option_points;
@@ -192,7 +199,6 @@ class EitherOr extends Component {
 
         return (
             <div>
-                {/* {JSON.stringify(this.state)} */}
                 {optionMap}
 
                 <Button
