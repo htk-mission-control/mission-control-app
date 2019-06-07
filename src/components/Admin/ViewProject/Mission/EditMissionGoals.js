@@ -46,13 +46,12 @@ const styles = theme => ({
 class EditMissionGoals extends Component {
 
     state = {
-        // Need to update this:
         missionId: 0,
         goals: [],
     }
 
+    // wait for reduxState to update, then set state with goal details
     componentDidUpdate(prevProps) {
-        console.log(`in componentDidUpdate, GoalList`, this.state);
         if (this.props.reduxState.missionDetails.goals !== prevProps.reduxState.missionDetails.goals) {
             this.setState({
                 ...this.state,
@@ -62,12 +61,12 @@ class EditMissionGoals extends Component {
         }
     }
 
+    // update state and reduxState with changes to goal forms
     handleGoal = (i, name) => (event) => {
         let newGoals = [...this.props.reduxState.missionDetails.goals];
         for (let goal of newGoals) {
             if (goal.goal_id === i) {
                 let index = newGoals.indexOf(goal);
-                console.log(`index:`, index, name);
                 if (name === 'goal_type_id') {
                     newGoals[index][name] = Number(event.currentTarget.value);
                 } else {
@@ -82,15 +81,14 @@ class EditMissionGoals extends Component {
         })
     }
 
+    // create goal in db on click of "Add a Goal"
     addGoal = () => {
         this.props.dispatch({ type: 'ADD_GOAL_TO_MISSION', payload: this.state });
         this.setState({ state: this.state });
-        console.log(`in ADD GOAL/missions:`, this.state);
-
     }
 
+    // delete goal from DB when user clicks trash can for goal
     removeGoal = (id) => () => {
-        console.log(`in removeGoal`, id);
         let removePayload = { goal_id: id, missionId: this.state.missionId };
         this.props.dispatch({ type: 'DELETE_GOAL', payload: removePayload });
         this.setState({ state: this.state });
@@ -103,6 +101,8 @@ class EditMissionGoals extends Component {
         let goalList;
         let goalCount = 0;
 
+        // wait for reduxState to populate with data from GET request
+        // then map through goal data and display forms corresponding with goal types
         if (missionDetails.goals) {
             goalList = this.state.goals.map(goal => {
                 let goalTypeForm;

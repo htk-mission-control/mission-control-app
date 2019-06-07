@@ -48,16 +48,17 @@ const styles = theme => ({
 class EditMission extends Component {
 
     state = {
-        // need to fix alternate form of getting mission_id
         mission_id: 0,
         name: '',
         description: '',
         goals: []
     }
 
+    // on load of component, get missionid from url and add it to state
+    // dispatch to sagas to get mission and goal data for pre-filling forms
     componentDidMount() {
         const searchObject = qs.parse(this.props.location.search);
-        console.log('searchObject', searchObject);
+        
         this.setState({
             mission_id: searchObject.missionId,
         })
@@ -65,6 +66,8 @@ class EditMission extends Component {
         this.props.dispatch({ type: `GET_MISSION_DETAILS`, payload: searchObject });
     }
 
+    // once reduxState is updated with information from GET dispatches in componentDidMount,
+    // set state with data from missionDetails reducer
     componentDidUpdate(prevProps) {
 
         if (this.props.reduxState.missionDetails !== prevProps.reduxState.missionDetails) {
@@ -77,28 +80,25 @@ class EditMission extends Component {
         }
     }
 
+    // set state with changes when user updates input fields
     handleChange = (event) => {
         this.setState({
             ...this.state,
             [event.target.name]: event.currentTarget.value,
         })
-        console.log(`new state:`, this.state);
     }
 
+    // group data from page for save and send with dispatch to saga to update DB
     handleSave = () => {
         let missionDetails = this.props.reduxState.missionDetails;
 
         let missionUpdate = {
-            // need to fix alternate form of getting mission_id
             mission_id: this.state.mission_id || missionDetails.mission_id,
             name: this.state.name || missionDetails.name,
             description: this.state.description || missionDetails.description,
             goals: missionDetails.goals,
             eitherOrOptions: this.props.reduxState.goalOptions.optionList,
         }
-        console.log(`MissionUpdate:`, missionUpdate);
-        console.log(`STATE:`, this.state);
-        console.log(`STATE:`, missionDetails);
 
         this.props.dispatch({ type: 'UPDATE_MISSION', payload: missionUpdate });
         this.props.history.goBack();
@@ -110,6 +110,8 @@ class EditMission extends Component {
         let missionDetails = this.props.reduxState.missionDetails;
         let missionIntro;
 
+        // Check that redux state is not empty and render forms 
+        // once it contains info from get dispatches
         if (missionDetails) {
             missionIntro = <div>
                 <TextField

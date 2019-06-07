@@ -13,7 +13,8 @@ CREATE TABLE "projects" (
     "description" VARCHAR(1000),
     "year" VARCHAR(9) NOT NULL,
     "published" BOOLEAN NOT NULL,
-    "date_created" DATE
+    "date_created" DATE,
+    "hidden" BOOLEAN NOT NULL DEFAULT 'false'
 );
 
 
