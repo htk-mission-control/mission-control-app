@@ -117,6 +117,8 @@ CREATE TABLE "goals_per_run" (
     "is_completed" BOOLEAN
 );
 
+
+
 --GOAL TYPES
 INSERT INTO "public"."goal_types"("type") VALUES('Yes/No');
 INSERT INTO "public"."goal_types"("type") VALUES('Either/Or');

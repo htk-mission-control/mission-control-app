@@ -54,6 +54,7 @@ class AddTeam extends Component {
         teamSaved: false,
     }
 
+    // Handles change for inputs
     handleChange = propertyName => (event) => {
         this.setState({
             newTeam: {
@@ -75,6 +76,7 @@ class AddTeam extends Component {
 
     }
 
+    //Sets Id to the state
     setId = () => {
         this.setState({
             newTeam: {
@@ -85,8 +87,8 @@ class AddTeam extends Component {
     }
 
 
+    // Sends new team state and dispatchs and clears input 
     addTeammate = () => {
-        
         this.props.dispatch({
             type: "ADD_TEAM_MEMBER",
             payload: this.state.newTeam
@@ -99,15 +101,13 @@ class AddTeam extends Component {
         })
     }
 
-
+    //Switches view to coach view all team views
     changePage = () => {
         window.location = `#/coach/teams`
-
     }
 
     render() {
         const { classes } = this.props;
-
 
         if (this.state.teamSaved === false) {
             return (

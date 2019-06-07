@@ -74,6 +74,7 @@ class HomeAdmin extends Component {
         event.currentTarget.className += " active";
     }
 
+    // sets new project properties on input value change
     handleChange = propertyName => (event) => {
         this.setState({
             newProject: {
@@ -83,6 +84,7 @@ class HomeAdmin extends Component {
         });
     }
 
+    // resets state and dispatches new project state
     handleSubmit = (event) => {
         event.preventDefault();
         this.props.dispatch({ type: 'ADD_PROJECT', payload: this.state.newProject })
@@ -94,9 +96,9 @@ class HomeAdmin extends Component {
                 published: false,
             }
         });
-        // this.props.history.push(`/admin/projects?projectId=${event.target.value}`)
     }
 
+    // routes to project page with new project id
     handleClickMission = (event) => {
         this.props.history.push(`/admin/projects?projectId=${event.currentTarget.value}`)
     }
@@ -121,6 +123,7 @@ class HomeAdmin extends Component {
                     <Typography variant="h4">Projects:</Typography>
                     <div className="tab">
                         <button className="tablinks" value="newProject" onClick={this.showProject}>New Project +</button>
+                        {/* maps through projects reducer to display clickable list of project names on dom */}
                         {this.props.reduxState.projects.map(project => (
                             <div key={project.id}>
                                 <button className="tablinks" value={project.id} onClick={this.showProject}>
@@ -131,6 +134,7 @@ class HomeAdmin extends Component {
                     </div>
                 </div>
                 <div>
+                    {/* maps through projects reducer to display project details on domon dom */}
                     {this.props.reduxState.projects.map(project => {
                         return (
                             <div key={project.id} id={project.id} className="tabcontent">
@@ -151,7 +155,6 @@ class HomeAdmin extends Component {
                     <div id="newProject" className="tabcontent">
                         <form>
                             <Typography variant="h4">Create New Project</Typography>
-                            {/* <Typography variant="h">Project Name</Typography> */}
                             <TextField
                                 type="text"
                                 label="Project Name"
