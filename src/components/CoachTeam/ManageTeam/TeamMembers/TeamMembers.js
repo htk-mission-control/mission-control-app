@@ -53,6 +53,7 @@ class TeamMembers extends Component {
     this.getUrl();
   }
 
+  //Changes view to view all teams
   changePage = () => {
     window.location = `#/coach/teams`;
   };
@@ -66,6 +67,7 @@ class TeamMembers extends Component {
     });
   };
 
+  //Sends state of the new teammate to database and clears input field 
   addTeammate = () => {
     this.props.dispatch({
       type: "ADD_TEAM_MEMBER",

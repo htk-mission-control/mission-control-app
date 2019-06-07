@@ -2,6 +2,33 @@ import React, {Component} from 'react';
 import {connect} from 'react-redux';
 import queryString from 'query-string';
 
+//----Material UI----
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import Grid from '@material-ui/core/Grid';
+
+const styles = theme => ({
+    root: {
+        flexGrow: 1,
+        textAlign: "center",
+        padding: theme.spacing.unit,
+        margin: theme.spacing.unit,
+        width: '100%',
+        overflowX: 'auto',
+    },
+    button: {
+        marginTop: 20,
+        marginBottom: 15,
+        paddingLeft: "5%",
+        paddingRight: "5%",
+    },
+    spacing: {
+        marginTop: 25,
+        marginBottom: 15,
+    },
+})
 
 class RunDetails extends Component {
 
@@ -9,21 +36,21 @@ class RunDetails extends Component {
         count: 1,
     }
 
+    // finds id in query string and dispatches to get run details
     componentDidMount(){
         const values = queryString.parse(this.props.location.search);
-        console.log( `query runId:`, values.runId);
         this.props.dispatch( {type: 'GET_RUN_DETAILS', payload: values.runId} );
     }
 
+    // checks for updates in reduxState, sets count if updated
     componentDidUpdate(prevProps){
         if( this.props.reduxState.runHistoryDetails !== prevProps.reduxState.runHistoryDetails ){
-            this.setState({ ...this.state, count: this.state.count + 1 });
-            console.log( `Count:`, this.state.count );
-            
+            this.setState({ ...this.state, count: this.state.count + 1 });   
         }
     }
-
+    
     routeToTeam = () => {
+        this.props.history.push( `/home` );
         if(this.props.reduxState.user.security_clearance === 2 ){
             this.props.history.push( `/home` );
         } else {
@@ -39,38 +66,55 @@ class RunDetails extends Component {
 
     render(){
         const runDetails = this.props.reduxState.runHistoryDetails;
+        const { classes } = this.props;
 
         return(
-            <div>
-                {/* {JSON.stringify(this.props.reduxState.runHistoryDetails)} */}
-                <h2>Details: {runDetails.name}</h2>
+            <Grid
+                className={classes.root}
+                container
+                direction="column"
+                justify="center"
+                alignItems="center"
+                spacing={16}
+            >
+                <Typography variant="h2">Details: </Typography>
+                <Typography variant="h2">{runDetails.name}</Typography>
 
-                <div>
-                    <h3>Final Score</h3>
-                    <h1>{runDetails.score}</h1>
-                    {/* <h5>Possible Points: N/A</h5> */}
-                    <p><b>Driver:</b> {runDetails.driver}</p>
-                    <p><b>Assistant:</b> {runDetails.assistant}</p>
-                    <p><b>Scorekeeper:</b> {runDetails.score_keeper}</p>
+                <div className={classes.spacing}>
+                    <Typography variant="h3">Final Score</Typography>
+                    <Typography variant="h4">{runDetails.score}</Typography>
+                    <Typography variant="h6"><b>Driver:</b> {runDetails.driver}</Typography>
+                    <Typography variant="h6"><b>Assistant:</b> {runDetails.assistant}</Typography>
+                    <Typography variant="h6"><b>Scorekeeper:</b> {runDetails.score_keeper}</Typography>
                 </div>
 
-                <div>
-                    <h4>Completed Goals: {runDetails.count}</h4>
-                    {/* <p>Do we want to list which goals they completed?</p> */}
-                    <h4>Penalties: {runDetails.penalties}</h4>
+                <div className={classes.spacing}>
+                    <Typography variant="h6">Completed Goals: {runDetails.count}</Typography>
+                    <Typography variant="h6">Penalties: {runDetails.penalties}</Typography>
                 </div>
 
-                <div>
-                    {/* TO DO: get notes from table in router's get request */}
-                    <p><b>Notes:</b></p>
-                    <p>{runDetails.notes}</p>
+                <div className={classes.spacing}>
+                    <Typography variant="h6"><b>Notes:</b></Typography>
+                    <Typography variant="h6">{runDetails.notes}</Typography>
                 </div>
 
-                <div>
-                    <button onClick={this.routeToTeam} >Back to Home</button>
-                    <button onClick={this.routeToHistory} >Back to Runs</button>
+                <div className={classes.spacing}>
+                    <Button 
+                        variant="contained" 
+                        color="primary" 
+                        className={classes.button}
+                        onClick={this.routeToTeam} 
+                    >Back to Home
+                    </Button>
+                    <Button 
+                        variant="contained" 
+                        color="primary" 
+                        className={classes.button}
+                        onClick={this.routeToHistory} 
+                    >Back to Runs
+                    </Button>
                 </div>
-            </div>
+            </Grid>
         )
     }
 }
@@ -79,4 +123,8 @@ const mapReduxStateToProps = (reduxState) => ({
     reduxState,
 });
 
-export default connect(mapReduxStateToProps)(RunDetails);
+RunDetails.propTypes = {
+    classes: PropTypes.object.isRequired,
+};
+
+export default connect(mapReduxStateToProps)(withStyles(styles)(RunDetails));

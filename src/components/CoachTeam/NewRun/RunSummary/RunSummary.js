@@ -5,7 +5,6 @@ import queryString from 'query-string';
 //----Material UI----
 import PropTypes from 'prop-types';
 import { withStyles, TextField } from '@material-ui/core';
-import Paper from '@material-ui/core/Paper';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Grid from '@material-ui/core/Grid';
@@ -18,12 +17,6 @@ const styles = theme => ({
         margin: theme.spacing.unit,
         width: '100%',
         overflowX: 'auto',
-    },
-    paper: {
-        margin: theme.spacing.unit * 2,
-        maxWidth: 700,
-        padding: theme.spacing.unit,
-        textAlign: "center",
     },
     button: {
         marginTop: 20,

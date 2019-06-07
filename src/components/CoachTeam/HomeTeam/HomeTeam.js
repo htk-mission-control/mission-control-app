@@ -24,6 +24,7 @@ const styles = theme => ({
 
 class HomeTeam extends Component {
 
+  // On click, route to Project overview page
   routeToMissions = () => {
     this.props.history.push('/missions');
   }
@@ -33,6 +34,7 @@ class HomeTeam extends Component {
     this.props.history.push('/history');
   }
 
+  // On click, routes to create new run page
   routeToCreateRun = () => {
     this.props.history.push('/practice-run');
 
@@ -43,16 +45,6 @@ class HomeTeam extends Component {
     const { classes } = this.props;
 
     return (
-      // <div>
-      //   <Typography variant="h2">Welcome, {this.props.user.username}!</Typography>
-
-      //   {/* button to route to missions view */}
-      //   <Link to="/missions" ><button>View Missions</button></Link>
-      //   {/* button to route to run history view */}
-      //   <Link to="/history" ><button>View Run History</button></Link>
-      //   {/* conditionally render button based on user clearance level */}
-      //   {this.renderNewRunButton()}
-      // </div>
       <Grid className={classes.root}>
         <Typography variant="h2">Welcome, {this.props.user.username}!</Typography>
         <Button

@@ -66,7 +66,6 @@ class AddMission extends Component {
     // need project id to save mission to current project
     componentDidMount(){
         const searchObject = qs.parse(this.props.location.search);
-        
         this.setState({
             project_id: searchObject.projectId,
         })
@@ -103,11 +102,9 @@ class AddMission extends Component {
         for (let goal of newGoals) {
             if (goal.goal - 1 === i) {
                 let index = newGoals.indexOf(goal);
-                
                 newGoals[index][name] = event.target.value;
             }
         }
-
         this.setState({
             ...this.state,
             goals: newGoals,
@@ -117,13 +114,10 @@ class AddMission extends Component {
     // remove goal from goals in state when user clicks trash can button
     removeGoal = (i) => (event) => {
         event.preventDefault();
-        
         let newGoals = [...this.state.goals];
-
         for (let goal of newGoals) {
             if (goal.goal - 1 === i) {
                 let index = newGoals.indexOf(goal);
-                
                 newGoals.splice(index, 1);
             }
         }
@@ -141,7 +135,6 @@ class AddMission extends Component {
             mission: this.state,
             options: eitherOrOptions
         };
-
         this.props.dispatch({ type: 'ADD_MISSION', payload: addMissionPayload });
         this.props.history.goBack();
     }
@@ -150,7 +143,8 @@ class AddMission extends Component {
         const { classes } = this.props;
 
         let goalCount = 0;
-
+      
+        {/* maps through goals and conditionally renders corresponding goal info based on goal type */ }
         // Mapping through goals to display on DOM
         // conditional checks goal type to display corresponding form structure
         let goalList =

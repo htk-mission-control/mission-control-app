@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {withRouter} from 'react-router-dom';
 import {connect} from 'react-redux';
-
 import './ViewAllTeams.css';
 
 //----Material UI----
@@ -18,7 +17,6 @@ const styles = theme => ({
         textAlign: "center",
         padding: theme.spacing.unit,
         margin: theme.spacing.unit,
-        // width: '100%',
     },
     paper: {
         margin: theme.spacing.unit * 2,
@@ -37,30 +35,29 @@ const styles = theme => ({
 class ViewAllTeams extends Component {
 
     componentDidMount(){
-        // need the coach id to get their specific teams
-        console.log( 'user id is:', this.props.reduxState );
         let coachId = this.props.reduxState.user.id;
         this.props.dispatch( { type: 'GET_ALL_TEAMS', payload: coachId } );
     }
 
+
+    //Changes view to create a new team
     routeToAddTeam = () => {
         this.props.history.push('/coach/create-team');
     }
 
-    // The following three routes are dependent on team's id
-    // OR should we set these up as links and pass team_id as props?
+    //Changes view to create a new run based on the team ID
     routeToCreateRun = (event) => {
         let team_id = event.currentTarget.value;
-        console.log('team_id', team_id);
-        
         this.props.history.push(`/practice-run?teamId=${team_id}`);
     }
+
+    //Shows team members associtated with the team ID 
     routeToTeamMembers = (event) => {
-        console.log('team_id', event.currentTarget.value);
-        
         let team_id = event.currentTarget.value;
         this.props.history.push(`/coach?teamId=${team_id}`);
     }
+
+    //Changes to show historical runs the teams have made
     routeToRunHistory = (event) => {
         let team_id = event.currentTarget.value;
         this.props.history.push(`/history?teamId=${team_id}`);
@@ -68,8 +65,6 @@ class ViewAllTeams extends Component {
 
     // dispatch for PUT request to update team_access
     changePermission = (event) => {
-        console.log( `team_id:`, event.target.name );
-        console.log( `access:`, event.target.value );
         let team_id = event.target.name;
         let access;
         let coachId = this.props.reduxState.user.id;
@@ -81,7 +76,6 @@ class ViewAllTeams extends Component {
         }
 
         let permissionObject = {team_id, permission: access, coachId};
-        console.log( `permissionObject:`, permissionObject );
         this.props.dispatch( {type: 'UPDATE_TEAM_ACCESS', payload: permissionObject} );
     }
 
